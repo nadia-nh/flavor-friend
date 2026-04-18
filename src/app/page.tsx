@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { Food, FoodCategory, Attempt } from '@/lib/types'
-import { getSuggestionsForFood, getSimilarFoods } from '@/lib/foods'
+import { getSuggestionsForFood, getSimilarFoods, getAllSuggestedFoods } from '@/lib/foods'
 
 const STORAGE_KEY = 'flavorfriend-foods'
 
@@ -63,6 +63,11 @@ export default function Home() {
   const [swipeY, setSwipeY] = useState(0)
   const [swipeDirection, setSwipeDirection] = useState<'up' | 'down' | null>(null)
   const [dismissedSuggestions, setDismissedSuggestions] = useState<string[]>([])
+  const [inputValues, setInputValues] = useState<Record<FoodCategory, string>>({ safe: '', learning: '', scary: '', never: '' })
+  const [showAutocomplete, setShowAutocomplete] = useState<Record<string, boolean>>({})
+  
+  const allFoodNames = getAllSuggestedFoods()
+  const existingFoodNames = foods.map(f => f.name.toLowerCase())
   
   const cardRef = useRef<HTMLDivElement>(null)
   const [dragState, setDragState] = useState<DragState>({
@@ -362,18 +367,56 @@ export default function Home() {
                 <span className="ml-2 text-white/70">({count})</span>
               </div>
               <div className="p-2">
-                <div className="flex gap-1 mb-2">
-                  <input
-                    type="text"
-                    placeholder="Add..."
-                    className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded"
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && e.currentTarget.value) {
-                        addFood(e.currentTarget.value, cat)
-                        e.currentTarget.value = ''
-                      }
-                    }}
-                  />
+                <div className="relative flex gap-1 mb-2">
+                  <div className="flex-1 relative">
+                    <input
+                      type="text"
+                      value={inputValues[cat]}
+                      placeholder="Add..."
+                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded"
+                      onChange={(e) => {
+                        setInputValues({ ...inputValues, [cat]: e.target.value })
+                        setShowAutocomplete({ ...showAutocomplete, [cat]: e.target.value.length > 0 })
+                      }}
+                      onFocus={() => {
+                        if (inputValues[cat].length > 0) {
+                          setShowAutocomplete({ ...showAutocomplete, [cat]: true })
+                        }
+                      }}
+                      onBlur={() => {
+                        setTimeout(() => setShowAutocomplete({ ...showAutocomplete, [cat]: false }), 200)
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && inputValues[cat]) {
+                          addFood(inputValues[cat], cat)
+                          setInputValues({ ...inputValues, [cat]: '' })
+                        }
+                      }}
+                    />
+                    {showAutocomplete[cat] && inputValues[cat].length > 0 && (
+                      <div className="absolute z-10 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-32 overflow-y-auto">
+                        {allFoodNames
+                          .filter(name => 
+                            name.toLowerCase().includes(inputValues[cat].toLowerCase()) &&
+                            !existingFoodNames.includes(name.toLowerCase())
+                          )
+                          .slice(0, 5)
+                          .map(name => (
+                            <button
+                              key={name}
+                              className="w-full text-left px-2 py-1 text-sm hover:bg-green-50"
+                              onClick={() => {
+                                addFood(name, cat)
+                                setInputValues({ ...inputValues, [cat]: '' })
+                                setShowAutocomplete({ ...showAutocomplete, [cat]: false })
+                              }}
+                            >
+                              {name}
+                            </button>
+                          ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <ul className="space-y-1 max-h-48 overflow-y-auto">
                   {foods.filter(f => f.category === cat).map(food => (
