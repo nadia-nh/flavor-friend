@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlavorFriend - Expand Your Palate</title>
+  <style>
+    :root {
+      --green-dark: #166534;
+      --green: #22c55e;
+      --green-light: #dcfce7;
+      --yellow: #eab308;
+      --yellow-light: #fef9c3;
+      --red-light: #fef2f2;
+      --gray-light: #f3f4f6;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0fdf4;
+      color: #1f2937;
+      line-height: 1.5;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+    .container { max-width: 600px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 2rem; }
+    h1 { font-size: 2rem; color: var(--green-dark); margin-bottom: 0.5rem; }
+    .tagline { color: var(--green); }
+    
+    .message {
+      position: fixed;
+      top: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--green);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 9999px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: pulse 0.5s ease;
+      z-index: 100;
+    }
+    @keyframes pulse {
+      0% { opacity: 0; transform: translateX(-50%) scale(0.8); }
+      100% { opacity: 1; transform: translateX(-50%) scale(1); }
+    }
+    
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .tab {
+      flex-shrink: 0;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      border: 2px solid #e5e7eb;
+      background: white;
+      cursor: pointer;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+    .tab.active {
+      border-color: var(--green);
+      background: var(--green-light);
+      color: var(--green-dark);
+    }
+    
+    .panel {
+      background: white;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 1.5rem;
+    }
+    .panel-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    
+    .add-form {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .add-form input {
+      flex: 1;
+      padding: 0.5rem 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+    }
+    .add-form input:focus {
+      outline: none;
+      border-color: var(--green);
+    }
+    .add-form button {
+      padding: 0.5rem 1rem;
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .add-form button:hover { background: var(--green-dark); }
+    
+    .food-list { list-style: none; }
+    .food-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem;
+      background: var(--gray-light);
+      border-radius: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .food-name { font-weight: 500; }
+    .food-actions { display: flex; align-items: center; gap: 0.5rem; }
+    .btn-try {
+      padding: 0.25rem 0.75rem;
+      background: var(--green-light);
+      color: var(--green-dark);
+      border: none;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    .btn-try:hover { background: var(--green); color: white; }
+    .btn-move {
+      padding: 0.25rem 0.5rem;
+      border: 1px solid #d1d5db;
+      background: white;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    .btn-delete {
+      background: none;
+      border: none;
+      color: #9ca3af;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .btn-delete:hover { color: #ef4444; }
+    
+    .empty { text-align: center; color: #6b7280; padding: 2rem; }
+    
+    footer { text-align: center; color: #6b7280; font-size: 0.875rem; margin-top: 2rem; }
+    
+    @media (max-width: 480px) {
+      .tabs { gap: 0.25rem; }
+      .tab { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>FlavorFriend</h1>
+      <p class="tagline">Expand your palate, one bite at a time</p>
+    </header>
+    
+    <div id="message" class="message" style="display: none;"></div>
+    
+    <nav class="tabs" id="tabs"></nav>
+    <main id="main"></main>
+    
+    <footer>
+      <p>Your journey is unique. Go at your own pace. 💚</p>
+    </footer>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'flavorfriend-foods';
+    
+    const categories = {
+      safe: { label: 'Safe Foods', emoji: '🟢', bg: '#dcfce7' },
+      learning: { label: 'Trying', emoji: '🟡', bg: '#fef9c3' },
+      scary: { label: 'Want to Try', emoji: '🔴', bg: '#fef2f2' },
+      new: { label: 'Suggested', emoji: '⚪', bg: '#f3f4f6' }
+    };
+    
+    const encouragement = [
+      "You're doing great! Every try counts.",
+      "Nice work! Your palate is expanding.",
+      "That's courage! Keep going at your own pace.",
+      "Every bite teaches your body something new.",
+      "You're amazing for trying!",
+      "Food adventures take time - be patient with yourself.",
+      "Small steps lead to big discoveries!"
+    ];
+    
+    let foods = [];
+    let selectedCategory = 'safe';
+    
+    function load() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        foods = JSON.parse(stored);
+      } else {
+        foods = [
+          { id: '1', name: 'Chicken', category: 'safe', attempts: 10 },
+          { id: '2', name: 'Rice', category: 'safe', attempts: 10 },
+          { id: '3', name: 'Pasta', category: 'safe', attempts: 10 },
+          { id: '4', name: 'Bread', category: 'safe', attempts: 10 },
+          { id: '5', name: 'Broccoli', category: 'learning', attempts: 2 },
+          { id: '6', name: 'Spinach', category: 'learning', attempts: 1 },
+          { id: '7', name: 'Salmon', category: 'scary', attempts: 0 },
+          { id: '8', name: 'Mushrooms', category: 'scary', attempts: 0 },
+          { id: '9', name: 'Brussels Sprouts', category: 'scary', attempts: 0 }
+        ];
+        save();
+      }
+    }
+    
+    function save() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(foods));
+    }
+    
+    function showMessage(text) {
+      const el = document.getElementById('message');
+      el.textContent = text;
+      el.style.display = 'block';
+      setTimeout(() => el.style.display = 'none', 3000);
+    }
+    
+    function renderTabs() {
+      const tabs = document.getElementById('tabs');
+      tabs.innerHTML = Object.entries(categories).map(([key, cat]) => {
+        const active = selectedCategory === key ? 'active' : '';
+        return `<button class="tab ${active}" data-category="${key}">${cat.emoji} ${cat.label}</button>`;
+      }).join('');
+      
+      tabs.querySelectorAll('.tab').forEach(tab => {
+        tab.onclick = () => {
+          selectedCategory = tab.dataset.category;
+          render();
+        };
+      });
+    }
+    
+    function render() {
+      renderTabs();
+      
+      const main = document.getElementById('main');
+      const cat = categories[selectedCategory];
+      const filtered = foods.filter(f => f.category === selectedCategory);
+      
+      let html = `
+        <div class="panel">
+          <div class="panel-header">
+            <span>${cat.emoji}</span>
+            <span>${cat.label}</span>
+          </div>
+          <div class="add-form">
+            <input type="text" id="newFood" placeholder="Add a food...">
+            <button onclick="addFood()">Add</button>
+          </div>
+      `;
+      
+      if (filtered.length === 0) {
+        html += `<p class="empty">No foods here yet. Add some above!</p>`;
+      } else {
+        html += `<ul class="food-list">`;
+        filtered.forEach(food => {
+          html += `
+            <li class="food-item">
+              <span class="food-name">${food.name}</span>
+              <div class="food-actions">
+                ${selectedCategory === 'learning' ? `
+                  <button class="btn-try" onclick="logAttempt('${food.id}')">Tried (${food.attempts})</button>
+                ` : ''}
+                <select class="btn-move" onchange="moveFood('${food.id}', this.value)">
+                  ${Object.entries(categories).map(([key, c]) => `
+                    <option value="${key}" ${food.category === key ? 'selected' : ''}>${c.emoji}</option>
+                  `).join('')}
+                </select>
+                <button class="btn-delete" onclick="deleteFood('${food.id}')">✕</button>
+              </div>
+            </li>
+          `;
+        });
+        html += `</ul>`;
+      }
+      
+      html += `</div>`;
+      main.innerHTML = html;
+      
+      document.getElementById('newFood').onkeydown = (e) => {
+        if (e.key === 'Enter') addFood();
+      };
+    }
+    
+    function addFood() {
+      const input = document.getElementById('newFood');
+      const name = input.value.trim();
+      if (!name) return;
+      
+      foods.push({
+        id: Date.now().toString(),
+        name,
+        category: selectedCategory,
+        attempts: 0
+      });
+      save();
+      render();
+    }
+    
+    function deleteFood(id) {
+      foods = foods.filter(f => f.id !== id);
+      save();
+      render();
+    }
+    
+    function moveFood(id, category) {
+      foods = foods.map(f => f.id === id ? { ...f, category } : f);
+      save();
+      render();
+    }
+    
+    function logAttempt(id) {
+      foods = foods.map(f => {
+        if (f.id === id) {
+          const msg = encouragement[f.attempts % encouragement.length];
+          showMessage(msg);
+          return { ...f, attempts: f.attempts + 1 };
+        }
+        return f;
+      });
+      save();
+      render();
+    }
+    
+    load();
+    render();
+  </script>
+</body>
+</html>
