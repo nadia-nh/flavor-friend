@@ -245,6 +245,7 @@ export default function Home() {
   }
 
   const learningFoods = foods.filter(f => f.category === 'learning')
+  const safeFoods = foods.filter(f => f.category === 'safe')
   const completedFoods = learningFoods.filter(f => f.attempts >= 7)
   const inProgressFoods = learningFoods.filter(f => f.attempts > 0)
 
@@ -583,17 +584,22 @@ export default function Home() {
           
           <div className="space-y-4">
             <div>
-              <p className="text-sm text-purple-600 mb-1">Ready for Safe ({completedFoods.length})</p>
-              {completedFoods.length > 0 ? (
+              <p className="text-sm text-purple-600 mb-1">Safe foods ({safeFoods.length})</p>
+              {safeFoods.length > 0 ? (
                 <div className="flex flex-wrap gap-1">
-                  {completedFoods.map(f => (
-                    <span key={f.id} className="px-2 py-1 bg-green-500 text-white rounded-full text-xs">
+                  {safeFoods.slice(0, 10).map(f => (
+                    <span key={f.id} className="px-2 py-1 bg-emerald-500 text-white rounded-full text-xs">
                       {f.name}
                     </span>
                   ))}
+                  {safeFoods.length > 10 && (
+                    <span className="px-2 py-1 bg-emerald-400 text-white rounded-full text-xs">
+                      +{safeFoods.length - 10} more
+                    </span>
+                  )}
                 </div>
               ) : (
-                <p className="text-xs text-gray-500">Try foods 7 times to see them here</p>
+                <p className="text-xs text-gray-500">Move foods to Safe to see them here</p>
               )}
             </div>
 
