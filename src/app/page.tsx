@@ -430,7 +430,7 @@ export default function Home() {
                       draggable
                       onDragStart={() => setDraggedFood(food)}
                       onDragEnd={() => setDraggedFood(null)}
-                      className="flex items-center justify-between bg-white p-2 rounded shadow-sm group cursor-move"
+                      className="flex items-center justify-between bg-white p-2 rounded-xl shadow-sm group cursor-move hover:scale-102 hover:shadow-md transition-all duration-200"
                     >
                       <button
                         onClick={() => setSelectedFood(selectedFood?.id === food.id ? null : food)}
@@ -442,7 +442,7 @@ export default function Home() {
                         {cat === 'learning' && (
                           <button
                             onClick={() => openAttemptModal(food)}
-                            className="text-xs px-2 py-0.5 bg-green-100 text-green-700 rounded-full hover:bg-green-200"
+                            className="text-xs px-2 py-0.5 bg-green-100 text-green-700 rounded-full hover:bg-green-200 transition-colors duration-200"
                           >
                             {food.attempts}/7
                           </button>
