@@ -119,7 +119,7 @@ export default function Home() {
   const moveFood = (food: Food, newCategory: FoodCategory) => {
     if (newCategory === 'safe') {
       setShowMessage(`Great! ${food.name} moved to Safe!`)
-      setTimeout(() => setShowMessage(''), 4000)
+      setTimeout(() => setShowMessage(''), 2000)
     }
     setFoods(foods.map(f => f.id === food.id ? { ...f, category: newCategory } : f))
   }
