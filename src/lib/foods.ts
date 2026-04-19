@@ -682,6 +682,68 @@ export const foodSuggestions: FoodSuggestion[] = [
       }
     ],
     easyMeals: ['Kale chips', 'Kale salad', 'Pasta with kale']
+  },
+  {
+    name: 'Pasta',
+    similarTo: 'Bread',
+    cookingMethods: [
+      {
+        name: 'Plain with butter',
+        description: 'Cook and toss with butter and parmesan.',
+        tips: ['Simple is classic', 'Add a little pasta water'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'With sauce',
+        description: 'Toss with your favorite jarred sauce.',
+        tips: ['Marinara or alfredo work well', 'Heat the sauce first'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Garlic and oil',
+        description: 'Sauté garlic in olive oil, toss with pasta.',
+        tips: ['Add red pepper flakes', 'Fresh parsley helps'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'With cheese',
+        description: 'Mix with mac and cheese or cream sauce.',
+        tips: ['Lots of cheese hides flavors', 'Add breadcrumbs on top'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Butter pasta', 'Pasta with sauce', 'Garlic pasta']
+  },
+  {
+    name: 'Rice',
+    similarTo: 'Bread',
+    cookingMethods: [
+      {
+        name: 'Plain with butter',
+        description: 'Cook and add butter and salt.',
+        tips: ['Simple base', 'Add soy sauce if desired'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Fried rice',
+        description: 'Cook, then fry with eggs and vegetables.',
+        tips: ['Day-old rice works best', 'High heat is key'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'With broth',
+        description: 'Cook in broth for more flavor.',
+        tips: ['Use chicken or vegetable broth', 'Add herbs after'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Rice bowl',
+        description: 'Top with protein and vegetables.',
+        tips: ['Teriyaki or curry toppings work great', 'Add egg'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Plain rice', 'Fried rice', 'Rice bowls']
   }
 ]
 
