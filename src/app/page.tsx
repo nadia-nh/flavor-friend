@@ -347,8 +347,8 @@ export default function Home() {
           return (
             <div
               key={cat}
-              className={`flex-shrink-0 w-56 rounded-2xl ${categoryInfo[cat].color} ${
-                dragOverCategory === cat ? 'ring-4 ring-blue-400 ring-opacity-50' : ''
+              className={`flex-shrink-0 w-56 rounded-2xl ${categoryInfo[cat].color} transition-all duration-200 ${
+                dragOverCategory === cat ? 'ring-4 ring-blue-400 ring-opacity-50 scale-105' : ''
               }`}
               onDragOver={(e) => {
                 e.preventDefault()
