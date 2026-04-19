@@ -81,14 +81,17 @@ A responsive web app for adults to expand their food comfort zone through gentle
 - Testing
 
 ### Phase 6: Modern UI Updates
-- [ ] Rounded corners increased to 12-16px
-- [ ] Subtle shadows instead of borders
-- [ ] Gradient headers
-- [ ] Glassmorphism on modals
-- [ ] Hover animations on food cards (scale up)
-- [ ] Smooth drag transitions
-- [ ] Toast notifications
-- [ ] Sticky headers when scrolling
-- [ ] Progress rings instead of text counters
-- [ ] Softer pastel colors
-- [ ] Dark mode support
+- [x] Rounded corners increased to 12-16px
+- [x] Subtle shadows instead of borders
+- [x] Gradient headers
+- [x] Glassmorphism on modals
+- [x] Hover animations on food cards (scale up)
+- [x] Smooth drag transitions
+- [x] Toast notifications
+- [x] Sticky headers when scrolling
+- [x] Progress rings instead of text counters
+- [x] Softer pastel colors
+- [x] Dark mode support
+
+### Future: Food Journey Updates
+- [ ] Change "Ready for Safe" to show count of foods moved to Safe
