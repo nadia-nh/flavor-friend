@@ -245,8 +245,7 @@ export default function Home() {
 
   const learningFoods = foods.filter(f => f.category === 'learning')
   const completedFoods = learningFoods.filter(f => f.attempts >= 7)
-  const inProgressFoods = learningFoods.filter(f => f.attempts > 0 && f.attempts < 7)
-  const justStarted = learningFoods.filter(f => f.attempts === 0)
+  const inProgressFoods = learningFoods.filter(f => f.attempts > 0)
 
   const categories: FoodCategory[] = ['safe', 'learning', 'scary', 'never']
 
@@ -442,22 +441,32 @@ export default function Home() {
                       >
                         {food.name}
                       </button>
-                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100">
-                        {cat === 'learning' && (
+                      {cat === 'learning' ? (
+                        <div className="flex items-center gap-2">
+                          <div className="relative w-6 h-6">
+                            <svg className="w-6 h-6 transform -rotate-90">
+                              <circle cx="12" cy="12" r="9" stroke="#e5e7eb" strokeWidth="2" fill="none" />
+                              <circle cx="12" cy="12" r="9" stroke="#22c55e" strokeWidth="2" fill="none" strokeDasharray={`${food.attempts * 5.14} 57`} className="transition-all duration-300" />
+                            </svg>
+                            <span className="absolute inset-0 flex items-center justify-center text-xs">{food.attempts}</span>
+                          </div>
                           <button
                             onClick={() => openAttemptModal(food)}
-                            className="text-xs px-2 py-0.5 bg-green-100 text-green-700 rounded-full hover:bg-green-200 transition-colors duration-200"
+                            className="text-xs text-gray-400 hover:text-green-600"
                           >
-                            {food.attempts}/7
+                            +
                           </button>
-                        )}
-                        <button
-                          onClick={() => deleteFood(food.id)}
-                          className="text-gray-400 hover:text-red-500 text-xs"
-                        >
-                          ✕
-                        </button>
-                      </div>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100">
+                          <button
+                            onClick={() => deleteFood(food.id)}
+                            className="text-gray-400 hover:text-red-500 text-xs"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      )}
                     </li>
                   ))}
                 </ul>
@@ -582,37 +591,30 @@ export default function Home() {
             <div>
               <p className="text-sm text-purple-600 mb-1">In progress ({inProgressFoods.length})</p>
               {inProgressFoods.length > 0 ? (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {inProgressFoods.map(f => (
-                    <div key={f.id} className="flex items-center gap-2">
+                    <div key={f.id} className="flex items-center gap-3">
                       <span className="text-sm text-gray-700 w-20 truncate">{f.name}</span>
-                      <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div 
-                          className="h-full bg-purple-500 rounded-full transition-all"
-                          style={{ width: `${(f.attempts / 7) * 100}%` }}
-                        />
+                      <div className="relative w-8 h-8">
+                        <svg className="w-8 h-8 transform -rotate-90">
+                          <circle cx="16" cy="16" r="12" stroke="#e5e7eb" strokeWidth="3" fill="none" />
+                          <circle 
+                            cx="16" cy="16" r="12" 
+                            stroke="#8b5cf6" 
+                            strokeWidth="3" 
+                            fill="none" 
+                            strokeDasharray={`${f.attempts * 10.8} 75.4`} 
+                            className="transition-all duration-300" 
+                          />
+                        </svg>
+                        <span className="absolute inset-0 flex items-center justify-center text-xs font-medium">{f.attempts}</span>
                       </div>
-                      <span className="text-xs text-gray-500 w-10 text-right">{f.attempts}/7</span>
+                      <span className="text-xs text-gray-500">/ 7</span>
                     </div>
                   ))}
                 </div>
               ) : (
                 <p className="text-xs text-gray-500">Start trying foods in "Trying"</p>
-              )}
-            </div>
-
-            <div>
-              <p className="text-sm text-purple-600 mb-1">Just added ({justStarted.length})</p>
-              {justStarted.length > 0 ? (
-                <div className="flex flex-wrap gap-1">
-                  {justStarted.map(f => (
-                    <span key={f.id} className="px-2 py-1 bg-yellow-400 text-white rounded-full text-xs">
-                      {f.name}
-                    </span>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-xs text-gray-500">Add foods to "Trying" to track them</p>
               )}
             </div>
           </div>
