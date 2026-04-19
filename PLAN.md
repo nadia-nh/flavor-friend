@@ -94,4 +94,4 @@ A responsive web app for adults to expand their food comfort zone through gentle
 - [x] Dark mode support
 
 ### Future: Food Journey Updates
-- [ ] Change "Ready for Safe" to show count of foods moved to Safe
+- [x] Change "Ready for Safe" to show count of foods moved to Safe

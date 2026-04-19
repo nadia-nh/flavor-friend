@@ -55,6 +55,7 @@ export default function Home() {
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [showProgress, setShowProgress] = useState(false)
   const [darkMode, setDarkMode] = useState(false)
+  const [movedToSafe, setMovedToSafe] = useState<string[]>([])
   const [attemptModal, setAttemptModal] = useState<Food | null>(null)
   const [attemptMethod, setAttemptMethod] = useState('')
   const [attemptLiked, setAttemptLiked] = useState<boolean | null>(null)
@@ -118,7 +119,8 @@ export default function Home() {
   }
 
   const moveFood = (food: Food, newCategory: FoodCategory) => {
-    if (newCategory === 'safe') {
+    if (newCategory === 'safe' && (food.category === 'learning' || food.category === 'scary') && !movedToSafe.includes(food.id)) {
+      setMovedToSafe([...movedToSafe, food.id])
       setShowMessage(`Great! ${food.name} moved to Safe!`)
       setTimeout(() => setShowMessage(''), 2000)
     }
@@ -245,7 +247,6 @@ export default function Home() {
   }
 
   const learningFoods = foods.filter(f => f.category === 'learning')
-  const safeFoods = foods.filter(f => f.category === 'safe')
   const completedFoods = learningFoods.filter(f => f.attempts >= 7)
   const inProgressFoods = learningFoods.filter(f => f.attempts > 0)
 
@@ -584,23 +585,8 @@ export default function Home() {
           
           <div className="space-y-4">
             <div>
-              <p className="text-sm text-purple-600 mb-1">Safe foods ({safeFoods.length})</p>
-              {safeFoods.length > 0 ? (
-                <div className="flex flex-wrap gap-1">
-                  {safeFoods.slice(0, 10).map(f => (
-                    <span key={f.id} className="px-2 py-1 bg-emerald-500 text-white rounded-full text-xs">
-                      {f.name}
-                    </span>
-                  ))}
-                  {safeFoods.length > 10 && (
-                    <span className="px-2 py-1 bg-emerald-400 text-white rounded-full text-xs">
-                      +{safeFoods.length - 10} more
-                    </span>
-                  )}
-                </div>
-              ) : (
-                <p className="text-xs text-gray-500">Move foods to Safe to see them here</p>
-              )}
+              <p className="text-sm text-purple-600 mb-1">Foods moved to Safe</p>
+              <p className="text-2xl font-bold text-emerald-600">{movedToSafe.length}</p>
             </div>
 
             <div>
