@@ -24,10 +24,10 @@ const defaultFoods: Food[] = [
 ]
 
 const categoryInfo: Record<FoodCategory, { label: string; emoji: string; color: string; headerColor: string }> = {
-  safe: { label: 'Safe', emoji: '🟢', color: 'bg-green-100/50 shadow-md', headerColor: 'bg-gradient-to-r from-green-400 to-green-500' },
-  learning: { label: 'Trying', emoji: '🟡', color: 'bg-yellow-100/50 shadow-md', headerColor: 'bg-gradient-to-r from-yellow-400 to-yellow-500' },
-  scary: { label: 'Want to Try', emoji: '🟠', color: 'bg-orange-100/50 shadow-md', headerColor: 'bg-gradient-to-r from-orange-400 to-orange-500' },
-  never: { label: 'Never', emoji: '🔴', color: 'bg-red-100/50 shadow-md', headerColor: 'bg-gradient-to-r from-red-400 to-red-500' },
+  safe: { label: 'Safe', emoji: '🟢', color: 'bg-emerald-50 shadow-md', headerColor: 'bg-gradient-to-r from-emerald-300 to-emerald-400' },
+  learning: { label: 'Trying', emoji: '🟡', color: 'bg-amber-50 shadow-md', headerColor: 'bg-gradient-to-r from-amber-300 to-amber-400' },
+  scary: { label: 'Want to Try', emoji: '🟠', color: 'bg-orange-50 shadow-md', headerColor: 'bg-gradient-to-r from-orange-300 to-orange-400' },
+  never: { label: 'Never', emoji: '🔴', color: 'bg-rose-50 shadow-md', headerColor: 'bg-gradient-to-r from-rose-300 to-rose-400' },
 }
 
 const encouragementMessages = [
@@ -257,7 +257,7 @@ export default function Home() {
       </header>
 
       {showMessage && (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-green-600 text-white px-4 py-2 rounded-full shadow-lg z-50 text-sm">
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-emerald-500 text-white px-4 py-2 rounded-full shadow-lg z-50 text-sm">
           {showMessage}
         </div>
       )}
@@ -266,7 +266,7 @@ export default function Home() {
         onClick={() => setShowSuggestions(!showSuggestions)}
         className={`mx-auto block mb-4 px-6 py-3 rounded-2xl font-medium transition-all ${
           showSuggestions 
-            ? 'bg-green-600 text-white' 
+            ? 'bg-emerald-500 text-white' 
             : 'bg-green-100 text-green-700 border border-green-300 hover:bg-green-200'
         }`}
       >
@@ -685,7 +685,7 @@ export default function Home() {
               </button>
               <button
                 onClick={submitAttempt}
-                className="flex-1 py-2 bg-green-600 text-white rounded-xl"
+                className="flex-1 py-2 bg-emerald-500 text-white rounded-xl"
               >
                 Save
               </button>
