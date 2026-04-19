@@ -370,7 +370,7 @@ export default function Home() {
                 }
               }}
             >
-              <div className={`px-3 py-2 rounded-t-lg ${categoryInfo[cat].headerColor} text-white`}>
+              <div className={`px-3 py-2 rounded-t-lg ${categoryInfo[cat].headerColor} text-white sticky top-0 z-10`}>
                 <span className="mr-2">{categoryInfo[cat].emoji}</span>
                 {categoryInfo[cat].label}
                 <span className="ml-2 text-white/70">({count})</span>
