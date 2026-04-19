@@ -85,7 +85,7 @@ export default function Home() {
       const parsed = JSON.parse(stored)
       const migrated = parsed.map((f: Food) => ({
         ...f,
-        category: f.category === 'new' ? 'scary' : f.category
+        category: f.category === 'never' ? 'scary' : f.category
       }))
       setFoods(migrated)
     } else {
