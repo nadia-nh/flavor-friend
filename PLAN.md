@@ -79,3 +79,16 @@ A responsive web app for adults to expand their food comfort zone through gentle
 - Responsive design
 - Onboarding flow
 - Testing
+
+### Phase 6: Modern UI Updates
+- [ ] Rounded corners increased to 12-16px
+- [ ] Subtle shadows instead of borders
+- [ ] Gradient headers
+- [ ] Glassmorphism on modals
+- [ ] Hover animations on food cards (scale up)
+- [ ] Smooth drag transitions
+- [ ] Toast notifications
+- [ ] Sticky headers when scrolling
+- [ ] Progress rings instead of text counters
+- [ ] Softer pastel colors
+- [ ] Dark mode support

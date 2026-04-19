@@ -24,10 +24,10 @@ const defaultFoods: Food[] = [
 ]
 
 const categoryInfo: Record<FoodCategory, { label: string; emoji: string; color: string; headerColor: string }> = {
-  safe: { label: 'Safe', emoji: '🟢', color: 'bg-green-50 border-green-200', headerColor: 'bg-green-500' },
-  learning: { label: 'Trying', emoji: '🟡', color: 'bg-yellow-50 border-yellow-200', headerColor: 'bg-yellow-500' },
-  scary: { label: 'Want to Try', emoji: '🟠', color: 'bg-orange-50 border-orange-200', headerColor: 'bg-orange-500' },
-  never: { label: 'Never', emoji: '🔴', color: 'bg-red-50 border-red-200', headerColor: 'bg-red-500' },
+  safe: { label: 'Safe', emoji: '🟢', color: 'bg-green-100/50 shadow-md', headerColor: 'bg-gradient-to-r from-green-400 to-green-500' },
+  learning: { label: 'Trying', emoji: '🟡', color: 'bg-yellow-100/50 shadow-md', headerColor: 'bg-gradient-to-r from-yellow-400 to-yellow-500' },
+  scary: { label: 'Want to Try', emoji: '🟠', color: 'bg-orange-100/50 shadow-md', headerColor: 'bg-gradient-to-r from-orange-400 to-orange-500' },
+  never: { label: 'Never', emoji: '🔴', color: 'bg-red-100/50 shadow-md', headerColor: 'bg-gradient-to-r from-red-400 to-red-500' },
 }
 
 const encouragementMessages = [
@@ -261,17 +261,17 @@ export default function Home() {
 
       <button
         onClick={() => setShowSuggestions(!showSuggestions)}
-        className={`mx-auto block mb-4 px-6 py-3 rounded-xl font-medium transition-all ${
+        className={`mx-auto block mb-4 px-6 py-3 rounded-2xl font-medium transition-all ${
           showSuggestions 
             ? 'bg-green-600 text-white' 
-            : 'bg-green-100 text-green-700 border-2 border-green-300 hover:bg-green-200'
+            : 'bg-green-100 text-green-700 border border-green-300 hover:bg-green-200'
         }`}
       >
         {showSuggestions ? '✕ Close Suggestions' : '+ Food Suggestions'}
       </button>
 
       {showSuggestions && (
-        <div className="max-w-md mx-auto mb-6 p-4 bg-white rounded-xl border-2 border-green-200 shadow-lg">
+        <div className="max-w-md mx-auto mb-6 p-4 bg-white rounded-2xl border-2 border-green-200 shadow-lg">
           {!currentSuggestion ? (
             <p className="text-center text-gray-500 py-8">No more suggestions. Check back later!</p>
           ) : (
@@ -290,7 +290,7 @@ export default function Home() {
                 onTouchEnd={handleDragEnd}
               >
                 <div 
-                  className="absolute inset-0 bg-gradient-to-b from-green-50 to-green-100 rounded-xl border-2 border-green-300 shadow-lg flex flex-col items-center justify-center p-6 transition-transform"
+                  className="absolute inset-0 bg-gradient-to-b from-green-50 to-green-100 rounded-2xl border border-green-300 shadow-lg flex flex-col items-center justify-center p-6 transition-transform"
                   style={{
                     transform: `translateY(${dragState.isDragging ? dragState.currentY - dragState.startY : 0}px) translateX(${dragState.isDragging ? dragState.currentX - dragState.startX : 0}px) rotate(${dragState.isDragging ? (dragState.currentX - dragState.startX) / 20 : 0}deg)`,
                   }}
@@ -312,7 +312,7 @@ export default function Home() {
               <div className="flex justify-center gap-2 mt-4">
                 <button
                   onClick={() => handleAddCurrentSuggestion('never')}
-                  className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 font-medium"
+                  className="px-4 py-2 bg-red-100 text-red-700 rounded-xl hover:bg-red-200 font-medium"
                 >
                   ← Never
                 </button>
@@ -321,13 +321,13 @@ export default function Home() {
                     setDismissedSuggestions([...dismissedSuggestions, currentSuggestion])
                     setSuggestionIndex(prev => prev + 1)
                   }}
-                  className="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 font-medium"
+                  className="px-4 py-2 bg-gray-100 text-gray-600 rounded-xl hover:bg-gray-200 font-medium"
                 >
                   ↑ Maybe Later
                 </button>
                 <button
                   onClick={() => handleAddCurrentSuggestion('scary')}
-                  className="px-4 py-2 bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 font-medium"
+                  className="px-4 py-2 bg-orange-100 text-orange-700 rounded-xl hover:bg-orange-200 font-medium"
                 >
                   Want to Try →
                 </button>
@@ -347,7 +347,7 @@ export default function Home() {
           return (
             <div
               key={cat}
-              className={`flex-shrink-0 w-56 rounded-xl border-2 ${categoryInfo[cat].color} ${
+              className={`flex-shrink-0 w-56 rounded-2xl ${categoryInfo[cat].color} ${
                 dragOverCategory === cat ? 'ring-4 ring-blue-400 ring-opacity-50' : ''
               }`}
               onDragOver={(e) => {
@@ -399,7 +399,7 @@ export default function Home() {
                       }}
                     />
                     {showAutocomplete[cat] && inputValues[cat].length > 0 && (
-                      <div className="absolute z-10 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-32 overflow-y-auto">
+                      <div className="absolute z-10 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-32 overflow-y-auto">
                         {allFoodNames
                           .filter(name => 
                             name.toLowerCase().includes(inputValues[cat].toLowerCase()) &&
@@ -465,7 +465,7 @@ export default function Home() {
 
       {selectedFood && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-40 p-4" onClick={() => setSelectedFood(null)}>
-          <div className="bg-white rounded-xl p-4 max-w-sm w-full max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+          <div className="bg-white rounded-2xl p-4 max-w-sm w-full max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex justify-between items-start mb-4">
               <h3 className="text-lg font-semibold">{selectedFood.name}</h3>
               <div className="flex gap-1">
@@ -536,7 +536,7 @@ export default function Home() {
 
             <button
               onClick={() => setSelectedFood(null)}
-              className="w-full py-2 bg-gray-100 text-gray-600 rounded-lg"
+              className="w-full py-2 bg-gray-100 text-gray-600 rounded-xl"
             >
               Close
             </button>
@@ -546,17 +546,17 @@ export default function Home() {
 
       <button
         onClick={() => setShowProgress(!showProgress)}
-        className={`mx-auto block mb-4 px-6 py-3 rounded-xl font-medium transition-all ${
+        className={`mx-auto block mb-4 px-6 py-3 rounded-2xl font-medium transition-all ${
           showProgress 
             ? 'bg-purple-600 text-white' 
-            : 'bg-purple-100 text-purple-700 border-2 border-purple-300 hover:bg-purple-200'
+            : 'bg-purple-100 text-purple-700 border border-purple-300 hover:bg-purple-200'
         }`}
       >
         {showProgress ? '✕ Close Progress' : '📊 View Progress'}
       </button>
 
       {showProgress && (
-        <div className="max-w-md mx-auto mb-6 p-4 bg-white rounded-xl border-2 border-purple-200 shadow-lg">
+        <div className="max-w-md mx-auto mb-6 p-4 bg-white rounded-2xl border-2 border-purple-200 shadow-lg">
           <h3 className="font-semibold text-purple-800 mb-4">Your Food Journey</h3>
           
           <div className="space-y-4">
@@ -617,7 +617,7 @@ export default function Home() {
 
       {attemptModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl p-4 max-w-sm w-full">
+          <div className="bg-white rounded-2xl p-4 max-w-sm w-full">
             <h3 className="font-semibold text-lg mb-4">Log attempt: {attemptModal.name}</h3>
             
             <div className="mb-3">
@@ -626,7 +626,7 @@ export default function Home() {
                 type="text"
                 value={attemptMethod}
                 onChange={e => setAttemptMethod(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                className="w-full px-3 py-2 border border-gray-300 rounded-xl"
               />
             </div>
 
@@ -635,7 +635,7 @@ export default function Home() {
               <div className="flex gap-2">
                 <button
                   onClick={() => setAttemptLiked(true)}
-                  className={`flex-1 py-2 rounded-lg border ${
+                  className={`flex-1 py-2 rounded-xl border ${
                     attemptLiked === true ? 'bg-green-500 text-white border-green-500' : 'border-gray-300 text-gray-600'
                   }`}
                 >
@@ -643,7 +643,7 @@ export default function Home() {
                 </button>
                 <button
                   onClick={() => setAttemptLiked(false)}
-                  className={`flex-1 py-2 rounded-lg border ${
+                  className={`flex-1 py-2 rounded-xl border ${
                     attemptLiked === false ? 'bg-red-500 text-white border-red-500' : 'border-gray-300 text-gray-600'
                   }`}
                 >
@@ -651,7 +651,7 @@ export default function Home() {
                 </button>
                 <button
                   onClick={() => setAttemptLiked(null)}
-                  className={`flex-1 py-2 rounded-lg border ${
+                  className={`flex-1 py-2 rounded-xl border ${
                     attemptLiked === null ? 'bg-gray-500 text-white border-gray-500' : 'border-gray-300 text-gray-600'
                   }`}
                 >
@@ -665,7 +665,7 @@ export default function Home() {
               <textarea
                 value={attemptNotes}
                 onChange={e => setAttemptNotes(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                className="w-full px-3 py-2 border border-gray-300 rounded-xl"
                 rows={2}
               />
             </div>
@@ -673,13 +673,13 @@ export default function Home() {
             <div className="flex gap-2">
               <button
                 onClick={() => setAttemptModal(null)}
-                className="flex-1 py-2 border border-gray-300 rounded-lg text-gray-600"
+                className="flex-1 py-2 border border-gray-300 rounded-xl text-gray-600"
               >
                 Cancel
               </button>
               <button
                 onClick={submitAttempt}
-                className="flex-1 py-2 bg-green-600 text-white rounded-lg"
+                className="flex-1 py-2 bg-green-600 text-white rounded-xl"
               >
                 Save
               </button>
