@@ -78,6 +78,7 @@ export default function Home() {
     currentY: 0,
   })
   const [dragOverCategory, setDragOverCategory] = useState<FoodCategory | null>(null)
+  const [draggedFood, setDraggedFood] = useState<Food | null>(null)
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY)
@@ -355,7 +356,11 @@ export default function Home() {
               }}
               onDragLeave={() => setDragOverCategory(null)}
               onDrop={() => {
-                if (currentSuggestion) {
+                if (draggedFood) {
+                  moveFood(draggedFood, cat)
+                  setDraggedFood(null)
+                  setDragOverCategory(null)
+                } else if (currentSuggestion) {
                   handleAddCurrentSuggestion(cat)
                   setDragOverCategory(null)
                 }
@@ -422,7 +427,10 @@ export default function Home() {
                   {foods.filter(f => f.category === cat).map(food => (
                     <li
                       key={food.id}
-                      className="flex items-center justify-between bg-white p-2 rounded shadow-sm group"
+                      draggable
+                      onDragStart={() => setDraggedFood(food)}
+                      onDragEnd={() => setDraggedFood(null)}
+                      className="flex items-center justify-between bg-white p-2 rounded shadow-sm group cursor-move"
                     >
                       <button
                         onClick={() => setSelectedFood(selectedFood?.id === food.id ? null : food)}
