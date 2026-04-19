@@ -117,6 +117,10 @@ export default function Home() {
   }
 
   const moveFood = (food: Food, newCategory: FoodCategory) => {
+    if (newCategory === 'safe') {
+      setShowMessage(`Great! ${food.name} moved to Safe!`)
+      setTimeout(() => setShowMessage(''), 4000)
+    }
     setFoods(foods.map(f => f.id === food.id ? { ...f, category: newCategory } : f))
   }
 
@@ -254,7 +258,7 @@ export default function Home() {
       </header>
 
       {showMessage && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-full shadow-lg z-50 animate-pulse">
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-green-600 text-white px-4 py-2 rounded-full shadow-lg z-50 text-sm">
           {showMessage}
         </div>
       )}
