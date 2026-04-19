@@ -4,7 +4,7 @@
 A Next.js web app for adult picky eaters to expand their palate through gentle encouragement, cooking suggestions, and progress tracking.
 
 ## Tech Stack
-- **Framework**: Next.js 14 (App Router)
+- **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **Storage**: Browser localStorage (no backend)
@@ -42,7 +42,7 @@ Main React component containing:
 
 ### `src/lib/types.ts`
 TypeScript interfaces:
-- `FoodCategory` - 'safe' | 'learning' | 'scary' | 'new'
+- `FoodCategory` - 'safe' | 'learning' | 'scary' | 'never'
 - `Food` - Main food item with attempts, history, notes
 - `Attempt` - Individual attempt record
 - `CookingMethod` - Cooking suggestion with difficulty
@@ -64,6 +64,7 @@ npm install      # Install dependencies
 npm run dev      # Start dev server at localhost:3000
 npm run build    # Production build
 npm run start    # Start production server
+npm run lint    # Run ESLint
 ```
 
 ## Categories
