@@ -23,12 +23,12 @@ const defaultFoods: Food[] = [
   { id: '9', name: 'Brussels Sprouts', category: 'scary', attempts: 0, lastAttempted: null, notes: '', methodUsed: '', attemptHistory: [] },
 ]
 
-const categoryInfo: Record<FoodCategory, { label: string; emoji: string; color: string; headerColor: string }> = {
-  safe: { label: 'Safe', emoji: '🟢', color: 'bg-emerald-50 shadow-md', headerColor: 'bg-gradient-to-r from-emerald-300 to-emerald-400' },
-  learning: { label: 'Trying', emoji: '🟡', color: 'bg-amber-50 shadow-md', headerColor: 'bg-gradient-to-r from-amber-300 to-amber-400' },
-  scary: { label: 'Want to Try', emoji: '🟠', color: 'bg-orange-50 shadow-md', headerColor: 'bg-gradient-to-r from-orange-300 to-orange-400' },
-  never: { label: 'Never', emoji: '🔴', color: 'bg-rose-50 shadow-md', headerColor: 'bg-gradient-to-r from-rose-300 to-rose-400' },
-}
+const getCategoryInfo = (dark: boolean): Record<FoodCategory, { label: string; emoji: string; color: string; headerColor: string }> => ({
+  safe: { label: 'Safe', emoji: '🟢', color: dark ? 'bg-emerald-900/50 shadow-md' : 'bg-emerald-50 shadow-md', headerColor: dark ? 'bg-gradient-to-r from-emerald-600 to-emerald-700' : 'bg-gradient-to-r from-emerald-300 to-emerald-400' },
+  learning: { label: 'Trying', emoji: '🟡', color: dark ? 'bg-amber-900/50 shadow-md' : 'bg-amber-50 shadow-md', headerColor: dark ? 'bg-gradient-to-r from-amber-600 to-amber-700' : 'bg-gradient-to-r from-amber-300 to-amber-400' },
+  scary: { label: 'Want to Try', emoji: '🟠', color: dark ? 'bg-orange-900/50 shadow-md' : 'bg-orange-50 shadow-md', headerColor: dark ? 'bg-gradient-to-r from-orange-600 to-orange-700' : 'bg-gradient-to-r from-orange-300 to-orange-400' },
+  never: { label: 'Never', emoji: '🔴', color: dark ? 'bg-rose-900/50 shadow-md' : 'bg-rose-50 shadow-md', headerColor: dark ? 'bg-gradient-to-r from-rose-600 to-rose-700' : 'bg-gradient-to-r from-rose-300 to-rose-400' },
+})
 
 const encouragementMessages = [
   "You're doing great! Every try counts.",
@@ -54,6 +54,7 @@ export default function Home() {
   const [selectedFood, setSelectedFood] = useState<Food | null>(null)
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [showProgress, setShowProgress] = useState(false)
+  const [darkMode, setDarkMode] = useState(false)
   const [attemptModal, setAttemptModal] = useState<Food | null>(null)
   const [attemptMethod, setAttemptMethod] = useState('')
   const [attemptLiked, setAttemptLiked] = useState<boolean | null>(null)
@@ -250,10 +251,18 @@ export default function Home() {
   const categories: FoodCategory[] = ['safe', 'learning', 'scary', 'never']
 
   return (
-    <main className="min-h-screen p-4">
+    <main className={`min-h-screen p-4 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
       <header className="text-center mb-6">
-        <h1 className="text-3xl font-bold text-green-800 mb-2">FlavorFriend</h1>
-        <p className="text-green-700">Expand your palate, one bite at a time</p>
+        <div className="flex justify-end mb-2">
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className={`px-3 py-1 rounded-lg text-sm ${darkMode ? 'bg-gray-700 text-yellow-300' : 'bg-gray-200 text-gray-700'}`}
+          >
+            {darkMode ? '☀️' : '🌙'}
+          </button>
+        </div>
+        <h1 className={`text-3xl font-bold mb-2 ${darkMode ? 'text-emerald-300' : 'text-green-800'}`}>FlavorFriend</h1>
+        <p className={darkMode ? 'text-emerald-400' : 'text-green-700'}>Expand your palate, one bite at a time</p>
       </header>
 
       {showMessage && (
@@ -350,7 +359,7 @@ export default function Home() {
           return (
             <div
               key={cat}
-              className={`flex-shrink-0 w-56 rounded-2xl ${categoryInfo[cat].color} transition-all duration-200 ${
+              className={`flex-shrink-0 w-56 rounded-2xl ${getCategoryInfo(darkMode)[cat].color} transition-all duration-200 ${
                 dragOverCategory === cat ? 'ring-4 ring-blue-400 ring-opacity-50 scale-105' : ''
               }`}
               onDragOver={(e) => {
@@ -369,9 +378,9 @@ export default function Home() {
                 }
               }}
             >
-              <div className={`px-3 py-2 rounded-t-lg ${categoryInfo[cat].headerColor} text-white sticky top-0 z-10`}>
-                <span className="mr-2">{categoryInfo[cat].emoji}</span>
-                {categoryInfo[cat].label}
+              <div className={`px-3 py-2 rounded-t-lg ${getCategoryInfo(darkMode)[cat].headerColor} text-white sticky top-0 z-10`}>
+                <span className="mr-2">{getCategoryInfo(darkMode)[cat].emoji}</span>
+                {getCategoryInfo(darkMode)[cat].label}
                 <span className="ml-2 text-white/70">({count})</span>
               </div>
               <div className="p-2">
@@ -492,7 +501,7 @@ export default function Home() {
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
                   >
-                    {categoryInfo[cat].emoji}
+                    {getCategoryInfo(darkMode)[cat].emoji}
                   </button>
                 ))}
               </div>
