@@ -697,7 +697,7 @@ handleAddCurrentSuggestion('curious')
       )}
 
       <footer className="text-center text-gray-500 text-sm mt-8 pb-8">
-        <p>Your journey is unique. Go at your own pace. 🌚</p>
+        <p>Your journey is unique. Go at your own pace. 💚</p>
       </footer>
 
     {/* Recipe Browser Section */}
