@@ -1,7 +1,7 @@
-# FlavorFriend - Developer Guide
+# PlantPal - Developer Guide
 
 ## Project Overview
-A Next.js web app for adult picky eaters to expand their palate through gentle encouragement, cooking suggestions, and progress tracking.
+A Next.js web app for anyone looking to expand the number of plants they eat. Get plant-based cooking suggestions, track your progress, and discover new vegetables, grains, and fruits.
 
 ## Tech Stack
 - **Framework**: Next.js 16 (App Router)
@@ -12,7 +12,7 @@ A Next.js web app for adult picky eaters to expand their palate through gentle e
 ## File Structure
 
 ```
-FlavorFriend/
+PlantPal/
 ├── src/
 │   ├── app/
 │   │   ├── globals.css       # Global Tailwind styles
@@ -42,7 +42,7 @@ Main React component containing:
 
 ### `src/lib/types.ts`
 TypeScript interfaces:
-- `FoodCategory` - 'safe' | 'learning' | 'scary' | 'never'
+- `FoodCategory` - 'love' | 'exploring' | 'curious' | 'notYet'
 - `Food` - Main food item with attempts, history, notes
 - `Attempt` - Individual attempt record
 - `CookingMethod` - Cooking suggestion with difficulty
@@ -70,10 +70,10 @@ npm run lint    # Run ESLint
 ## Categories
 | Emoji | Category | Description |
 |-------|----------|-------------|
-| 🟢 | Safe | Foods you already like |
-| 🟡 | Trying | Foods you're actively exploring |
-| 🔴 | Want to Try | Foods you'd like to attempt |
-| ⚪ | Suggested | Recommended foods to add |
+| 🟢 | Love | Plants you already enjoy |
+| 🌱 | Exploring | Plants you're actively trying |
+| 🌿 | Curious | Plants you'd like to try |
+| 🚫 | Not Yet | Plants you'd rather avoid |
 
 ## Features
 1. **Food Management** - Add, edit, delete, categorize foods

@@ -262,7 +262,7 @@ handleAddCurrentSuggestion('curious')
             {darkMode ? '☀️' : '🌙'}
           </button>
         </div>
-        <h1 className={`text-3xl font-bold mb-2 ${darkMode ? 'text-emerald-300' : 'text-green-800'}`}>FlavorFriend</h1>
+        <h1 className={`text-3xl font-bold mb-2 ${darkMode ? 'text-emerald-300' : 'text-green-800'}`}>PlantPal</h1>
         <p className={darkMode ? 'text-emerald-400' : 'text-green-700'}>Expand your palate, one bite at a time</p>
       </header>
 

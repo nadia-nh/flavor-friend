@@ -14,23 +14,23 @@ export const foodSuggestions: FoodSuggestion[] = [
       {
         name: 'Steam until bright green',
         description: 'Steam for 4-5 minutes until bright green but still slightly crisp.',
-        tips: ['Don\'t overcook - it should still have some crunch', 'Add a tiny bit of butter after'],
+        tips: ['Don\'t overcook - it should still have some crunch', 'Add a little olive oil after'],
         difficulty: 'easy'
       },
       {
         name: 'Blend into sauces or soups',
         description: 'Steam well, then blend into creamy sauces or soups.',
-        tips: ['Mix with cheese sauce for extra flavor', 'Adds nutrition without strong flavor'],
+        tips: ['Mix with cashew sauce for extra flavor', 'Adds nutrition without strong flavor'],
         difficulty: 'easy'
       },
       {
         name: 'Raw with dip',
         description: 'Cut into bite-sized pieces and serve with your favorite dip.',
-        tips: ['Small pieces are less intimidating', 'Ranch dressing is a classic choice'],
+        tips: ['Small pieces are less intimidating', 'Hummus is a classic choice'],
         difficulty: 'easy'
       }
     ],
-    easyMeals: ['Broccoli cheese soup', 'Pasta with broccoli', 'Roasted broccoli side']
+    easyMeals: ['Roasted broccoli side', 'Pasta with broccoli', 'Broccoli soup']
   },
   {
     name: 'Spinach',
@@ -45,7 +45,7 @@ export const foodSuggestions: FoodSuggestion[] = [
       {
         name: 'Mix into pasta',
         description: 'Toss with warm pasta in the last minute of cooking.',
-        tips: ['The heat wilts it down significantly', 'Use with creamy sauces'],
+        tips: ['The heat wilts it down significantly', 'Use with creamy cashew sauce'],
         difficulty: 'easy'
       },
       {
@@ -55,75 +55,44 @@ export const foodSuggestions: FoodSuggestion[] = [
         difficulty: 'easy'
       },
       {
-        name: 'Scrambled eggs',
-        description: 'Stir a handful into scrambled eggs while cooking.',
-        tips: ['Adds nutrition invisibly', 'Pairs well with cheese'],
+        name: 'Sauté with tofu',
+        description: 'Stir a handful into tofu scramble while cooking.',
+        tips: ['Adds nutrition invisibly', 'Pairs well with nutritional yeast'],
         difficulty: 'easy'
       }
     ],
-    easyMeals: ['Spinach smoothies', 'Pasta with spinach', 'Eggs Florentine']
-  },
-  {
-    name: 'Salmon',
-    similarTo: 'Chicken',
-    cookingMethods: [
-      {
-        name: 'Bake with honey glaze',
-        description: 'Bake at 400°F for 12-15 minutes with honey or maple glaze.',
-        tips: ['Sweet glazes make it more approachable', 'Ensure it\'s fully cooked through'],
-        difficulty: 'medium'
-      },
-      {
-        name: 'Pan-sear simple',
-        description: 'Cook in a hot pan with oil for 4 minutes per side.',
-        tips: ['Don\'t move it around - let it form a crust', 'Fresh rosemary or dill helps the flavor'],
-        difficulty: 'medium'
-      },
-      {
-        name: 'Canned/fish cakes',
-        description: 'Use canned salmon mixed with breadcrumbs and Shape into patties.',
-        tips: ['Much milder than fresh', 'Add lots of seasoning'],
-        difficulty: 'easy'
-      },
-      {
-        name: 'Pasta creamy sauce',
-        description: 'Flake into creamy pasta sauces.',
-        tips: ['The creamy sauce masks any fishy taste', 'Add lemon for brightness'],
-        difficulty: 'medium'
-      }
-    ],
-    easyMeals: ['Honey salmon', 'Salmon pasta', 'Salmon cakes']
+    easyMeals: ['Spinach smoothies', 'Pasta with spinach', 'Sautéed spinach']
   },
   {
     name: 'Mushrooms',
-    similarTo: 'Meat',
+    similarTo: 'Tofu',
     cookingMethods: [
       {
         name: 'Grilled or roasted',
-        description: 'Toss with oil and grill/froast until golden.',
+        description: 'Toss with oil and grill/roast until golden.',
         tips: ['Large portobello caps are meaty', 'Season well'],
         difficulty: 'easy'
       },
       {
         name: 'Sautéed with garlic',
-        description: 'Cook in butter with garlic until golden.',
+        description: 'Cook in olive oil with garlic until golden.',
         tips: ['Cook off most of the moisture', 'Add fresh thyme'],
         difficulty: 'easy'
       },
       {
-        name: 'Blend into meat',
-        description: 'Finely chop and mix into ground beef or turkey.',
-        tips: ['Can reduce meat cost too', 'Adds texture and nutrition'],
+        name: 'Blend into lentils',
+        description: 'Finely chop and mix into lentil stew.',
+        tips: ['Adds texture and nutrition', 'Use with hearty beans'],
         difficulty: 'easy'
       },
       {
         name: 'Soup or gravy',
         description: 'Cook into soups or gravies - very subtle when blended.',
-        tips: ['Blend smooth for hidden nutrition', 'Pairs well with cream'],
+        tips: ['Blend smooth for hidden nutrition', 'Pairs well with cashew cream'],
         difficulty: 'easy'
       }
     ],
-    easyMeals: ['Stuffed mushrooms', 'Mushroom soup', 'Beef with mushrooms']
+    easyMeals: ['Stuffed mushrooms', 'Mushroom soup', 'Lentil mushroom stew']
   },
   {
     name: 'Brussels Sprouts',
@@ -148,13 +117,13 @@ export const foodSuggestions: FoodSuggestion[] = [
         difficulty: 'medium'
       },
       {
-        name: 'With bacon',
-        description: 'Cook with bacon - the bacon makes everything better.',
-        tips: ['You can wrap in bacon', 'The smokiness helps'],
+        name: 'With maple glaze',
+        description: 'Roast with maple syrup and mustard glaze.',
+        tips: ['Sweet glaze makes it approachable', 'The sweetness helps'],
         difficulty: 'easy'
       }
     ],
-    easyMeals: ['Roasted brussels', 'Brussels fried rice', 'Bacon brussels']
+    easyMeals: ['Roasted brussels', 'Brussels fried rice', 'Maple glazed brussels']
   },
   {
     name: 'Bell Peppers',
@@ -162,14 +131,14 @@ export const foodSuggestions: FoodSuggestion[] = [
     cookingMethods: [
       {
         name: 'Stuff and bake',
-        description: 'Stuff with rice/meat and bake at 375°F for 45 minutes.',
-        tips: ['Sweet peppers are milder', 'Cheese helps the flavor'],
+        description: 'Stuff with rice/beans and bake at 375°F for 45 minutes.',
+        tips: ['Sweet peppers are milder', 'Nutritional yeast helps the flavor'],
         difficulty: 'medium'
       },
       {
         name: 'Raw with dip',
         description: 'Cut into strips and serve with dip.',
-        tips: ['Red and yellow are sweetest', 'Ranch is classic'],
+        tips: ['Red and yellow are sweetest', 'Hummus is classic'],
         difficulty: 'easy'
       },
       {
@@ -179,13 +148,13 @@ export const foodSuggestions: FoodSuggestion[] = [
         difficulty: 'easy'
       },
       {
-        name: 'Omlette',
-        description: 'Sauté and add to eggs.',
-        tips: ['Good breakfast option', 'Use cheese too'],
+        name: 'Tofu scramble',
+        description: 'Sauté and add to tofu scramble.',
+        tips: ['Good breakfast option', 'Use nutritional yeast too'],
         difficulty: 'easy'
       }
     ],
-    easyMeals: ['Stuffed peppers', 'Fajitas', 'Pepper omelette']
+    easyMeals: ['Stuffed peppers', 'Fajitas', 'Pepper tofu scramble']
   },
   {
     name: 'Cauliflower',
@@ -194,13 +163,13 @@ export const foodSuggestions: FoodSuggestion[] = [
       {
         name: 'Roasted simple',
         description: 'Cut into florets, toss with oil, roast at 425°F for 25 minutes.',
-        tips: ['Get it crispy', 'Add garlic and parmesan'],
+        tips: ['Get it crispy', 'Add garlic and nutritional yeast'],
         difficulty: 'easy'
       },
       {
         name: 'Mashed',
-        description: 'Steam and mash like potatoes with butter.',
-        tips: ['Use cream and cheese', 'Cannot tell difference from potatoes'],
+        description: 'Steam and mash like potatoes with olive oil.',
+        tips: ['Use cashew cream and nutritional yeast', 'Tastes like cheesy potatoes'],
         difficulty: 'easy'
       },
       {
@@ -212,7 +181,7 @@ export const foodSuggestions: FoodSuggestion[] = [
       {
         name: 'Buffalo wings',
         description: 'Cover in buffalo sauce and bake - like wings!',
-        tips: ['Crispy texture', 'Use ranch or blue cheese'],
+        tips: ['Crispy texture', 'Use hummus or cashew ranch'],
         difficulty: 'easy'
       }
     ],
@@ -223,31 +192,31 @@ export const foodSuggestions: FoodSuggestion[] = [
     similarTo: 'Green beans',
     cookingMethods: [
       {
-        name: 'Roasted with parmesan',
-        description: 'Roast at 425°F for 12-15 minutes, top with parmesan.',
+        name: 'Roasted with nutritional yeast',
+        description: 'Roast at 425°F for 12-15 minutes, top with nutritional yeast.',
         tips: ['Tender inside', 'Simple and elegant'],
         difficulty: 'easy'
       },
       {
-        name: 'Wrapped in bacon',
-        description: 'Wrap in bacon and bake at 400°F for 20 minutes.',
-        tips: ['Bacon makes everything better', 'Crunchy and tender'],
+        name: 'Wrapped in tofu',
+        description: 'Wrap in smoked tofu and bake at 400°F for 20 minutes.',
+        tips: ['Smoked tofu adds depth', 'Crunchy and tender'],
         difficulty: 'easy'
       },
       {
         name: 'Pasta',
         description: 'Cut into pieces and toss with pasta.',
-        tips: ['Use with creamy sauces', 'Cut into small pieces'],
+        tips: ['Use with creamy cashew sauce', 'Cut into small pieces'],
         difficulty: 'easy'
       },
       {
-        name: 'Eggs',
-        description: 'Cut into small pieces and add to omelette or quiche.',
+        name: 'Tofu scramble',
+        description: 'Cut into small pieces and add to tofu scramble.',
         tips: ['Mild flavor when cooked', 'Good breakfast option'],
         difficulty: 'easy'
       }
     ],
-    easyMeals: ['Parmesan asparagus', 'Bacon asparagus', 'Asparagus eggs']
+    easyMeals: ['Parmesan asparagus', 'Tofu-wrapped asparagus', 'Asparagus tofu scramble']
   },
   {
     name: 'Zucchini',
@@ -268,7 +237,7 @@ export const foodSuggestions: FoodSuggestion[] = [
       {
         name: 'Baked',
         description: 'Cut into sticks and bake as "fries".',
-        tips: ['Light coating helps', 'Use ranch for dipping'],
+        tips: ['Light coating helps', 'Use hummus for dipping'],
         difficulty: 'easy'
       },
       {
@@ -282,7 +251,7 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Avocado',
-    similarTo: 'Butter',
+    similarTo: 'Oil',
     cookingMethods: [
       {
         name: 'On toast',
@@ -313,7 +282,7 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Tofu',
-    similarTo: 'Chicken',
+    similarTo: 'Tempeh',
     cookingMethods: [
       {
         name: 'Press and marinate',
@@ -349,25 +318,25 @@ export const foodSuggestions: FoodSuggestion[] = [
       {
         name: 'Roast with garlic',
         description: 'Toss with oil and garlic, roast at 425°F for 15 minutes.',
-        tips: ['Get them slightly charred', 'Add parmesan after'],
+        tips: ['Get them slightly charred', 'Add nutritional yeast after'],
         difficulty: 'easy'
       },
       {
         name: 'Blanch and sauté',
-        description: 'Blanch 2 min, then sauté with butter and almonds.',
+        description: 'Blanch 2 min, then sauté with olive oil and almonds.',
         tips: ['Keep them slightly crunchy', 'Lemon adds brightness'],
         difficulty: 'easy'
       },
       {
         name: 'Raw with dip',
         description: 'Serve raw with your favorite dip.',
-        tips: ['Cut into bite-sized pieces', 'Ranch is classic'],
+        tips: ['Cut into bite-sized pieces', 'Hummus is classic'],
         difficulty: 'easy'
       },
       {
-        name: 'With bacon',
-        description: 'Sauté with bacon bits and vinegar.',
-        tips: ['The bacon makes everything better', 'Add red pepper flakes'],
+        name: 'With maple glaze',
+        description: 'Sauté with maple syrup and vinegar.',
+        tips: ['The sweetness makes everything better', 'Add red pepper flakes'],
         difficulty: 'easy'
       }
     ],
@@ -375,7 +344,7 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Textured Vegetable Protein',
-    similarTo: 'Ground meat',
+    similarTo: 'Lentils',
     cookingMethods: [
       {
         name: 'Rehydrate and season',
@@ -385,7 +354,7 @@ export const foodSuggestions: FoodSuggestion[] = [
       },
       {
         name: 'In chili',
-        description: 'Use in place of ground beef in chili.',
+        description: 'Use in place of lentils in chili.',
         tips: ['Add liquid to rehydrate', 'Works great in soups too'],
         difficulty: 'easy'
       },
@@ -396,9 +365,9 @@ export const foodSuggestions: FoodSuggestion[] = [
         difficulty: 'easy'
       },
       {
-        name: ' Bolognese',
-        description: 'Use in pasta sauce in place of ground meat.',
-        tips: ['Blend with actual meat for过渡', 'Add mushrooms for texture'],
+        name: 'Bolognese',
+        description: 'Use in pasta sauce in place of lentils.',
+        tips: ['Blend with mushrooms for texture', 'Add herbs for depth'],
         difficulty: 'medium'
       }
     ],
@@ -406,7 +375,7 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Soy Curls',
-    similarTo: 'Chicken',
+    similarTo: 'Tofu',
     cookingMethods: [
       {
         name: 'Rehydrate and marinate',
@@ -417,7 +386,7 @@ export const foodSuggestions: FoodSuggestion[] = [
       {
         name: 'Buffalo style',
         description: 'Toss with buffalo sauce and bake at 375°F for 15 min.',
-        tips: ['Crispy buffalo is amazing', 'Serve with ranch'],
+        tips: ['Crispy buffalo is amazing', 'Serve with cashew ranch'],
         difficulty: 'easy'
       },
       {
@@ -428,27 +397,27 @@ export const foodSuggestions: FoodSuggestion[] = [
       },
       {
         name: 'In wraps',
-        description: 'Use in place of chicken in wraps or sandwiches.',
+        description: 'Use in place of tofu in wraps or sandwiches.',
         tips: ['Slice thin for wraps', 'Pickle adds tang'],
         difficulty: 'easy'
       }
     ],
-    easyMeals: ['Buffalo soy curls', 'Soy curl stir-fry', 'Chicken-style wraps']
+    easyMeals: ['Buffalo soy curls', 'Soy curl stir-fry', 'Tofu-style wraps']
   },
   {
     name: 'Quinoa',
     similarTo: 'Rice',
     cookingMethods: [
       {
-        name: 'Plain with butter',
-        description: 'Cook and add butter and salt.',
+        name: 'Plain with olive oil',
+        description: 'Cook and add olive oil and salt.',
         tips: ['Rinse before cooking to remove bitterness', 'Add broth for more flavor'],
         difficulty: 'easy'
       },
       {
         name: 'In salads',
         description: 'Cool and mix with vegetables and lemon dressing.',
-        tips: ['Works great cold', 'Add feta and cucumber'],
+        tips: ['Works great cold', 'Add hemp seeds and cucumber'],
         difficulty: 'easy'
       },
       {
@@ -472,8 +441,8 @@ export const foodSuggestions: FoodSuggestion[] = [
     cookingMethods: [
       {
         name: 'Bake and top',
-        description: 'Bake at 400°F for 45 min, top with butter.',
-        tips: ['Pierce with fork before baking', 'Cinnamon and butter classic'],
+        description: 'Bake at 400°F for 45 min, top with tahini.',
+        tips: ['Pierce with fork before baking', 'Maple syrup and cinnamon classic'],
         difficulty: 'easy'
       },
       {
@@ -484,7 +453,7 @@ export const foodSuggestions: FoodSuggestion[] = [
       },
       {
         name: 'Mashed',
-        description: 'Boil and mash with butter and milk.',
+        description: 'Boil and mash with olive oil and plant milk.',
         tips: ['Add a little maple syrup', 'Roasted is even better'],
         difficulty: 'easy'
       },
@@ -510,7 +479,7 @@ export const foodSuggestions: FoodSuggestion[] = [
       {
         name: 'Dal',
         description: 'Cook with spices, serve over rice.',
-        tips: ['Add cumin and turmeric', 'Finish with butter'],
+        tips: ['Add cumin and turmeric', 'Finish with coconut oil'],
         difficulty: 'medium'
       },
       {
@@ -521,7 +490,7 @@ export const foodSuggestions: FoodSuggestion[] = [
       },
       {
         name: 'Tacos',
-        description: 'Season and use in place of ground meat.',
+        description: 'Season and use in place of walnuts in tacos.',
         tips: ['Mash slightly for better texture', 'Add taco seasoning'],
         difficulty: 'easy'
       }
@@ -553,7 +522,7 @@ export const foodSuggestions: FoodSuggestion[] = [
       {
         name: 'Salad',
         description: 'Toss with cucumber, tomato, and dressing.',
-        tips: ['Use drained canned chickpeas', 'Add feta'],
+        tips: ['Use drained canned chickpeas', 'Add hemp seeds'],
         difficulty: 'easy'
       }
     ],
@@ -565,7 +534,7 @@ export const foodSuggestions: FoodSuggestion[] = [
     cookingMethods: [
       {
         name: 'Overnight',
-        description: 'Soak in milk or yogurt overnight, add toppings.',
+        description: 'Soak in plant milk or yogurt overnight, add toppings.',
         tips: ['Use rolled oats', 'Add fruit in the morning'],
         difficulty: 'easy'
       },
@@ -577,13 +546,13 @@ export const foodSuggestions: FoodSuggestion[] = [
       },
       {
         name: 'Smoothie',
-        description: 'Blend with frozen fruit and milk.',
+        description: 'Blend with frozen fruit and plant milk.',
         tips: ['Use rolled oats', 'Soak first if needed'],
         difficulty: 'easy'
       },
       {
         name: 'Crumble topping',
-        description: 'Mix with butter and sugar for pie toppings.',
+        description: 'Mix with coconut oil and maple syrup for pie toppings.',
         tips: ['Mix until crumbly', 'Add cinnamon'],
         difficulty: 'easy'
       }
@@ -639,7 +608,7 @@ export const foodSuggestions: FoodSuggestion[] = [
       },
       {
         name: 'Parmesan',
-        description: 'Bread and bake with marinara and cheese.',
+        description: 'Bread and bake with marinara and nutritional yeast.',
         tips: ['Salt and drain first', 'Use panko for crunch'],
         difficulty: 'medium'
       },
@@ -665,7 +634,7 @@ export const foodSuggestions: FoodSuggestion[] = [
       {
         name: 'Salad',
         description: 'Massage with dressing, add toppings.',
-        tips: ['Massaging is key for tender leaves', 'Add parmesan and croutons'],
+        tips: ['Massaging is key for tender leaves', 'Add nutritional yeast and croutons'],
         difficulty: 'easy'
       },
       {
@@ -688,8 +657,8 @@ export const foodSuggestions: FoodSuggestion[] = [
     similarTo: 'Bread',
     cookingMethods: [
       {
-        name: 'Plain with butter',
-        description: 'Cook and toss with butter and parmesan.',
+        name: 'Plain with olive oil',
+        description: 'Cook and toss with olive oil and nutritional yeast.',
         tips: ['Simple is classic', 'Add a little pasta water'],
         difficulty: 'easy'
       },
@@ -706,40 +675,40 @@ export const foodSuggestions: FoodSuggestion[] = [
         difficulty: 'easy'
       },
       {
-        name: 'With cheese',
-        description: 'Mix with mac and cheese or cream sauce.',
-        tips: ['Lots of cheese hides flavors', 'Add breadcrumbs on top'],
+        name: 'With nutritional yeast',
+        description: 'Mix with cashew cream or nutritional yeast.',
+        tips: ['Lots of yeast adds cheesy flavor', 'Add breadcrumbs on top'],
         difficulty: 'easy'
       }
     ],
-    easyMeals: ['Butter pasta', 'Pasta with sauce', 'Garlic pasta']
+    easyMeals: ['Olive oil pasta', 'Pasta with sauce', 'Garlic pasta']
   },
   {
     name: 'Rice',
     similarTo: 'Bread',
     cookingMethods: [
       {
-        name: 'Plain with butter',
-        description: 'Cook and add butter and salt.',
+        name: 'Plain with olive oil',
+        description: 'Cook and add olive oil and salt.',
         tips: ['Simple base', 'Add soy sauce if desired'],
         difficulty: 'easy'
       },
       {
         name: 'Fried rice',
-        description: 'Cook, then fry with eggs and vegetables.',
+        description: 'Cook, then fry with tofu and vegetables.',
         tips: ['Day-old rice works best', 'High heat is key'],
         difficulty: 'easy'
       },
       {
         name: 'With broth',
-        description: 'Cook in broth for more flavor.',
-        tips: ['Use chicken or vegetable broth', 'Add herbs after'],
+        description: 'Cook in vegetable broth for more flavor.',
+        tips: ['Use vegetable broth', 'Add herbs after'],
         difficulty: 'easy'
       },
       {
         name: 'Rice bowl',
-        description: 'Top with protein and vegetables.',
-        tips: ['Teriyaki or curry toppings work great', 'Add egg'],
+        description: 'Top with tofu and vegetables.',
+        tips: ['Teriyaki or curry toppings work great', 'Add edamame'],
         difficulty: 'easy'
       }
     ],

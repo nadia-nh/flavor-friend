@@ -1,7 +1,7 @@
-# FlavorFriend - Plan
+# PlantPal - Plan
 
 ## Overview
-A responsive web app for adults to expand their food comfort zone through gentle, non-judgmental encouragement and practical cooking suggestions.
+A responsive web app for anyone looking to expand the number of plants they eat through plant-based cooking suggestions and progress tracking.
 
 ## Tech Stack
 - **Frontend**: Next.js (React)
