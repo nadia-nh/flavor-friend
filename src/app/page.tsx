@@ -71,6 +71,7 @@ export default function Home() {
   
   const allFoodNames = getAllSuggestedFoods()
   const existingFoodNames = foods.map(f => f.name.toLowerCase())
+  const recipeCategories = ['all', ...Array.from(new Set(recipes.map(r => r.category)))]
   
   const cardRef = useRef<HTMLDivElement>(null)
   const [dragState, setDragState] = useState<DragState>({
@@ -87,11 +88,16 @@ export default function Home() {
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored) {
       const parsed = JSON.parse(stored)
-      const migrated = parsed.map((f: Food) => ({
-        ...f,
-        category: f.category === 'notYet' ? 'curious' : f.category
-      }))
-      setFoods(migrated)
+      if (parsed.length === 0) {
+        setFoods(defaultFoods)
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultFoods))
+      } else {
+        const migrated = parsed.map((f: Food) => ({
+          ...f,
+          category: f.category === 'notYet' ? 'curious' : f.category
+        }))
+        setFoods(migrated)
+      }
     } else {
       setFoods(defaultFoods)
       localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultFoods))
@@ -709,7 +715,7 @@ handleAddCurrentSuggestion('curious')
         <div className="mt-4">
           {/* Category Filters */}
           <div className="flex flex-wrap gap-2 mb-6">
-            {(['all', 'breakfast', 'lunch', 'dinner', 'dessert', 'snack', 'appetizer', 'side', 'soup', 'salad', 'quick', 'one-pot', 'pasta', 'drink', 'sauce'] as const).map(cat => (
+            {recipeCategories.map(cat => (
               <button
                 key={cat}
                 onClick={() => setRecipeFilter(cat)}

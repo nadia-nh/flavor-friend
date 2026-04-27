@@ -209,7 +209,7 @@ export const recipes: Recipe[] = [
   {
     title: 'Winter Vegetable Risotto',
     description: 'Creamy winter vegetable risotto with herbs.',
-    image: 'https://www.forksoverknives.com/wp-content/uploads/featured-winter-vegetable-risotto.jpg',
+    image: 'https://www.forksoverknives.com/wp-content/uploads/Winter-Vegetable-Risotto-1-600x400.jpg',
     link: 'https://www.forksoverknives.com/recipes/amazing-grains/winter-vegetable-risotto/',
     category: 'dinner',
     source: 'Forks Over Knives',
@@ -219,7 +219,7 @@ export const recipes: Recipe[] = [
   {
     title: 'Crispy Buffalo Cauliflower Bites',
     description: 'Crispy buffalo cauliflower bites - perfect appetizer.',
-    image: 'https://www.forksoverknives.com/wp-content/uploads/featured-crispy-buffalo-cauliflower-bites.jpg',
+    image: 'https://www.forksoverknives.com/wp-content/uploads/Crispy-Buffalo-Cauliflower-Bites-1-600x400.jpg',
     link: 'https://www.forksoverknives.com/recipes/vegan-snacks-appetizers/crispy-buffalo-cauliflower-bites/',
     category: 'appetizer',
     source: 'Forks Over Knives',
@@ -229,7 +229,7 @@ export const recipes: Recipe[] = [
   {
     title: 'Chickpea Omelet',
     description: 'Fluffy chickpea omelet - high protein breakfast.',
-    image: 'https://www.forksoverknives.com/wp-content/uploads/featured-chickpea-omelet.jpg',
+    image: 'https://www.forksoverknives.com/wp-content/uploads/Chickpea-Omelet-1-600x400.jpg',
     link: 'https://www.forksoverknives.com/recipes/vegan-breakfast/chickpea-omelet/',
     category: 'breakfast',
     source: 'Forks Over Knives',
@@ -239,7 +239,7 @@ export const recipes: Recipe[] = [
   {
     title: 'Indian-Spiced Cauliflower Potato Casserole',
     description: 'Indian-spiced cauliflower and potato casserole.',
-    image: 'https://www.forksoverknives.com/wp-content/uploads/featured-indian-spiced-cauliflower-potato-casserole.jpg',
+    image: 'https://www.forksoverknives.com/wp-content/uploads/Indian-Spiced-Cauliflower-Potato-Casserole-1-600x400.jpg',
     link: 'https://www.forksoverknives.com/recipes/vegan-baked-stuffed/indian-spiced-cauliflower-potato-easy-vegan-casserole/',
     category: 'dinner',
     source: 'Forks Over Knives',
@@ -249,7 +249,7 @@ export const recipes: Recipe[] = [
   {
     title: 'Creamy Potato Soup',
     description: 'Hearty creamy potato soup with vegetables.',
-    image: 'https://www.forksoverknives.com/wp-content/uploads/featured-creamy-potato-soup.jpg',
+    image: 'https://www.forksoverknives.com/wp-content/uploads/Creamy-Potato-Soup-1-600x400.jpg',
     link: 'https://www.forksoverknives.com/recipes/vegan-soups-stew/creamy-potato-soup/',
     category: 'soup',
     source: 'Forks Over Knives',
@@ -259,7 +259,7 @@ export const recipes: Recipe[] = [
   {
     title: 'Tuscan White Bean Soup',
     description: 'Tuscan white bean soup with kale.',
-    image: 'https://www.forksoverknives.com/wp-content/uploads/featured-tuscan-white-bean-soup.jpg',
+    image: 'https://www.forksoverknives.com/wp-content/uploads/Tuscan-White-Bean-Soup-1-600x400.jpg',
     link: 'https://www.forksoverknives.com/recipes/vegan-soups-stew/tuscan-white-bean-soup-kale/',
     category: 'soup',
     source: 'Forks Over Knives',
@@ -269,7 +269,7 @@ export const recipes: Recipe[] = [
   {
     title: 'Thai Green Curry',
     description: 'Flavorful Thai green curry with vegetables.',
-    image: 'https://www.forksoverknives.com/wp-content/uploads/featured-thai-green-curry.jpg',
+    image: 'https://www.forksoverknives.com/wp-content/uploads/Thai-Green-Curry-1-600x400.jpg',
     link: 'https://www.forksoverknives.com/recipes/vegan-curries-stir-fries/thai-green-curry/',
     category: 'dinner',
     source: 'Forks Over Knives',
@@ -279,7 +279,7 @@ export const recipes: Recipe[] = [
   {
     title: 'Chickpea Curry',
     description: 'Easy chickpea curry with spinach.',
-    image: 'https://www.forksoverknives.com/wp-content/uploads/featured-chickpea-curry.jpg',
+    image: 'https://www.forksoverknives.com/wp-content/uploads/Chickpea-Curry-1-600x400.jpg',
     link: 'https://www.forksoverknives.com/recipes/vegan-curries-stir-fries/chickpea-curry/',
     category: 'dinner',
     source: 'Forks Over Knives',
@@ -289,7 +289,7 @@ export const recipes: Recipe[] = [
   {
     title: 'Lentil Soup',
     description: 'Hearty lentil soup with vegetables.',
-    image: 'https://www.forksoverknives.com/wp-content/uploads/featured-lentil-soup.jpg',
+    image: 'https://www.forksoverknives.com/wp-content/uploads/Lentil-Soup-1-600x400.jpg',
     link: 'https://www.forksoverknives.com/recipes/vegan-soups-stew/lentil-soup/',
     category: 'soup',
     source: 'Forks Over Knives',
@@ -299,7 +299,7 @@ export const recipes: Recipe[] = [
   {
     title: 'Vegan Mac and Cheese',
     description: 'Creamy vegan mac and cheese with queso.',
-    image: 'https://www.forksoverknives.com/wp-content/uploads/featured-vegan-mac-and-cheese.jpg',
+    image: 'https://www.forksoverknives.com/wp-content/uploads/Vegan-Mac-and-Cheese-1-600x400.jpg',
     link: 'https://www.forksoverknives.com/recipes/vegan-pasta/vegan-mac-and-cheese/',
     category: 'pasta',
     source: 'Forks Over Knives',
