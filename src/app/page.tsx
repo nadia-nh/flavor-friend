@@ -697,9 +697,8 @@ handleAddCurrentSuggestion('curious')
       )}
 
       <footer className="text-center text-gray-500 text-sm mt-8 pb-8">
-        <p>Your journey is unique. Go at your own pace. 💚</p>
+        <p>Your journey is unique. Go at your own pace. 🌚</p>
       </footer>
-    </main>
 
     {/* Recipe Browser Section */}
     <section className="max-w-6xl mx-auto px-4 pb-8">
@@ -732,10 +731,10 @@ handleAddCurrentSuggestion('curious')
               .map((recipe, idx) => (
                 <div key={idx} className="bg-gray-50 dark:bg-gray-700 rounded-lg shadow p-2 hover:shadow-md transition-shadow">
                   <img 
-                    src={recipe.image || '/placeholder-vegetable.png'} 
+                    src={recipe.image || '/placeholder-vegetable.svg'} 
                     alt={recipe.title}
                     className="w-full h-32 object-cover rounded-md mb-2"
-                    onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder-vegetable.png' }}
+                    onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder-vegetable.svg' }}
                   />
                   <h3 className="text-sm font-medium text-gray-800 dark:text-gray-200 mb-1 line-clamp-2">{recipe.title}</h3>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{recipe.source}</p>
@@ -758,7 +757,6 @@ handleAddCurrentSuggestion('curious')
         </div>
       </details>
     </section>
-  )
-}
+  </main>
   )
 }
