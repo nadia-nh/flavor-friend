@@ -27,8 +27,36 @@ export interface CookingMethod {
 }
 
 export interface FoodSuggestion {
-  name: string
-  similarTo: string
-  cookingMethods: CookingMethod[]
-  easyMeals: string[]
+  name: string;
+  similarTo: string;
+  cookingMethods: CookingMethod[];
+  easyMeals: string[];
+}
+
+export type RecipeCategory =
+  | 'breakfast'
+  | 'lunch'
+  | 'dinner'
+  | 'dessert'
+  | 'snack'
+  | 'appetizer'
+  | 'side'
+  | 'soup'
+  | 'salad'
+  | 'quick'
+  | 'one-pot'
+  | 'pasta'
+  | 'baking'
+  | 'drink'
+  | 'sauce';
+
+export interface Recipe {
+  title: string;
+  description: string;
+  image: string;
+  link: string;
+  category: RecipeCategory;
+  source: string;
+  prepTime?: string;
+  difficulty?: 'easy' | 'medium' | 'hard';
 }
