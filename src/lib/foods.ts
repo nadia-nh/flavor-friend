@@ -713,9 +713,256 @@ export const foodSuggestions: FoodSuggestion[] = [
       }
     ],
     easyMeals: ['Plain rice', 'Fried rice', 'Rice bowls']
+  },
+  {
+    name: 'Carrots',
+    similarTo: 'Sweet potato',
+    cookingMethods: [
+      {
+        name: 'Roast with oil',
+        description: 'Cut into sticks, toss with oil, roast at 425°F for 20 minutes.',
+        tips: ['Cut uniformly for even cooking', 'Honey or maple glaze helps'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Raw with dip',
+        description: 'Cut into sticks and serve with hummus or dip.',
+        tips: ['Baby carrots are convenient', 'Cut into small pieces'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Grated in salads',
+        description: 'Grate raw and add to salads.',
+        tips: ['Adds sweetness and crunch', 'Pair with raisins'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'In soups',
+        description: 'Add to soups and blend for creaminess.',
+        tips: ['Blends smooth for hidden nutrition', 'Pairs with ginger'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Roasted carrots', 'Carrot sticks', 'Carrot soup']
+  },
+  {
+    name: 'Onions',
+    similarTo: 'Garlic',
+    cookingMethods: [
+      {
+        name: 'Sautéed',
+        description: 'Dice and sauté in oil until translucent.',
+        tips: ['Cook slowly for sweetness', 'Don\'t burn them'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Caramelized',
+        description: 'Cook slowly in oil for 30 minutes until brown.',
+        tips: ['Takes patience but worth it', 'Add a pinch of salt'],
+        difficulty: 'medium'
+      },
+      {
+        name: 'Raw in salsa',
+        description: 'Dice finely and add to fresh salsa.',
+        tips: ['Red onions are milder', 'Soak in water to reduce bite'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Roasted whole',
+        description: 'Wrap in foil and roast at 400°F for 45 minutes.',
+        tips: ['Skin should be charred', 'Squeeze out the soft inside'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Sautéed onions', 'Caramelized onions', 'Onion salsa']
+  },
+  {
+    name: 'Garlic',
+    similarTo: 'Onions',
+    cookingMethods: [
+      {
+        name: 'Minced in oil',
+        description: 'Mince and sauté in oil for 1-2 minutes.',
+        tips: ['Don\'t burn it - turns bitter', 'Use fresh for best flavor'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Roasted whole',
+        description: 'Wrap head in foil, roast at 400°F for 40 minutes.',
+        tips: ['Squeeze out soft cloves', 'Spread on bread like butter'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Raw in dressing',
+        description: 'Mince and whisk into salad dressings.',
+        tips: ['Use sparingly raw', 'Pairs with lemon and olive oil'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'In marinades',
+        description: 'Crush and add to tofu/tempeh marinades.',
+        tips: ['Mash with salt to make a paste', 'Let marinate for flavor'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Garlic bread', 'Garlic pasta', 'Roasted garlic']
+  },
+  {
+    name: 'Tomatoes',
+    similarTo: 'Bell peppers',
+    cookingMethods: [
+      {
+        name: 'Roasted',
+        description: 'Cut in half, drizzle with oil, roast at 400°F for 30 minutes.',
+        tips: ['Cherry tomatoes roast faster', 'Add balsamic for depth'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Fresh in salsa',
+        description: 'Dice and mix with onion, cilantro, lime.',
+        tips: ['Use ripe tomatoes', 'Add jalapeño for heat'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Sauce base',
+        description: 'Sauté with garlic and herbs for pasta sauce.',
+        tips: ['Cook down until thick', 'Add basil at the end'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Stuffed and baked',
+        description: 'Hollow out, stuff with breadcrumbs, bake at 375°F.',
+        tips: ['Use large tomatoes', 'Add nutritional yeast to filling'],
+        difficulty: 'medium'
+      }
+    ],
+    easyMeals: ['Roasted tomatoes', 'Fresh salsa', 'Tomato sauce']
+  },
+  {
+    name: 'Cucumber',
+    similarTo: 'Zucchini',
+    cookingMethods: [
+      {
+        name: 'Raw in salads',
+        description: 'Slice and toss with lemon and herbs.',
+        tips: ['Peel if skin is bitter', 'Salt to draw out moisture'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Pickled',
+        description: 'Slice and pickle in vinegar brine.',
+        tips: ['Quick pickle in 24 hours', 'Add dill and garlic'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'In smoothies',
+        description: 'Peel and blend with fruit.',
+        tips: ['Mild flavor when blended', 'Pairs with melon'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Sushi',
+        description: 'Cut into strips for vegan sushi.',
+        tips: ['Seedless varieties work best', 'Pair with avocado'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Cucumber salad', 'Pickles', 'Cucumber smoothie']
+  },
+  {
+    name: 'Peppers',
+    similarTo: 'Bell peppers',
+    cookingMethods: [
+      {
+        name: 'Roasted',
+        description: 'Cut into strips, toss with oil, roast at 425°F.',
+        tips: ['Char the skin for smoky flavor', 'Red and yellow are sweeter'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Raw with dip',
+        description: 'Slice and serve with hummus or dip.',
+        tips: ['Remove seeds and membranes', 'Sweet varieties are milder'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Stir-fry',
+        description: 'Chop and add to stir-fries.',
+        tips: ['Keep pieces large for crunch', 'Cook briefly to stay crisp'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Stuffed and baked',
+        description: 'Fill with rice/beans, bake at 375°F for 45 min.',
+        tips: ['Use sweet bell peppers', 'Top with nutritional yeast'],
+        difficulty: 'medium'
+      }
+    ],
+    easyMeals: ['Roasted peppers', 'Pepper strips', 'Stuffed peppers']
+  },
+  {
+    name: 'Ginger',
+    similarTo: 'Garlic',
+    cookingMethods: [
+      {
+        name: 'Minced in stir-fry',
+        description: 'Mince and add to hot oil for 30 seconds.',
+        tips: ['Don\'t burn it', 'Pairs with garlic and soy'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Grated in dressing',
+        description: 'Grate fresh and whisk into dressings.',
+        tips: ['Use microplane for fine grate', 'Pairs with sesame oil'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'In tea',
+        description: 'Simmer slices in water for ginger tea.',
+        tips: ['Add lemon and honey', 'Great for digestion'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'In marinades',
+        description: 'Grate and add to tofu/tempeh marinades.',
+        tips: ['Let marinate for flavor', 'Pairs with soy sauce'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Ginger tea', 'Stir-fry ginger', 'Ginger dressing']
+  },
+  {
+    name: 'Cashews',
+    similarTo: 'Almonds',
+    cookingMethods: [
+      {
+        name: 'Soaked and blended',
+        description: 'Soak 4 hours, blend into cream.',
+        tips: ['Use for vegan cheese sauces', 'Soak in hot water to speed up'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Roasted salty',
+        description: 'Toss with oil and salt, roast at 350°F for 15 min.',
+        tips: ['Watch closely - burn fast', 'Add nutritional yeast'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Cashew butter',
+        description: 'Blend in food processor until smooth.',
+        tips: ['Add oil if too thick', 'Use in smoothies'],
+        difficulty: 'medium'
+      },
+      {
+        name: 'In curries',
+        description: 'Add raw cashews to curries for creaminess.',
+        tips: ['Blend into sauce', 'Add at the end'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Cashew cream', 'Roasted cashews', 'Cashew butter']
   }
 ]
-
 export function getSuggestionsForFood(foodName: string): FoodSuggestion | undefined {
   return foodSuggestions.find(s => 
     s.name.toLowerCase() === foodName.toLowerCase()
