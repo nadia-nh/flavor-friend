@@ -703,7 +703,7 @@ handleAddCurrentSuggestion('curious')
     {/* Recipe Browser Section */}
     <section className="max-w-6xl mx-auto px-4 pb-8">
       <details className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-        <summary className="text-xl font-bold cursor-pointer hover:text-emerald-600 dark:hover:text-emerald-400">
+        <summary className="text-xl font-bold cursor-pointer hover:text-emerald-600 dark:hover:text-emerald-400 text-gray-800 dark:text-gray-200">
           📖 Recipe Browser ({recipes.length} recipes)
         </summary>
         <div className="mt-4">
