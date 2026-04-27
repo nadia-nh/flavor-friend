@@ -1,8 +1,9 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Food, FoodCategory, Attempt } from '@/lib/types'
+import { Food, FoodCategory, Attempt, Recipe } from '@/lib/types'
 import { getSuggestionsForFood, getSimilarFoods, getAllSuggestedFoods } from '@/lib/foods'
+import { recipes } from '@/lib/recipes'
 
 const STORAGE_KEY = 'flavorfriend-foods'
 
@@ -66,6 +67,7 @@ export default function Home() {
   const [dismissedSuggestions, setDismissedSuggestions] = useState<string[]>([])
   const [inputValues, setInputValues] = useState<Record<FoodCategory, string>>({ love: '', exploring: '', curious: '', notYet: '' })
   const [showAutocomplete, setShowAutocomplete] = useState<Record<string, boolean>>({})
+  const [recipeFilter, setRecipeFilter] = useState<string>('all')
   
   const allFoodNames = getAllSuggestedFoods()
   const existingFoodNames = foods.map(f => f.name.toLowerCase())
@@ -698,5 +700,65 @@ handleAddCurrentSuggestion('curious')
         <p>Your journey is unique. Go at your own pace. 💚</p>
       </footer>
     </main>
+
+    {/* Recipe Browser Section */}
+    <section className="max-w-6xl mx-auto px-4 pb-8">
+      <details className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+        <summary className="text-xl font-bold cursor-pointer hover:text-emerald-600 dark:hover:text-emerald-400">
+          📖 Recipe Browser ({recipes.length} recipes)
+        </summary>
+        <div className="mt-4">
+          {/* Category Filters */}
+          <div className="flex flex-wrap gap-2 mb-6">
+            {(['all', 'breakfast', 'lunch', 'dinner', 'dessert', 'snack', 'appetizer', 'side', 'soup', 'salad', 'quick', 'one-pot', 'pasta', 'drink', 'sauce'] as const).map(cat => (
+              <button
+                key={cat}
+                onClick={() => setRecipeFilter(cat)}
+                className={`px-3 py-1 rounded-full text-sm ${
+                  recipeFilter === cat
+                    ? 'bg-emerald-500 text-white'
+                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                }`}
+              >
+                {cat === 'all' ? 'All' : cat.charAt(0).toUpperCase() + cat.slice(1)}
+              </button>
+            ))}
+          </div>
+
+          {/* Recipe Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {recipes
+              .filter(r => recipeFilter === 'all' || r.category === recipeFilter)
+              .map((recipe, idx) => (
+                <div key={idx} className="bg-gray-50 dark:bg-gray-700 rounded-lg shadow p-2 hover:shadow-md transition-shadow">
+                  <img 
+                    src={recipe.image || '/placeholder-vegetable.png'} 
+                    alt={recipe.title}
+                    className="w-full h-32 object-cover rounded-md mb-2"
+                    onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder-vegetable.png' }}
+                  />
+                  <h3 className="text-sm font-medium text-gray-800 dark:text-gray-200 mb-1 line-clamp-2">{recipe.title}</h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{recipe.source}</p>
+                  {recipe.prepTime && (
+                    <span className="inline-block text-xs bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded-full mb-2">
+                      ⏱ {recipe.prepTime}
+                    </span>
+                  )}
+                  <a 
+                    href={recipe.link} 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block text-center text-sm bg-emerald-500 text-white py-1.5 rounded-lg hover:bg-emerald-600 transition-colors"
+                  >
+                    View Recipe
+                  </a>
+                </div>
+              ))}
+          </div>
+        </div>
+      </details>
+    </section>
+  )
+}
   )
 }
