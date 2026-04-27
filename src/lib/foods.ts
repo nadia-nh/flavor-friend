@@ -961,6 +961,68 @@ export const foodSuggestions: FoodSuggestion[] = [
       }
     ],
     easyMeals: ['Cashew cream', 'Roasted cashews', 'Cashew butter']
+  },
+  {
+    name: 'Coconut Milk',
+    similarTo: 'Almond Milk',
+    cookingMethods: [
+      {
+        name: 'In curries',
+        description: 'Add to curries for rich, creamy texture.',
+        tips: ['Full-fat is creamiest', 'Shake can well before opening'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'In smoothies',
+        description: 'Add a splash for creaminess.',
+        tips: ['Use canned, not carton', 'Blends smooth'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Whipped cream',
+        description: 'Chill can, scoop solid fat, whip with sugar.',
+        tips: ['Use full-fat only', 'Chill bowl and beaters too'],
+        difficulty: 'medium'
+      },
+      {
+        name: 'In soups',
+        description: 'Stir into soups for creamy texture.',
+        tips: ['Add at end to prevent curdling', 'Works in sweet or savory'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Coconut curry', 'Coconut smoothie', 'Coconut whipped cream']
+  },
+  {
+    name: 'Almonds',
+    similarTo: 'Cashews',
+    cookingMethods: [
+      {
+        name: 'Raw as snack',
+        description: 'Eat raw or roasted as snack.',
+        tips: ['Soak overnight to activate', 'Roast with salt'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Almond butter',
+        description: 'Blend in food processor until smooth.',
+        tips: ['Add oil if too thick', 'Use in smoothies'],
+        difficulty: 'medium'
+      },
+      {
+        name: 'Sliced in salads',
+        description: 'Top salads with sliced almonds.',
+        tips: ['Toast first for more flavor', 'Pairs with fruit salads'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Almond flour',
+        description: 'Grind and use in baking.',
+        tips: ['Blanch first for white flour', 'Store in freezer'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Almond butter', 'Roasted almonds', 'Almond salad']
   }
 ]
 export function getSuggestionsForFood(foodName: string): FoodSuggestion | undefined {
