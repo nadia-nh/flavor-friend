@@ -7,27 +7,26 @@ import { getSuggestionsForFood, getSimilarFoods, getAllSuggestedFoods } from '@/
 const STORAGE_KEY = 'flavorfriend-foods'
 
 const defaultFoods: Food[] = [
-  { id: '1', name: 'Chicken', category: 'safe', attempts: 10, lastAttempted: '2024-01-15', notes: '', methodUsed: '', attemptHistory: [] },
-  { id: '2', name: 'Rice', category: 'safe', attempts: 10, lastAttempted: '2024-01-15', notes: '', methodUsed: '', attemptHistory: [] },
-  { id: '3', name: 'Pasta', category: 'safe', attempts: 10, lastAttempted: '2024-01-15', notes: '', methodUsed: '', attemptHistory: [] },
-  { id: '4', name: 'Bread', category: 'safe', attempts: 10, lastAttempted: '2024-01-15', notes: '', methodUsed: '', attemptHistory: [] },
-  { id: '5', name: 'Broccoli', category: 'learning', attempts: 2, lastAttempted: '2024-01-10', notes: '', methodUsed: 'Roasted', attemptHistory: [
+  { id: '1', name: 'Rice', category: 'love', attempts: 10, lastAttempted: '2024-01-15', notes: '', methodUsed: '', attemptHistory: [] },
+  { id: '2', name: 'Pasta', category: 'love', attempts: 10, lastAttempted: '2024-01-15', notes: '', methodUsed: '', attemptHistory: [] },
+  { id: '3', name: 'Bread', category: 'love', attempts: 10, lastAttempted: '2024-01-15', notes: '', methodUsed: '', attemptHistory: [] },
+  { id: '4', name: 'Broccoli', category: 'exploring', attempts: 2, lastAttempted: '2024-01-10', notes: '', methodUsed: 'Roasted', attemptHistory: [
     { id: 'a1', date: '2024-01-08', method: 'Roasted', liked: false, notes: 'Too crunchy' },
     { id: 'a2', date: '2024-01-10', method: 'Steamed', liked: null, notes: 'It was okay' }
   ]},
-  { id: '6', name: 'Spinach', category: 'learning', attempts: 1, lastAttempted: '2024-01-12', notes: '', methodUsed: 'Smoothie', attemptHistory: [
+  { id: '5', name: 'Spinach', category: 'exploring', attempts: 1, lastAttempted: '2024-01-12', notes: '', methodUsed: 'Smoothie', attemptHistory: [
     { id: 'a3', date: '2024-01-12', method: 'Smoothie', liked: true, notes: 'Couldnt even taste it!' }
   ]},
-  { id: '7', name: 'Salmon', category: 'scary', attempts: 0, lastAttempted: null, notes: '', methodUsed: '', attemptHistory: [] },
-  { id: '8', name: 'Mushrooms', category: 'scary', attempts: 0, lastAttempted: null, notes: '', methodUsed: '', attemptHistory: [] },
-  { id: '9', name: 'Brussels Sprouts', category: 'scary', attempts: 0, lastAttempted: null, notes: '', methodUsed: '', attemptHistory: [] },
+  { id: '6', name: 'Mushrooms', category: 'curious', attempts: 0, lastAttempted: null, notes: '', methodUsed: '', attemptHistory: [] },
+  { id: '7', name: 'Brussels Sprouts', category: 'curious', attempts: 0, lastAttempted: null, notes: '', methodUsed: '', attemptHistory: [] },
+  { id: '8', name: 'Cauliflower', category: 'curious', attempts: 0, lastAttempted: null, notes: '', methodUsed: '', attemptHistory: [] },
 ]
 
 const getCategoryInfo = (dark: boolean): Record<FoodCategory, { label: string; emoji: string; color: string; headerColor: string }> => ({
-  safe: { label: 'Safe', emoji: '🟢', color: dark ? 'bg-emerald-900/50 shadow-md' : 'bg-emerald-50 shadow-md', headerColor: dark ? 'bg-gradient-to-r from-emerald-600 to-emerald-700' : 'bg-gradient-to-r from-emerald-300 to-emerald-400' },
-  learning: { label: 'Trying', emoji: '🟡', color: dark ? 'bg-amber-900/50 shadow-md' : 'bg-amber-50 shadow-md', headerColor: dark ? 'bg-gradient-to-r from-amber-600 to-amber-700' : 'bg-gradient-to-r from-amber-300 to-amber-400' },
-  scary: { label: 'Want to Try', emoji: '🟠', color: dark ? 'bg-orange-900/50 shadow-md' : 'bg-orange-50 shadow-md', headerColor: dark ? 'bg-gradient-to-r from-orange-600 to-orange-700' : 'bg-gradient-to-r from-orange-300 to-orange-400' },
-  never: { label: 'Never', emoji: '🔴', color: dark ? 'bg-rose-900/50 shadow-md' : 'bg-rose-50 shadow-md', headerColor: dark ? 'bg-gradient-to-r from-rose-600 to-rose-700' : 'bg-gradient-to-r from-rose-300 to-rose-400' },
+  love: { label: 'Love', emoji: '🟢', color: dark ? 'bg-emerald-900/50 shadow-md' : 'bg-emerald-50 shadow-md', headerColor: dark ? 'bg-gradient-to-r from-emerald-600 to-emerald-700' : 'bg-gradient-to-r from-emerald-300 to-emerald-400' },
+  exploring: { label: 'Exploring', emoji: '🌱', color: dark ? 'bg-lime-900/50 shadow-md' : 'bg-lime-50 shadow-md', headerColor: dark ? 'bg-gradient-to-r from-lime-600 to-lime-700' : 'bg-gradient-to-r from-lime-300 to-lime-400' },
+  curious: { label: 'Curious', emoji: '🌿', color: dark ? 'bg-amber-900/50 shadow-md' : 'bg-amber-50 shadow-md', headerColor: dark ? 'bg-gradient-to-r from-amber-600 to-amber-700' : 'bg-gradient-to-r from-amber-300 to-amber-400' },
+  notYet: { label: 'Not Yet', emoji: '🚫', color: dark ? 'bg-stone-900/50 shadow-md' : 'bg-stone-50 shadow-md', headerColor: dark ? 'bg-gradient-to-r from-stone-600 to-stone-700' : 'bg-gradient-to-r from-stone-300 to-stone-400' },
 })
 
 const encouragementMessages = [
@@ -65,7 +64,7 @@ export default function Home() {
   const [swipeY, setSwipeY] = useState(0)
   const [swipeDirection, setSwipeDirection] = useState<'up' | 'down' | null>(null)
   const [dismissedSuggestions, setDismissedSuggestions] = useState<string[]>([])
-  const [inputValues, setInputValues] = useState<Record<FoodCategory, string>>({ safe: '', learning: '', scary: '', never: '' })
+  const [inputValues, setInputValues] = useState<Record<FoodCategory, string>>({ love: '', exploring: '', curious: '', notYet: '' })
   const [showAutocomplete, setShowAutocomplete] = useState<Record<string, boolean>>({})
   
   const allFoodNames = getAllSuggestedFoods()
@@ -88,7 +87,7 @@ export default function Home() {
       const parsed = JSON.parse(stored)
       const migrated = parsed.map((f: Food) => ({
         ...f,
-        category: f.category === 'never' ? 'scary' : f.category
+        category: f.category === 'notYet' ? 'curious' : f.category
       }))
       setFoods(migrated)
     } else {
@@ -119,7 +118,7 @@ export default function Home() {
   }
 
   const moveFood = (food: Food, newCategory: FoodCategory) => {
-    if (newCategory === 'safe' && (food.category === 'learning' || food.category === 'scary') && !movedToSafe.includes(food.id)) {
+    if (newCategory === 'love' && (food.category === 'exploring' || food.category === 'curious') && !movedToSafe.includes(food.id)) {
       setMovedToSafe([...movedToSafe, food.id])
       setShowMessage(`Great! ${food.name} moved to Safe!`)
       setTimeout(() => setShowMessage(''), 2000)
@@ -174,7 +173,7 @@ export default function Home() {
     setAttemptModal(null)
   }
 
-  const safeFoodNames = foods.filter(f => f.category === 'safe').map(f => f.name)
+  const safeFoodNames = foods.filter(f => f.category === 'love').map(f => f.name)
   const allSuggested = getSimilarFoods(safeFoodNames)
   const availableSuggestions = allSuggested.filter(
     s => !dismissedSuggestions.includes(s) && !foods.some(f => f.name.toLowerCase() === s.toLowerCase())
@@ -228,9 +227,9 @@ export default function Home() {
     
     if (currentSuggestion) {
       if (deltaX > 100) {
-        handleAddCurrentSuggestion('scary')
+handleAddCurrentSuggestion('curious')
       } else if (deltaX < -100) {
-        handleAddCurrentSuggestion('never')
+        handleAddCurrentSuggestion('notYet')
       } else if (deltaY < -100) {
         setDismissedSuggestions([...dismissedSuggestions, currentSuggestion])
         setSuggestionIndex(prev => prev + 1)
@@ -246,11 +245,11 @@ export default function Home() {
     })
   }
 
-  const learningFoods = foods.filter(f => f.category === 'learning')
-  const completedFoods = learningFoods.filter(f => f.attempts >= 7)
-  const inProgressFoods = learningFoods.filter(f => f.attempts > 0)
+  const exploringFoods = foods.filter(f => f.category === 'exploring')
+  const completedFoods = exploringFoods.filter(f => f.attempts >= 7)
+  const inProgressFoods = exploringFoods.filter(f => f.attempts > 0)
 
-  const categories: FoodCategory[] = ['safe', 'learning', 'scary', 'never']
+  const categories: FoodCategory[] = ['love', 'exploring', 'curious', 'notYet']
 
   return (
     <main className={`min-h-screen p-4 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
@@ -325,7 +324,7 @@ export default function Home() {
 
               <div className="flex justify-center gap-2 mt-4">
                 <button
-                  onClick={() => handleAddCurrentSuggestion('never')}
+                  onClick={() => handleAddCurrentSuggestion('notYet')}
                   className="px-4 py-2 bg-red-100 text-red-700 rounded-xl hover:bg-red-200 font-medium"
                 >
                   ← Never
@@ -340,7 +339,7 @@ export default function Home() {
                   ↑ Maybe Later
                 </button>
                 <button
-                  onClick={() => handleAddCurrentSuggestion('scary')}
+                  onClick={() => handleAddCurrentSuggestion('curious')}
                   className="px-4 py-2 bg-orange-100 text-orange-700 rounded-xl hover:bg-orange-200 font-medium"
                 >
                   Want to Try →
@@ -452,7 +451,7 @@ export default function Home() {
                       >
                         {food.name}
                       </button>
-                      {cat === 'learning' ? (
+                      {cat === 'exploring' ? (
                         <div className="flex items-center gap-2">
                           <div className="relative w-6 h-6">
                             <svg className="w-6 h-6 transform -rotate-90">

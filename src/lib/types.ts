@@ -1,4 +1,4 @@
-export type FoodCategory = 'safe' | 'learning' | 'scary' | 'never'
+export type FoodCategory = 'love' | 'exploring' | 'curious' | 'notYet'
 
 export interface Attempt {
   id: string
