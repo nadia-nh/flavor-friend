@@ -1021,3 +1021,11 @@ export const recipes: Recipe[] = [
     difficulty: 'easy',
   },
 ];
+
+export function getRecipeForFood(foodName: string): Recipe | undefined {
+  const nameLower = foodName.toLowerCase()
+  return recipes.find(r => 
+    r.title.toLowerCase().includes(nameLower) || 
+    r.description.toLowerCase().includes(nameLower)
+  )
+}

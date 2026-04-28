@@ -1,9 +1,11 @@
-import { FoodSuggestion } from './types'
+import { FoodSuggestion, Recipe } from './types'
+import { recipes } from './recipes'
 
 export const foodSuggestions: FoodSuggestion[] = [
   {
     name: 'Broccoli',
-    similarTo: 'Green beans',
+    similarTo: ['Green beans', 'Cauliflower', 'Brussels Sprouts'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Broccoli_JG1.jpg/600px-Broccoli_JG1.jpg',
     cookingMethods: [
       {
         name: 'Roast with olive oil',
@@ -34,7 +36,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Spinach',
-    similarTo: 'Lettuce',
+    similarTo: ['Kale', 'Lettuce', 'Swiss Chard'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Spinach_JG1.jpg/600px-Spinach_JG1.jpg',
     cookingMethods: [
       {
         name: 'Add to smoothies',
@@ -65,7 +68,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Mushrooms',
-    similarTo: 'Tofu',
+    similarTo: ['Tofu', 'Eggplant', 'Portobello'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Agaricus_bisporus_white.JPG/600px-Agaricus_bisporus_white.JPG',
     cookingMethods: [
       {
         name: 'Grilled or roasted',
@@ -96,7 +100,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Brussels Sprouts',
-    similarTo: 'Cabbage',
+    similarTo: ['Cabbage', 'Broccoli', 'Kale'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Brussels_sprouts_JG1.jpg/600px-Brussels_sprouts_JG1.jpg',
     cookingMethods: [
       {
         name: 'Roast until crispy',
@@ -127,7 +132,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Bell Peppers',
-    similarTo: 'Cucumber',
+    similarTo: ['Cucumber', 'Tomatoes', 'Zucchini'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Red_and_Yellow_Peppers.JPG/600px-Red_and_Yellow_Peppers.JPG',
     cookingMethods: [
       {
         name: 'Stuff and bake',
@@ -158,7 +164,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Cauliflower',
-    similarTo: 'Potato',
+    similarTo: ['Potato', 'Broccoli', 'Romanesco'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Cauliflower_JG1.jpg/600px-Cauliflower_JG1.jpg',
     cookingMethods: [
       {
         name: 'Roasted simple',
@@ -189,7 +196,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Asparagus',
-    similarTo: 'Green beans',
+    similarTo: ['Green beans', 'Broccoli', 'Celery'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Asparagus_officinalis_with_crumbs.JPG/600px-Asparagus_officinalis_with_crumbs.JPG',
     cookingMethods: [
       {
         name: 'Roasted with nutritional yeast',
@@ -220,7 +228,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Zucchini',
-    similarTo: 'Cucumber',
+    similarTo: ['Cucumber', 'Squash', 'Patty Pan'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Zucchini_JG1.jpg/600px-Zucchini_JG1.jpg',
     cookingMethods: [
       {
         name: 'Noodles',
@@ -251,7 +260,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Avocado',
-    similarTo: 'Oil',
+    similarTo: ['Oil', 'Nuts', 'Olives'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Avocado_Hass.jpeg/600px-Avocado_Hass.jpeg',
     cookingMethods: [
       {
         name: 'On toast',
@@ -282,7 +292,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Tofu',
-    similarTo: 'Tempeh',
+    similarTo: ['Tempeh', 'Soy Curls', 'Chickpeas'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Firm_tofu_JG1.jpg/600px-Firm_tofu_JG1.jpg',
     cookingMethods: [
       {
         name: 'Press and marinate',
@@ -313,7 +324,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Green Beans',
-    similarTo: 'Broccoli',
+    similarTo: ['Broccoli', 'Asparagus', 'Snap Peas'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Green_beans_2.jpg/600px-Green_beans_2.jpg',
     cookingMethods: [
       {
         name: 'Roast with garlic',
@@ -344,7 +356,7 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Textured Vegetable Protein',
-    similarTo: 'Lentils',
+    similarTo: ['Lentils', 'Tofu', 'Soy Curls'],
     cookingMethods: [
       {
         name: 'Rehydrate and season',
@@ -375,7 +387,7 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Soy Curls',
-    similarTo: 'Tofu',
+    similarTo: ['Tofu', 'Tempeh', 'Textured Vegetable Protein'],
     cookingMethods: [
       {
         name: 'Rehydrate and marinate',
@@ -406,7 +418,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Quinoa',
-    similarTo: 'Rice',
+    similarTo: ['Rice', 'Couscous', 'Bulgur'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Quinoa_100g.jpg/600px-Quinoa_100g.jpg',
     cookingMethods: [
       {
         name: 'Plain with olive oil',
@@ -437,7 +450,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Sweet Potato',
-    similarTo: 'Potato',
+    similarTo: ['Potato', 'Carrots', 'Yams'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Sweet_Potatos_-_10.jpg/600px-Sweet_Potatos_-_10.jpg',
     cookingMethods: [
       {
         name: 'Bake and top',
@@ -468,7 +482,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Lentils',
-    similarTo: 'Beans',
+    similarTo: ['Beans', 'Split Peas', 'Textured Vegetable Protein'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Lentils_%28really%29.jpg/600px-Lentils_%28really%29.jpg',
     cookingMethods: [
       {
         name: 'Soup',
@@ -499,7 +514,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Chickpeas',
-    similarTo: 'Beans',
+    similarTo: ['Beans', 'Lentils', 'Peanuts'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Chickpeas_1.jpg/600px-Chickpeas_1.jpg',
     cookingMethods: [
       {
         name: 'Roasted crispy',
@@ -530,7 +546,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Oats',
-    similarTo: 'Bread',
+    similarTo: ['Bread', 'Barley', 'Rice'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Oatmeal_1.jpg/600px-Oatmeal_1.jpg',
     cookingMethods: [
       {
         name: 'Overnight',
@@ -561,7 +578,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Edamame',
-    similarTo: 'Peas',
+    similarTo: ['Peas', 'Lentils', 'Soybeans'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Edamame_soybeans_in_pod.jpg/600px-Edamame_soybeans_in_pod.jpg',
     cookingMethods: [
       {
         name: 'Steamed',
@@ -592,7 +610,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Eggplant',
-    similarTo: 'Mushrooms',
+    similarTo: ['Mushrooms', 'Zucchini', 'Tomatoes'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Eggplant_with_calories.jpg/600px-Eggplant_with_calories.jpg',
     cookingMethods: [
       {
         name: 'Roasted',
@@ -623,7 +642,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Kale',
-    similarTo: 'Spinach',
+    similarTo: ['Spinach', 'Swiss Chard', 'Collard Greens'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Kale_-_Trinidad_and_Tobago.jpg/600px-Kale_-_Trinidad_and_Tobago.jpg',
     cookingMethods: [
       {
         name: 'Chips',
@@ -654,7 +674,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Pasta',
-    similarTo: 'Bread',
+    similarTo: ['Bread', 'Rice', 'Couscous'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Cooked_pasta.jpg/600px-Cooked_pasta.jpg',
     cookingMethods: [
       {
         name: 'Plain with olive oil',
@@ -685,7 +706,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Rice',
-    similarTo: 'Bread',
+    similarTo: ['Bread', 'Quinoa', 'Barley'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Rice_grains_-_close-up_view.jpg/600px-Rice_grains_-_close-up_view.jpg',
     cookingMethods: [
       {
         name: 'Plain with olive oil',
@@ -716,7 +738,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Carrots',
-    similarTo: 'Sweet potato',
+    similarTo: ['Sweet potato', 'Bell Peppers', 'Beets'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Carrots_%28Daucus_carota_subsp._sativa%29_-_bunch.jpg/600px-Carrots_%28Daucus_carota_subsp._sativa%29_-_bunch.jpg',
     cookingMethods: [
       {
         name: 'Roast with oil',
@@ -747,7 +770,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Onions',
-    similarTo: 'Garlic',
+    similarTo: ['Garlic', 'Shallots', 'Leeks'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Onions_-_a_bunch.jpg/600px-Onions_-_a_bunch.jpg',
     cookingMethods: [
       {
         name: 'Sautéed',
@@ -778,7 +802,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Garlic',
-    similarTo: 'Onions',
+    similarTo: ['Onions', 'Shallots', 'Leeks'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Garlic_bulbs_and_cloves.jpg/600px-Garlic_bulbs_and_cloves.jpg',
     cookingMethods: [
       {
         name: 'Minced in oil',
@@ -809,7 +834,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Tomatoes',
-    similarTo: 'Bell peppers',
+    similarTo: ['Bell Peppers', 'Eggplant', 'Zucchini'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Tomato_julienne.jpg/600px-Tomato_julienne.jpg',
     cookingMethods: [
       {
         name: 'Roasted',
@@ -840,7 +866,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Cucumber',
-    similarTo: 'Zucchini',
+    similarTo: ['Zucchini', 'Celery', 'Jicama'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Cucumbers.jpg/600px-Cucumbers.jpg',
     cookingMethods: [
       {
         name: 'Raw in salads',
@@ -871,7 +898,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Peppers',
-    similarTo: 'Bell peppers',
+    similarTo: ['Bell Peppers', 'Chili Peppers', 'Poblano'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Pimentoes.jpg/600px-Pimentoes.jpg',
     cookingMethods: [
       {
         name: 'Roasted',
@@ -902,7 +930,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Ginger',
-    similarTo: 'Garlic',
+    similarTo: ['Garlic', 'Turmeric', 'Galangal'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Ginger_roots.jpg/600px-Ginger_roots.jpg',
     cookingMethods: [
       {
         name: 'Minced in stir-fry',
@@ -933,7 +962,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Cashews',
-    similarTo: 'Almonds',
+    similarTo: ['Almonds', 'Pecans', 'Hazelnuts'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Cashew_Nuts_-_Kerala.jpg/600px-Cashew_Nuts_-_Kerala.jpg',
     cookingMethods: [
       {
         name: 'Soaked and blended',
@@ -964,7 +994,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Coconut Milk',
-    similarTo: 'Almond Milk',
+    similarTo: ['Almond Milk', 'Oat Milk', 'Cream'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Coconut_milk%2C_extracted_from_grated_coconut%2C_Thailand.jpg/600px-Coconut_milk%2C_extracted_from_grated_coconut%2C_Thailand.jpg',
     cookingMethods: [
       {
         name: 'In curries',
@@ -995,7 +1026,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   },
   {
     name: 'Almonds',
-    similarTo: 'Cashews',
+    similarTo: ['Cashews', 'Walnuts', 'Pecans'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Blanched_almonds_and_almond_flour.jpg/600px-Blanched_almonds_and_almond_flour.jpg',
     cookingMethods: [
       {
         name: 'Raw as snack',
@@ -1034,8 +1066,42 @@ export function getSuggestionsForFood(foodName: string): FoodSuggestion | undefi
 export function getSimilarFoods(foods: string[]): string[] {
   return foodSuggestions
     .filter(s => !foods.some(f => f.toLowerCase() === s.name.toLowerCase()))
+    .filter(s => s.similarTo.some(similar => 
+      foods.some(f => f.toLowerCase() === similar.toLowerCase())
+    ))
     .slice(0, 5)
     .map(s => s.name)
+}
+
+export function getSimilarFoodsFallback(foods: string[], allFoods: string[]): string[] {
+  // First try popular ingredients not yet tried
+  const popularIngredients = ['Tofu', 'Chickpeas', 'Lentils', 'Sweet Potato', 'Mushrooms', 'Quinoa', 'Oats', 'Cauliflower', 'Spinach', 'Broccoli']
+  const available = popularIngredients.filter(p => 
+    !foods.some(f => f.toLowerCase() === p.toLowerCase()) &&
+    allFoods.some(a => a.toLowerCase() === p.toLowerCase())
+  )
+  if (available.length > 0) return available.slice(0, 5)
+  
+  // Then try most versatile (foods with 4+ cooking methods)
+  const versatile = foodSuggestions
+    .filter(s => s.cookingMethods.length >= 4)
+    .filter(s => !foods.some(f => f.toLowerCase() === s.name.toLowerCase()))
+    .map(s => s.name)
+  if (versatile.length > 0) return versatile.slice(0, 5)
+  
+  // Random fallback
+  const remaining = allFoods.filter(a => 
+    !foods.some(f => f.toLowerCase() === a.toLowerCase())
+  )
+  return remaining.sort(() => Math.random() - 0.5).slice(0, 5)
+}
+
+export function getRecipeForFood(foodName: string): Recipe | undefined {
+  const nameLower = foodName.toLowerCase()
+  return recipes.find(r => 
+    r.title.toLowerCase().includes(nameLower) || 
+    r.description.toLowerCase().includes(nameLower)
+  )
 }
 
 export function getAllSuggestedFoods(): string[] {

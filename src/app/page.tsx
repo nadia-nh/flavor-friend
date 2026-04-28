@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { Food, FoodCategory, Attempt, Recipe } from '@/lib/types'
-import { getSuggestionsForFood, getSimilarFoods, getAllSuggestedFoods } from '@/lib/foods'
-import { recipes } from '@/lib/recipes'
+import { getSuggestionsForFood, getSimilarFoods, getSimilarFoodsFallback, getAllSuggestedFoods, foodSuggestions } from '@/lib/foods'
+import { recipes, getRecipeForFood } from '@/lib/recipes'
 
 const STORAGE_KEY = 'flavorfriend-foods'
 
@@ -186,7 +186,15 @@ export default function Home() {
   const availableSuggestions = allSuggested.filter(
     s => !dismissedSuggestions.includes(s) && !foods.some(f => f.name.toLowerCase() === s.toLowerCase())
   )
-  const currentSuggestion = availableSuggestions[Math.max(0, suggestionIndex) % Math.max(1, availableSuggestions.length)]
+  const fallbackSuggestions = availableSuggestions.length === 0 
+    ? getSimilarFoodsFallback(safeFoodNames, allFoodNames)
+    : []
+  const allSuggestions = availableSuggestions.length > 0 ? availableSuggestions : fallbackSuggestions
+  const currentSuggestion = allSuggestions[Math.max(0, suggestionIndex) % Math.max(1, allSuggestions.length)]
+  const usingFallback = availableSuggestions.length === 0 && fallbackSuggestions.length > 0
+  
+  const suggestionData = currentSuggestion ? foodSuggestions.find(s => s.name === currentSuggestion) : undefined
+  const exampleRecipe = currentSuggestion ? getRecipeForFood(currentSuggestion) : undefined
 
   const handleSwipeDown = () => {
     if (currentSuggestion) {
@@ -310,24 +318,46 @@ handleAddCurrentSuggestion('curious')
                 onTouchMove={handleDragMove}
                 onTouchEnd={handleDragEnd}
               >
-                <div 
-                  className="absolute inset-0 bg-gradient-to-b from-green-50 to-green-100 rounded-2xl border border-green-300 shadow-lg flex flex-col items-center justify-center p-6 transition-transform"
-                  style={{
-                    transform: `translateY(${dragState.isDragging ? dragState.currentY - dragState.startY : 0}px) translateX(${dragState.isDragging ? dragState.currentX - dragState.startX : 0}px) rotate(${dragState.isDragging ? (dragState.currentX - dragState.startX) / 20 : 0}deg)`,
-                  }}
-                >
-                  <span className="text-4xl mb-2">🍽️</span>
-                  <span className="text-xl font-semibold text-green-800">{currentSuggestion}</span>
-                  <p className="text-sm text-green-600 mt-2">← Never | ↑ Later | Want to Try →</p>
-                  
-                  {dragState.isDragging && (
-                    <div className="absolute inset-0 flex items-center justify-around text-2xl opacity-30">
-                      <span>← Never</span>
-                      <span>↑ Later</span>
-                      <span>Want to Try →</span>
-                    </div>
-                  )}
-                </div>
+              <div 
+                className="absolute inset-0 bg-gradient-to-b from-green-50 to-green-100 rounded-2xl border border-green-300 shadow-lg flex flex-col items-center justify-center p-6 transition-transform"
+                style={{
+                  transform: `translateY(${dragState.isDragging ? dragState.currentY - dragState.startY : 0}px) translateX(${dragState.isDragging ? dragState.currentX - dragState.startX : 0}px) rotate(${dragState.isDragging ? (dragState.currentX - dragState.startX) / 20 : 0}deg)`,
+                }}
+              >
+                {suggestionData?.image && (
+                  <img 
+                    src={suggestionData.image} 
+                    alt={currentSuggestion}
+                    className="w-20 h-20 object-cover rounded-xl mb-2"
+                    onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder-vegetable.svg' }}
+                  />
+                )}
+                {!suggestionData?.image && <span className="text-4xl mb-2">🍽️</span>}
+                <span className="text-xl font-semibold text-green-800">{currentSuggestion}</span>
+                {usingFallback && (
+                  <span className="text-xs text-amber-600 mt-1">(Suggested for you)</span>
+                )}
+                {exampleRecipe && (
+                  <div className="mt-2 text-center">
+                    <img 
+                      src={exampleRecipe.image || '/placeholder-vegetable.svg'} 
+                      alt={exampleRecipe.title}
+                      className="w-24 h-16 object-cover rounded-lg mx-auto"
+                      onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder-vegetable.svg' }}
+                    />
+                    <p className="text-xs text-green-600 mt-1">Try: {exampleRecipe.title}</p>
+                  </div>
+                )}
+                <p className="text-sm text-green-600 mt-2">← Never | ↑ Later | Want to Try →</p>
+                
+                {dragState.isDragging && (
+                  <div className="absolute inset-0 flex items-center justify-around text-2xl opacity-30">
+                    <span>← Never</span>
+                    <span>↑ Later</span>
+                    <span>Want to Try →</span>
+                  </div>
+                )}
+              </div>
               </div>
 
               <div className="flex justify-center gap-2 mt-4">
@@ -355,7 +385,7 @@ handleAddCurrentSuggestion('curious')
               </div>
               
               <p className="text-xs text-center text-gray-400 mt-3">
-                {availableSuggestions.length} more suggestion{availableSuggestions.length !== 1 ? 's' : ''} available
+                {usingFallback ? 'Suggested for you' : `${availableSuggestions.length} more suggestion${availableSuggestions.length !== 1 ? 's' : ''} available`}
               </p>
             </>
           )}

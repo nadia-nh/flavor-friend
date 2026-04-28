@@ -28,9 +28,10 @@ export interface CookingMethod {
 
 export interface FoodSuggestion {
   name: string;
-  similarTo: string;
+  similarTo: string[];
   cookingMethods: CookingMethod[];
   easyMeals: string[];
+  image?: string;
 }
 
 export type RecipeCategory =
