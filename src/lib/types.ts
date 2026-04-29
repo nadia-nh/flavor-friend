@@ -1,4 +1,5 @@
 export type FoodCategory = 'love' | 'exploring' | 'curious' | 'notYet'
+export type FoodType = 'vegetable' | 'grain' | 'legume' | 'other'
 
 export interface Attempt {
   id: string
@@ -12,6 +13,7 @@ export interface Food {
   id: string
   name: string
   category: FoodCategory
+  foodType: FoodType
   attempts: number
   lastAttempted: string | null
   notes: string
@@ -28,6 +30,7 @@ export interface CookingMethod {
 
 export interface FoodSuggestion {
   name: string;
+  foodType: FoodType;
   similarTo: string[];
   cookingMethods: CookingMethod[];
   easyMeals: string[];
