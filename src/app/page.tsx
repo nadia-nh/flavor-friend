@@ -104,10 +104,12 @@ export default function Home() {
   const [attemptNotes, setAttemptNotes] = useState('')
   const [suggestionIndex, setSuggestionIndex] = useState(0)
   const [dismissedSuggestions, setDismissedSuggestions] = useState<string[]>([])
-  const [plateInputs, setPlateInputs] = useState<Record<FoodType, string>>({ vegetable: '', grain: '', legume: '', other: '' })
+  const [plateInput, setPlateInput] = useState('')
   const [exploringInput, setExploringInput] = useState('')
   const [showAutocomplete, setShowAutocomplete] = useState<Record<string, boolean>>({})
   const [recipeFilter, setRecipeFilter] = useState('all')
+  const [suggestionImgError, setSuggestionImgError] = useState(false)
+  const [suggestionImgUrl, setSuggestionImgUrl] = useState<string | null>(null)
   const cardRef = useRef<HTMLDivElement>(null)
   const [dragState, setDragState] = useState<DragState>({ isDragging: false, startX: 0, startY: 0, currentX: 0, currentY: 0 })
 
@@ -138,6 +140,7 @@ export default function Home() {
 
   const addFood = (name: string, category: FoodCategory, foodType?: FoodType) => {
     if (!name.trim()) return
+    if (foods.some(f => f.name.toLowerCase() === name.trim().toLowerCase())) return
     const newFood: Food = {
       id: Date.now().toString(),
       name: name.trim(),
@@ -193,8 +196,21 @@ export default function Home() {
     setAttemptModal(null)
   }
 
+  const addOrMoveFood = (name: string, category: FoodCategory) => {
+    const existing = foods.find(f => f.name.toLowerCase() === name.toLowerCase())
+    if (existing) {
+      if (existing.category !== category) moveFood(existing, category)
+    } else {
+      addFood(name, category)
+    }
+  }
+
+  useEffect(() => {
+    setSuggestionImgError(false)
+    setSuggestionImgUrl(null)
+  }, [suggestionIndex])
+
   const allFoodNames = getAllSuggestedFoods()
-  const existingFoodNames = foods.map(f => f.name.toLowerCase())
   const loveFoods = foods.filter(f => f.category === 'love')
   const exploringFoods = foods.filter(f => f.category === 'exploring')
   const safeFoodNames = loveFoods.map(f => f.name)
@@ -209,6 +225,16 @@ export default function Home() {
   const usingFallback = availableSuggestions.length === 0 && fallbackSuggestions.length > 0
   const suggestionData = currentSuggestion ? foodSuggestions.find(s => s.name === currentSuggestion) : undefined
   const exampleRecipe = currentSuggestion ? getRecipeForFood(currentSuggestion) : undefined
+
+  useEffect(() => {
+    if (!currentSuggestion) return
+    const controller = new AbortController()
+    fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(currentSuggestion)}`, { signal: controller.signal })
+      .then(r => r.json())
+      .then(data => { if (data.thumbnail?.source) setSuggestionImgUrl(data.thumbnail.source) })
+      .catch(() => {})
+    return () => controller.abort()
+  }, [currentSuggestion])
 
   const handleAddCurrentSuggestion = (category: FoodCategory) => {
     if (currentSuggestion) {
@@ -248,11 +274,12 @@ export default function Home() {
 
   const dm = darkMode
 
-  const renderAutocomplete = (key: string, inputVal: string, onSelect: (name: string) => void, dropUp = false) => {
+  const renderAutocomplete = (key: string, inputVal: string, onSelect: (name: string) => void, dropUp = false, excludeNames: string[] = []) => {
     if (!showAutocomplete[key] || inputVal.length === 0) return null
+    const excluded = new Set(excludeNames.map(n => n.toLowerCase()))
     const filtered = allFoodNames.filter(n =>
-      n.toLowerCase().includes(inputVal.toLowerCase()) && !existingFoodNames.includes(n.toLowerCase())
-    ).slice(0, 5)
+      n.toLowerCase().includes(inputVal.toLowerCase()) && !excluded.has(n.toLowerCase())
+    ).slice(0, 6)
     if (filtered.length === 0) return null
     return (
       <div className={`absolute z-20 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-36 overflow-y-auto ${dropUp ? 'bottom-full mb-1' : 'top-full mt-1'}`}>
@@ -315,8 +342,8 @@ export default function Home() {
                   className="absolute inset-0 bg-gradient-to-b from-green-50 to-green-100 rounded-2xl border border-green-300 shadow-lg flex flex-col items-center justify-center p-6"
                   style={{ transform: `translateY(${dragState.isDragging ? dragState.currentY - dragState.startY : 0}px) translateX(${dragState.isDragging ? dragState.currentX - dragState.startX : 0}px) rotate(${dragState.isDragging ? (dragState.currentX - dragState.startX) / 20 : 0}deg)` }}
                 >
-                  {suggestionData?.image
-                    ? <img src={suggestionData.image} alt={currentSuggestion} className="w-20 h-20 object-cover rounded-xl mb-2" onError={e => { (e.target as HTMLImageElement).src = '/placeholder-vegetable.svg' }} />
+                  {suggestionImgUrl && !suggestionImgError
+                    ? <img src={suggestionImgUrl} alt={currentSuggestion} className="w-20 h-20 object-cover rounded-xl mb-2" onError={() => setSuggestionImgError(true)} />
                     : <span className="text-4xl mb-2">🍽️</span>
                   }
                   <span className="text-xl font-semibold text-green-800">{currentSuggestion}</span>
@@ -386,45 +413,31 @@ export default function Home() {
             <circle cx={PLATE_CX} cy={PLATE_CY} r={INNER_R} fill={dm ? '#374151' : '#f9fafb'} stroke={dm ? '#4b5563' : '#e5e7eb'} strokeWidth="1" />
           </svg>
 
-          {/* Inputs below plate */}
-          <div className="grid grid-cols-2 gap-3 mt-5 max-w-sm mx-auto">
-            {FOOD_TYPES.map(ft => {
-              const cfg = FOOD_TYPE_CONFIG[ft]
-              const key = `plate-${ft}`
-              return (
-                <div key={ft} className="relative">
-                  <label className="block text-xs font-semibold mb-1" style={{ color: cfg.stroke }}>
-                    {cfg.emoji} {cfg.label}
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      value={plateInputs[ft]}
-                      placeholder={`Add…`}
-                      className="w-full px-2 py-1.5 text-sm border rounded-lg"
-                      style={{ borderColor: cfg.stroke + '70', background: dm ? '#1f2937' : cfg.fill + '60', color: dm ? '#f3f4f6' : '#1f2937' }}
-                      onChange={e => {
-                        setPlateInputs(p => ({ ...p, [ft]: e.target.value }))
-                        setShowAutocomplete(p => ({ ...p, [key]: e.target.value.length > 0 }))
-                      }}
-                      onFocus={() => { if (plateInputs[ft].length > 0) setShowAutocomplete(p => ({ ...p, [key]: true })) }}
-                      onBlur={() => { setTimeout(() => setShowAutocomplete(p => ({ ...p, [key]: false })), 200) }}
-                      onKeyDown={e => {
-                        if (e.key === 'Enter' && plateInputs[ft]) {
-                          addFood(plateInputs[ft], 'love', ft)
-                          setPlateInputs(p => ({ ...p, [ft]: '' }))
-                        }
-                      }}
-                    />
-                    {renderAutocomplete(key, plateInputs[ft], name => {
-                      addFood(name, 'love', ft)
-                      setPlateInputs(p => ({ ...p, [ft]: '' }))
-                      setShowAutocomplete(p => ({ ...p, [key]: false }))
-                    })}
-                  </div>
-                </div>
-              )
-            })}
+          {/* Single plate input */}
+          <div className="relative mt-5 max-w-sm mx-auto">
+            <input
+              type="text"
+              value={plateInput}
+              placeholder="Add food to your plate…"
+              className={`w-full px-4 py-2.5 text-sm border-2 rounded-xl ${dm ? 'bg-gray-800 border-gray-600 text-gray-100 placeholder-gray-500' : 'bg-white border-gray-300 placeholder-gray-400'} focus:outline-none focus:border-emerald-400`}
+              onChange={e => {
+                setPlateInput(e.target.value)
+                setShowAutocomplete(p => ({ ...p, plate: e.target.value.length > 0 }))
+              }}
+              onFocus={() => { if (plateInput.length > 0) setShowAutocomplete(p => ({ ...p, plate: true })) }}
+              onBlur={() => { setTimeout(() => setShowAutocomplete(p => ({ ...p, plate: false })), 200) }}
+              onKeyDown={e => {
+                if (e.key === 'Enter' && plateInput.trim()) {
+                  addOrMoveFood(plateInput.trim(), 'love')
+                  setPlateInput('')
+                }
+              }}
+            />
+            {renderAutocomplete('plate', plateInput, name => {
+              addOrMoveFood(name, 'love')
+              setPlateInput('')
+              setShowAutocomplete(p => ({ ...p, plate: false }))
+            }, false, loveFoods.map(f => f.name))}
           </div>
         </div>
 
@@ -476,16 +489,16 @@ export default function Home() {
               onBlur={() => { setTimeout(() => setShowAutocomplete(p => ({ ...p, exploring: false })), 200) }}
               onKeyDown={e => {
                 if (e.key === 'Enter' && exploringInput) {
-                  addFood(exploringInput, 'exploring')
+                  addOrMoveFood(exploringInput, 'exploring')
                   setExploringInput('')
                 }
               }}
             />
             {renderAutocomplete('exploring', exploringInput, name => {
-              addFood(name, 'exploring')
+              addOrMoveFood(name, 'exploring')
               setExploringInput('')
               setShowAutocomplete(p => ({ ...p, exploring: false }))
-            }, true)}
+            }, true, exploringFoods.map(f => f.name))}
           </div>
         </div>
       </div>

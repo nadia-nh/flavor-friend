@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Broccoli_JG1.jpg/320px-Broccoli_JG1.jpg\")",
+      "Bash(git add *)"
+    ]
+  }
+}
