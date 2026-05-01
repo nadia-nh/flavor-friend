@@ -35,6 +35,8 @@ export interface FoodSuggestion {
   cookingMethods: CookingMethod[];
   easyMeals: string[];
   image?: string;
+  /** Name of a more generic parent food — used as image fallback */
+  parent?: string;
 }
 
 export type RecipeCategory =

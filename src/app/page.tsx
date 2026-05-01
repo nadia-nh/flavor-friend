@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { Food, FoodCategory, FoodType, Attempt } from '@/lib/types'
-import { getSuggestionsForFood, getSimilarFoods, getSimilarFoodsFallback, getAllSuggestedFoods, getFoodType, foodSuggestions } from '@/lib/foods'
+import { getSuggestionsForFood, getParentSuggestion, getSimilarFoods, getSimilarFoodsFallback, getAllSuggestedFoods, getFoodType, foodSuggestions } from '@/lib/foods'
 import { recipes, getRecipeForFood } from '@/lib/recipes'
 
 const STORAGE_KEY = 'flavorfriend-foods'
@@ -60,6 +60,14 @@ const SPOONACULAR_SLUG_OVERRIDES: Record<string, string> = {
   'chia seeds': 'chia-seeds',
   'butternut squash': 'butternut-squash',
   'nutritional yeast': 'nutritional-yeast',
+  // grouped variants — strip the "(variant)" suffix to get a clean slug
+  'rice (all)': 'rice',
+  'rice (white)': 'white-rice',
+  'rice (brown)': 'brown-rice',
+  'beans (all)': 'black-beans',
+  'pasta (all)': 'pasta',
+  'pasta (wheat)': 'pasta',
+  'pasta (whole wheat)': 'whole-wheat-pasta',
 }
 
 function getIngredientImageUrl(foodName: string): string {
@@ -130,7 +138,7 @@ export default function Home() {
   const [exploringInput, setExploringInput] = useState('')
   const [showAutocomplete, setShowAutocomplete] = useState<Record<string, boolean>>({})
   const [recipeFilter, setRecipeFilter] = useState('all')
-  const [imgFallback, setImgFallback] = useState<'spoonacular' | 'fooddata' | 'emoji'>('spoonacular')
+  const [imgFallback, setImgFallback] = useState<'spoonacular' | 'fooddata' | 'parentimage' | 'emoji'>('spoonacular')
   const [platePopover, setPlatePopover] = useState<{food: Food; x: number; y: number} | null>(null)
   const [plateDragGhost, setPlateDragGhost] = useState<{svgX: number; svgY: number; outside: boolean; foodId: string} | null>(null)
   const plateRef = useRef<SVGSVGElement>(null)
@@ -426,14 +434,26 @@ export default function Home() {
                     {imgFallback !== 'emoji'
                       ? <img
                           key={`${currentSuggestion}-${imgFallback}`}
-                          src={imgFallback === 'spoonacular'
-                            ? getIngredientImageUrl(currentSuggestion)
-                            : getSuggestionsForFood(currentSuggestion)?.image ?? ''}
+                          src={
+                            imgFallback === 'spoonacular'
+                              ? getIngredientImageUrl(currentSuggestion)
+                              : imgFallback === 'fooddata'
+                              ? getSuggestionsForFood(currentSuggestion)?.image ?? ''
+                              : getParentSuggestion(currentSuggestion)?.image ?? ''
+                          }
                           alt={currentSuggestion}
                           className="w-full h-full object-cover"
                           onError={() => {
-                            if (imgFallback === 'spoonacular' && getSuggestionsForFood(currentSuggestion)?.image) {
-                              setImgFallback('fooddata')
+                            if (imgFallback === 'spoonacular') {
+                              const own = getSuggestionsForFood(currentSuggestion)?.image
+                              const parent = getParentSuggestion(currentSuggestion)?.image
+                              if (own) setImgFallback('fooddata')
+                              else if (parent) setImgFallback('parentimage')
+                              else setImgFallback('emoji')
+                            } else if (imgFallback === 'fooddata') {
+                              const parent = getParentSuggestion(currentSuggestion)?.image
+                              if (parent) setImgFallback('parentimage')
+                              else setImgFallback('emoji')
                             } else {
                               setImgFallback('emoji')
                             }

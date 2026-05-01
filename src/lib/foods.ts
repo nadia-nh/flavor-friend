@@ -694,9 +694,9 @@ export const foodSuggestions: FoodSuggestion[] = [
     easyMeals: ['Kale chips', 'Kale salad', 'Pasta with kale']
   },
   {
-    name: 'Pasta',
+    name: 'Pasta (All)',
     foodType: 'grain',
-    similarTo: ['Bread', 'Rice', 'Couscous'],
+    similarTo: ['Bread', 'Rice (All)', 'Couscous'],
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Cooked_pasta.jpg/320px-Cooked_pasta.jpg',
     cookingMethods: [
       {
@@ -727,9 +727,77 @@ export const foodSuggestions: FoodSuggestion[] = [
     easyMeals: ['Olive oil pasta', 'Pasta with sauce', 'Garlic pasta']
   },
   {
-    name: 'Rice',
+    name: 'Pasta (Wheat)',
     foodType: 'grain',
-    similarTo: ['Bread', 'Quinoa', 'Barley'],
+    parent: 'Pasta (All)',
+    similarTo: ['Pasta (All)', 'Pasta (Whole Wheat)', 'Rice (White)', 'Couscous'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Cooked_pasta.jpg/320px-Cooked_pasta.jpg',
+    cookingMethods: [
+      {
+        name: 'Al dente',
+        description: 'Boil in well-salted water, cook 1-2 min less than package says.',
+        tips: ['Taste as you go', 'Reserve pasta water to loosen sauces'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Baked pasta',
+        description: 'Undercook slightly, toss with sauce, bake covered at 375°F.',
+        tips: ['Uncover last 10 min for a crust', 'Great for batch cooking'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Cold pasta salad',
+        description: 'Cook, rinse cold, toss with vegetables and vinaigrette.',
+        tips: ['Short shapes like penne work best', 'Add chickpeas for protein'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'With pesto',
+        description: 'Toss hot pasta with fresh or jarred pesto.',
+        tips: ['Add a splash of pasta water', 'Top with toasted pine nuts'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Spaghetti marinara', 'Pasta salad', 'Pesto pasta']
+  },
+  {
+    name: 'Pasta (Whole Wheat)',
+    foodType: 'grain',
+    parent: 'Pasta (All)',
+    similarTo: ['Pasta (All)', 'Pasta (Wheat)', 'Rice (Brown)', 'Barley'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Cooked_pasta.jpg/320px-Cooked_pasta.jpg',
+    cookingMethods: [
+      {
+        name: 'With hearty sauces',
+        description: 'Pair with robust sauces like bolognese or arrabbiata.',
+        tips: ['Stronger flavour holds up to bold sauces', 'Cook until fully tender'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Cold grain bowl',
+        description: 'Cook, cool, and use like a grain in bowls.',
+        tips: ['Nutty flavour works well with roasted vegetables', 'Toss with lemon dressing'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Soup',
+        description: 'Add to vegetable soups in the last 10 min of cooking.',
+        tips: ['It swells and thickens the soup', 'Add extra broth if needed'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'With olive oil and greens',
+        description: 'Toss with wilted spinach or kale, garlic, and olive oil.',
+        tips: ['Simple preparation lets the nuttiness shine', 'Add lemon and chilli flakes'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Whole wheat bolognese', 'Whole wheat grain bowl', 'Pasta e fagioli']
+  },
+  {
+    name: 'Rice (All)',
+    foodType: 'grain',
+    similarTo: ['Bread', 'Quinoa', 'Barley', 'Pasta (All)'],
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Rice_grains_-_close-up_view.jpg/320px-Rice_grains_-_close-up_view.jpg',
     cookingMethods: [
       {
@@ -758,6 +826,74 @@ export const foodSuggestions: FoodSuggestion[] = [
       }
     ],
     easyMeals: ['Plain rice', 'Fried rice', 'Rice bowls']
+  },
+  {
+    name: 'Rice (White)',
+    foodType: 'grain',
+    parent: 'Rice (All)',
+    similarTo: ['Rice (All)', 'Rice (Brown)', 'Quinoa', 'Barley'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Rice_grains_-_close-up_view.jpg/320px-Rice_grains_-_close-up_view.jpg',
+    cookingMethods: [
+      {
+        name: 'Steamed',
+        description: 'Rinse well and steam or cook with a 1:1.5 water ratio.',
+        tips: ['Rinsing removes excess starch for fluffier rice', 'Rest covered for 5 min after cooking'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Fried rice',
+        description: 'Use day-old white rice for the best fried rice.',
+        tips: ['Cold rice fries better than fresh', 'High heat and quick movement is key'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Congee',
+        description: 'Simmer in a large amount of broth until thick and porridge-like.',
+        tips: ['Takes 45-60 min of simmering', 'Top with ginger and green onions'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Sushi rice',
+        description: 'Season cooked short-grain white rice with rice vinegar.',
+        tips: ['Short-grain or sushi rice is stickier', 'Fan while folding in vinegar'],
+        difficulty: 'medium'
+      }
+    ],
+    easyMeals: ['Steamed white rice', 'Fried rice', 'Congee']
+  },
+  {
+    name: 'Rice (Brown)',
+    foodType: 'grain',
+    parent: 'Rice (All)',
+    similarTo: ['Rice (All)', 'Rice (White)', 'Quinoa', 'Barley'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Brown_rice.jpg/320px-Brown_rice.jpg',
+    cookingMethods: [
+      {
+        name: 'Steamed',
+        description: 'Cook with a 1:2 water ratio for 40-45 min.',
+        tips: ['Takes longer than white rice', 'Toasting in oil first adds nuttiness'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Brown rice bowls',
+        description: 'Use as a hearty base for grain bowls with roasted veg.',
+        tips: ['Nutty flavour pairs well with tahini', 'Batch cook and refrigerate'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Fried rice',
+        description: 'Use day-old brown rice in stir-fries.',
+        tips: ['Chewier texture than white rice fried rice', 'Add sesame oil at the end'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Stuffed peppers',
+        description: 'Mix cooked brown rice with beans and spices to stuff peppers.',
+        tips: ['Pre-cook the rice fully before stuffing', 'Adds fibre and chew'],
+        difficulty: 'medium'
+      }
+    ],
+    easyMeals: ['Brown rice bowls', 'Fried brown rice', 'Stuffed peppers']
   },
   {
     name: 'Carrots',
@@ -1090,9 +1226,43 @@ export const foodSuggestions: FoodSuggestion[] = [
     easyMeals: ['Almond butter', 'Roasted almonds', 'Almond salad']
   },
   {
+    name: 'Beans (All)',
+    foodType: 'legume',
+    similarTo: ['Chickpeas', 'Lentils', 'Tofu'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Black_beans.jpg/320px-Black_beans.jpg',
+    cookingMethods: [
+      {
+        name: 'From a can',
+        description: 'Drain, rinse, and warm in a pan with garlic and olive oil.',
+        tips: ['The fastest way to add protein', 'Season well with salt and cumin'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'From dried',
+        description: 'Soak overnight, then simmer in fresh water for 1-2 hours.',
+        tips: ['Better texture than canned', 'Add aromatics like bay leaf and garlic'],
+        difficulty: 'medium'
+      },
+      {
+        name: 'Mashed as a spread',
+        description: 'Mash cooked beans with olive oil, lemon, and garlic.',
+        tips: ['Great on toast or in sandwiches', 'Add roasted garlic for depth'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'In stews and soups',
+        description: 'Add to soups and stews for hearty protein.',
+        tips: ['They thicken the broth naturally', 'Add in the last 20 min to keep shape'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Bean tacos', 'Bean soup', 'Beans on toast']
+  },
+  {
     name: 'Black Beans',
     foodType: 'legume',
-    similarTo: ['Chickpeas', 'Lentils', 'Kidney Beans'],
+    parent: 'Beans (All)',
+    similarTo: ['Beans (All)', 'Chickpeas', 'Lentils', 'Kidney Beans'],
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Black_beans.jpg/320px-Black_beans.jpg',
     cookingMethods: [
       {
@@ -1587,7 +1757,8 @@ export const foodSuggestions: FoodSuggestion[] = [
   {
     name: 'Kidney Beans',
     foodType: 'legume',
-    similarTo: ['Black Beans', 'Chickpeas', 'Lentils'],
+    parent: 'Beans (All)',
+    similarTo: ['Beans (All)', 'Black Beans', 'Chickpeas', 'Lentils'],
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/RedKidneyBeans.jpg/320px-RedKidneyBeans.jpg',
     cookingMethods: [
       {
@@ -1751,9 +1922,15 @@ export const foodSuggestions: FoodSuggestion[] = [
   }
 ]
 export function getSuggestionsForFood(foodName: string): FoodSuggestion | undefined {
-  return foodSuggestions.find(s => 
+  return foodSuggestions.find(s =>
     s.name.toLowerCase() === foodName.toLowerCase()
   )
+}
+
+export function getParentSuggestion(foodName: string): FoodSuggestion | undefined {
+  const food = getSuggestionsForFood(foodName)
+  if (!food?.parent) return undefined
+  return getSuggestionsForFood(food.parent)
 }
 
 export function getSimilarFoods(foods: string[]): string[] {
