@@ -45,8 +45,21 @@ const encouragementMessages = [
   "Small steps lead to big discoveries!",
 ]
 
+// Spoonacular CDN slugs that differ from the simple lowercase-with-dashes food name
+const SPOONACULAR_SLUG_OVERRIDES: Record<string, string> = {
+  'oats': 'rolled-oats',
+  'sweet potato': 'sweet-potatoes',
+  'bell peppers': 'bell-pepper',
+  'brussels sprouts': 'brussels-sprouts',
+  'green beans': 'green-beans',
+  'coconut milk': 'coconut-milk',
+  'textured vegetable protein': 'tvp',
+  'soy curls': 'soybeans',
+}
+
 function getIngredientImageUrl(foodName: string): string {
-  const slug = foodName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+  const key = foodName.toLowerCase()
+  const slug = SPOONACULAR_SLUG_OVERRIDES[key] ?? key.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
   return `https://spoonacular.com/cdn/ingredients_500x500/${slug}.jpg`
 }
 
@@ -112,7 +125,7 @@ export default function Home() {
   const [exploringInput, setExploringInput] = useState('')
   const [showAutocomplete, setShowAutocomplete] = useState<Record<string, boolean>>({})
   const [recipeFilter, setRecipeFilter] = useState('all')
-  const [suggestionImgError, setSuggestionImgError] = useState(false)
+  const [imgFallback, setImgFallback] = useState<'spoonacular' | 'fooddata' | 'emoji'>('spoonacular')
   const [platePopover, setPlatePopover] = useState<{food: Food; x: number; y: number} | null>(null)
   const [plateDragGhost, setPlateDragGhost] = useState<{svgX: number; svgY: number; outside: boolean; foodId: string} | null>(null)
   const plateRef = useRef<SVGSVGElement>(null)
@@ -282,7 +295,7 @@ export default function Home() {
   const exampleRecipe = currentSuggestion ? getRecipeForFood(currentSuggestion) : undefined
 
   useEffect(() => {
-    setSuggestionImgError(false)
+    setImgFallback('spoonacular')
   }, [currentSuggestion])
 
   const handleAddCurrentSuggestion = (category: FoodCategory) => {
@@ -405,8 +418,22 @@ export default function Home() {
                 >
                   {/* Full-width image area */}
                   <div className="relative w-full flex-1 bg-green-100 flex items-center justify-center overflow-hidden">
-                    {!suggestionImgError
-                      ? <img key={currentSuggestion} src={getIngredientImageUrl(currentSuggestion)} alt={currentSuggestion} className="w-full h-full object-cover" onError={() => setSuggestionImgError(true)} />
+                    {imgFallback !== 'emoji'
+                      ? <img
+                          key={`${currentSuggestion}-${imgFallback}`}
+                          src={imgFallback === 'spoonacular'
+                            ? getIngredientImageUrl(currentSuggestion)
+                            : getSuggestionsForFood(currentSuggestion)?.image ?? ''}
+                          alt={currentSuggestion}
+                          className="w-full h-full object-cover"
+                          onError={() => {
+                            if (imgFallback === 'spoonacular' && getSuggestionsForFood(currentSuggestion)?.image) {
+                              setImgFallback('fooddata')
+                            } else {
+                              setImgFallback('emoji')
+                            }
+                          }}
+                        />
                       : <span className="text-7xl">🍽️</span>
                     }
                     {/* Gradient overlay for text legibility */}
