@@ -44,7 +44,10 @@ const encouragementMessages = [
   "Small steps lead to big discoveries!",
 ]
 
-interface DragState { isDragging: boolean; startX: number; startY: number; currentX: number; currentY: number }
+function getIngredientImageUrl(foodName: string): string {
+  const slug = foodName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+  return `https://spoonacular.com/cdn/ingredients_500x500/${slug}.jpg`
+}
 
 const PLATE_CX = 200
 const PLATE_CY = 200
@@ -109,13 +112,14 @@ export default function Home() {
   const [showAutocomplete, setShowAutocomplete] = useState<Record<string, boolean>>({})
   const [recipeFilter, setRecipeFilter] = useState('all')
   const [suggestionImgError, setSuggestionImgError] = useState(false)
-  const [suggestionImgUrl, setSuggestionImgUrl] = useState<string | null>(null)
   const [platePopover, setPlatePopover] = useState<{food: Food; x: number; y: number} | null>(null)
   const [plateDragGhost, setPlateDragGhost] = useState<{svgX: number; svgY: number; outside: boolean; foodId: string} | null>(null)
   const plateRef = useRef<SVGSVGElement>(null)
   const plateDragRef = useRef<{food: Food; startX: number; startY: number; curX: number; curY: number; outside: boolean} | null>(null)
   const cardRef = useRef<HTMLDivElement>(null)
-  const [dragState, setDragState] = useState<DragState>({ isDragging: false, startX: 0, startY: 0, currentX: 0, currentY: 0 })
+  const cardInnerRef = useRef<HTMLDivElement>(null)
+  const cardDragRef = useRef<{startX: number; deltaX: number} | null>(null)
+  const [swipeDir, setSwipeDir] = useState<'left' | 'right' | null>(null)
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY)
@@ -244,7 +248,6 @@ export default function Home() {
 
   useEffect(() => {
     setSuggestionImgError(false)
-    setSuggestionImgUrl(null)
   }, [suggestionIndex])
 
   const allFoodNames = getAllSuggestedFoods()
@@ -263,16 +266,6 @@ export default function Home() {
   const suggestionData = currentSuggestion ? foodSuggestions.find(s => s.name === currentSuggestion) : undefined
   const exampleRecipe = currentSuggestion ? getRecipeForFood(currentSuggestion) : undefined
 
-  useEffect(() => {
-    if (!currentSuggestion) return
-    const controller = new AbortController()
-    fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(currentSuggestion)}`, { signal: controller.signal })
-      .then(r => r.json())
-      .then(data => { if (data.thumbnail?.source) setSuggestionImgUrl(data.thumbnail.source) })
-      .catch(() => {})
-    return () => controller.abort()
-  }, [currentSuggestion])
-
   const handleAddCurrentSuggestion = (category: FoodCategory) => {
     if (currentSuggestion) {
       addFood(currentSuggestion, category)
@@ -281,28 +274,36 @@ export default function Home() {
     }
   }
 
-  const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
-    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
-    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
-    setDragState({ isDragging: true, startX: clientX, startY: clientY, currentX: clientX, currentY: clientY })
+  const handleCardPointerDown = (e: React.PointerEvent) => {
+    e.preventDefault()
+    cardDragRef.current = { startX: e.clientX, deltaX: 0 }
+    cardRef.current?.setPointerCapture(e.pointerId)
   }
 
-  const handleDragMove = (e: React.MouseEvent | React.TouchEvent) => {
-    if (!dragState.isDragging) return
-    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
-    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
-    setDragState(prev => ({ ...prev, currentX: clientX, currentY: clientY }))
+  const handleCardPointerMove = (e: React.PointerEvent) => {
+    const drag = cardDragRef.current
+    if (!drag) return
+    const deltaX = e.clientX - drag.startX
+    drag.deltaX = deltaX
+    if (cardInnerRef.current) {
+      cardInnerRef.current.style.transform = `translateX(${deltaX}px) rotate(${deltaX / 20}deg)`
+    }
+    setSwipeDir(deltaX > 30 ? 'right' : deltaX < -30 ? 'left' : null)
   }
 
-  const handleDragEnd = () => {
-    if (!dragState.isDragging) return
-    const deltaX = dragState.currentX - dragState.startX
-    const deltaY = dragState.currentY - dragState.startY
+  const handleCardPointerUp = () => {
+    const drag = cardDragRef.current
+    if (!drag) return
+    const { deltaX } = drag
+    cardDragRef.current = null
+    if (cardInnerRef.current) {
+      cardInnerRef.current.style.transform = ''
+    }
+    setSwipeDir(null)
     if (currentSuggestion) {
-      if (deltaX > 60) handleAddCurrentSuggestion('curious')
+      if (deltaX > 60) handleAddCurrentSuggestion('exploring')
       else if (deltaX < -60) setSuggestionIndex(prev => prev + 1)
     }
-    setDragState({ isDragging: false, startX: 0, startY: 0, currentX: 0, currentY: 0 })
   }
 
   const dm = darkMode
@@ -369,18 +370,21 @@ export default function Home() {
               {/* Swipeable card */}
               <div
                 ref={cardRef}
-                className="relative h-64 cursor-grab active:cursor-grabbing select-none"
-                onMouseDown={handleDragStart} onMouseMove={handleDragMove} onMouseUp={handleDragEnd} onMouseLeave={handleDragEnd}
-                onTouchStart={handleDragStart} onTouchMove={handleDragMove} onTouchEnd={handleDragEnd}
+                className="relative h-64 cursor-grab active:cursor-grabbing select-none touch-none"
+                onPointerDown={handleCardPointerDown}
+                onPointerMove={handleCardPointerMove}
+                onPointerUp={handleCardPointerUp}
+                onPointerCancel={handleCardPointerUp}
               >
                 <div
+                  ref={cardInnerRef}
                   className="absolute inset-0 bg-white rounded-2xl border border-green-200 shadow-lg overflow-hidden flex flex-col"
-                  style={{ transform: `translateX(${dragState.isDragging ? dragState.currentX - dragState.startX : 0}px) rotate(${dragState.isDragging ? (dragState.currentX - dragState.startX) / 20 : 0}deg)` }}
+                  style={{ willChange: 'transform' }}
                 >
                   {/* Full-width image area */}
                   <div className="relative w-full flex-1 bg-green-100 flex items-center justify-center overflow-hidden">
-                    {suggestionImgUrl && !suggestionImgError
-                      ? <img src={suggestionImgUrl} alt={currentSuggestion} className="w-full h-full object-cover" onError={() => setSuggestionImgError(true)} />
+                    {!suggestionImgError
+                      ? <img key={currentSuggestion} src={getIngredientImageUrl(currentSuggestion)} alt={currentSuggestion} className="w-full h-full object-cover" onError={() => setSuggestionImgError(true)} />
                       : <span className="text-7xl">🍽️</span>
                     }
                     {/* Gradient overlay for text legibility */}
@@ -399,12 +403,12 @@ export default function Home() {
                 </div>
 
                 {/* Swipe overlays */}
-                {dragState.isDragging && (dragState.currentX - dragState.startX) > 30 && (
+                {swipeDir === 'right' && (
                   <div className="absolute inset-0 bg-green-400/30 rounded-2xl flex items-center justify-center pointer-events-none">
                     <span className="text-white font-bold text-2xl drop-shadow-lg">✓ Try it!</span>
                   </div>
                 )}
-                {dragState.isDragging && (dragState.currentX - dragState.startX) < -30 && (
+                {swipeDir === 'left' && (
                   <div className="absolute inset-0 bg-gray-400/30 rounded-2xl flex items-center justify-center pointer-events-none">
                     <span className="text-white font-bold text-2xl drop-shadow-lg">→ Skip</span>
                   </div>
@@ -429,7 +433,7 @@ export default function Home() {
                 </div>
                 <div className="flex flex-col items-center gap-1">
                   <button
-                    onClick={() => handleAddCurrentSuggestion('curious')}
+                    onClick={() => handleAddCurrentSuggestion('exploring')}
                     className="w-14 h-14 rounded-full bg-green-100 text-green-700 text-2xl hover:bg-green-200 flex items-center justify-center shadow transition-colors"
                   >
                     ✓
