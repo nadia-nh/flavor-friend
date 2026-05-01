@@ -55,6 +55,11 @@ const SPOONACULAR_SLUG_OVERRIDES: Record<string, string> = {
   'coconut milk': 'coconut-milk',
   'textured vegetable protein': 'tvp',
   'soy curls': 'soybeans',
+  'black beans': 'black-beans',
+  'kidney beans': 'kidney-beans',
+  'chia seeds': 'chia-seeds',
+  'butternut squash': 'butternut-squash',
+  'nutritional yeast': 'nutritional-yeast',
 }
 
 function getIngredientImageUrl(foodName: string): string {

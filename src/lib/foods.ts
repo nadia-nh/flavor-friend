@@ -1088,6 +1088,666 @@ export const foodSuggestions: FoodSuggestion[] = [
       }
     ],
     easyMeals: ['Almond butter', 'Roasted almonds', 'Almond salad']
+  },
+  {
+    name: 'Black Beans',
+    foodType: 'legume',
+    similarTo: ['Chickpeas', 'Lentils', 'Kidney Beans'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Black_beans.jpg/320px-Black_beans.jpg',
+    cookingMethods: [
+      {
+        name: 'Tacos or burritos',
+        description: 'Season canned black beans with cumin and garlic, warm through.',
+        tips: ['Mash some for creamier texture', 'Add lime juice at the end'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Black bean soup',
+        description: 'Simmer with onion, garlic, and vegetable broth until thick.',
+        tips: ['Blend half for creamy texture', 'Top with lime and cilantro'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Black bean burgers',
+        description: 'Mash with oats and spices, form patties, pan-fry or bake.',
+        tips: ['Chill patties before cooking', 'Add smoked paprika for depth'],
+        difficulty: 'medium'
+      },
+      {
+        name: 'Rice and beans',
+        description: 'Serve over white rice with sofrito seasoning.',
+        tips: ['Use canned beans for convenience', 'Add a bay leaf while warming'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Black bean tacos', 'Black bean soup', 'Rice and beans']
+  },
+  {
+    name: 'Tempeh',
+    foodType: 'legume',
+    similarTo: ['Tofu', 'Soy Curls', 'Seitan'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Tempeh.jpg/320px-Tempeh.jpg',
+    cookingMethods: [
+      {
+        name: 'Marinate and pan-fry',
+        description: 'Slice thin, marinate in soy sauce and garlic, fry until golden.',
+        tips: ['Steam for 10 min first to reduce bitterness', 'Press out moisture before marinating'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Crumbled in bolognese',
+        description: 'Crumble and brown with tomatoes and herbs.',
+        tips: ['Smaller crumbles soak up sauce better', 'Add nutritional yeast'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Baked with glaze',
+        description: 'Slice, coat in maple-soy glaze, bake at 400°F for 20 min.',
+        tips: ['Flip halfway through', 'Gets nicely caramelized'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'BLT sandwich',
+        description: 'Slice thin, marinate in smoky sauce, fry until crispy.',
+        tips: ['Liquid smoke adds depth', 'Get it really crispy'],
+        difficulty: 'medium'
+      }
+    ],
+    easyMeals: ['Tempeh stir-fry', 'Tempeh bolognese', 'Tempeh BLT']
+  },
+  {
+    name: 'Seitan',
+    foodType: 'legume',
+    similarTo: ['Tempeh', 'Tofu', 'Soy Curls'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Seitan_pieces.jpg/320px-Seitan_pieces.jpg',
+    cookingMethods: [
+      {
+        name: 'Stir-fry',
+        description: 'Slice and stir-fry with soy sauce and vegetables.',
+        tips: ['High heat gets a good sear', 'Add hoisin for extra flavor'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Roast whole',
+        description: 'Season and roast as a centrepiece at 375°F for 45 min.',
+        tips: ['Baste with marinade as it cooks', 'Rest before slicing'],
+        difficulty: 'medium'
+      },
+      {
+        name: 'Kebabs',
+        description: 'Cube, skewer with vegetables, grill or roast.',
+        tips: ['Marinate overnight for best flavor', 'Use sturdy vegetables'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Sandwich slices',
+        description: 'Slice thin and pan-fry with herbs for sandwiches.',
+        tips: ['Use store-bought for convenience', 'Mustard and pickles complement well'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Seitan stir-fry', 'Seitan roast', 'Seitan kebabs']
+  },
+  {
+    name: 'Peas',
+    foodType: 'legume',
+    similarTo: ['Edamame', 'Green Beans', 'Snap Peas'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Garden_peas_-_studio.jpg/320px-Garden_peas_-_studio.jpg',
+    cookingMethods: [
+      {
+        name: 'Mashed peas on toast',
+        description: 'Cook and mash with mint and lemon, spread on toast.',
+        tips: ['Frozen peas work perfectly', 'Add a little olive oil'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Pea soup',
+        description: 'Simmer with onion and broth, blend until smooth.',
+        tips: ['Add fresh mint at the end', 'A swirl of oat cream is great'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Fried rice',
+        description: 'Toss into fried rice in the last minute of cooking.',
+        tips: ['Frozen peas go straight in', 'They cook in 1-2 minutes'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Pasta with peas',
+        description: 'Blend into a creamy pea sauce or toss in whole.',
+        tips: ['Blend half for a vibrant sauce', 'Add lemon and basil'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Pea soup', 'Mushy peas', 'Pea pasta']
+  },
+  {
+    name: 'Corn',
+    foodType: 'grain',
+    similarTo: ['Peas', 'Bell Peppers', 'Carrots'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Cornflower_on_corn.jpg/320px-Cornflower_on_corn.jpg',
+    cookingMethods: [
+      {
+        name: 'Grilled on the cob',
+        description: 'Grill whole cobs over medium heat, turning every 3 min.',
+        tips: ['Brush with herb butter or chilli oil', 'Char marks add flavour'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Corn salsa',
+        description: 'Mix charred or raw corn with tomato, onion, and lime.',
+        tips: ['Char in a dry pan for sweetness', 'Great with black beans'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Corn chowder',
+        description: 'Simmer with potato, broth, and coconut milk.',
+        tips: ['Blend part of it for creaminess', 'Add smoked paprika'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Elote style',
+        description: 'Brush cooked cob with mayo, chilli, and lime.',
+        tips: ['Use vegan mayo', 'Nutritional yeast works instead of cheese'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Grilled corn', 'Corn salsa', 'Corn chowder']
+  },
+  {
+    name: 'Beets',
+    foodType: 'vegetable',
+    similarTo: ['Carrots', 'Sweet Potato', 'Turnip'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Beet_%28raw%29.jpg/320px-Beet_%28raw%29.jpg',
+    cookingMethods: [
+      {
+        name: 'Roasted',
+        description: 'Wrap in foil and roast at 400°F for 45-60 min until tender.',
+        tips: ['Skins slip off easily after roasting', 'Wear gloves to avoid staining'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Beet hummus',
+        description: 'Blend roasted beets with chickpeas, tahini, and lemon.',
+        tips: ['Stunning pink colour', 'Slightly sweeter than classic hummus'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Raw grated salad',
+        description: 'Grate raw and toss with lemon dressing.',
+        tips: ['Use a box grater or food processor', 'Pairs well with apple'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Pickled',
+        description: 'Slice and pickle in vinegar brine with spices.',
+        tips: ['Quick pickle takes just a few hours', 'Great on grain bowls'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Roasted beets', 'Beet hummus', 'Pickled beets']
+  },
+  {
+    name: 'Leeks',
+    foodType: 'vegetable',
+    similarTo: ['Onions', 'Garlic', 'Shallots'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Leeks.jpg/320px-Leeks.jpg',
+    cookingMethods: [
+      {
+        name: 'Sautéed in butter',
+        description: 'Slice and cook slowly in oil until soft and sweet.',
+        tips: ['Low heat brings out the sweetness', 'Add a pinch of salt early'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Leek and potato soup',
+        description: 'Simmer with potato and broth, blend until silky.',
+        tips: ['Use the white and light green parts', 'Add oat cream at the end'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Roasted whole',
+        description: 'Halve lengthways, brush with oil, roast at 400°F for 25 min.',
+        tips: ['Cut side down first for caramelisation', 'Add lemon after roasting'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'In pasta',
+        description: 'Sauté until soft, toss with pasta and white wine.',
+        tips: ['Pairs beautifully with lemon', 'Add capers for saltiness'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Leek soup', 'Sautéed leeks', 'Leek pasta']
+  },
+  {
+    name: 'Butternut Squash',
+    foodType: 'vegetable',
+    similarTo: ['Sweet Potato', 'Pumpkin', 'Carrots'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Butternut_squash.jpg/320px-Butternut_squash.jpg',
+    cookingMethods: [
+      {
+        name: 'Roasted cubes',
+        description: 'Cube, toss with oil and spices, roast at 425°F for 25 min.',
+        tips: ['Don\'t overcrowd the pan', 'Cinnamon or smoked paprika work well'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Soup',
+        description: 'Roast, then blend with broth, ginger, and coconut milk.',
+        tips: ['Roasting before blending adds depth', 'Add a little maple syrup'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Stuffed',
+        description: 'Halve and roast, fill cavity with grains and vegetables.',
+        tips: ['Scoop out seeds first', 'A showstopper for guests'],
+        difficulty: 'medium'
+      },
+      {
+        name: 'Pasta sauce',
+        description: 'Blend roasted squash with broth for a creamy pasta sauce.',
+        tips: ['Add nutritional yeast for cheesy flavour', 'Sage is a classic pairing'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Squash soup', 'Roasted squash', 'Stuffed squash']
+  },
+  {
+    name: 'Celery',
+    foodType: 'vegetable',
+    similarTo: ['Cucumber', 'Fennel', 'Asparagus'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Celery_in_a_farmers_market.jpg/320px-Celery_in_a_farmers_market.jpg',
+    cookingMethods: [
+      {
+        name: 'Raw with nut butter',
+        description: 'Cut into sticks and serve with peanut or almond butter.',
+        tips: ['Classic snack', 'Add raisins for "ants on a log"'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'In soups and stews',
+        description: 'Chop and add as part of a mirepoix base.',
+        tips: ['Use leaves too — lots of flavour', 'Cook until translucent'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Braised',
+        description: 'Halve stalks, brown in oil, braise in broth for 20 min.',
+        tips: ['Totally transforms the flavour', 'Goes well with lemon and capers'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Juice or smoothie',
+        description: 'Juice raw or blend into green smoothies.',
+        tips: ['Pairs with apple and ginger', 'Mild flavour when diluted'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Celery sticks', 'Celery soup', 'Mirepoix base']
+  },
+  {
+    name: 'Walnuts',
+    foodType: 'other',
+    similarTo: ['Almonds', 'Pecans', 'Cashews'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Walnut_-_whole_and_open.jpg/320px-Walnut_-_whole_and_open.jpg',
+    cookingMethods: [
+      {
+        name: 'Walnut meat',
+        description: 'Pulse with tamari and spices for a taco filling.',
+        tips: ['Don\'t over-process — keep some texture', 'Add smoked paprika'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Toasted on salads',
+        description: 'Toast in a dry pan until fragrant, add to salads.',
+        tips: ['Watch closely — they burn fast', 'Pairs with bitter greens'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Walnut pesto',
+        description: 'Blend with basil, garlic, lemon, and olive oil.',
+        tips: ['Cheaper than pine nuts', 'Use on pasta or as a dip'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'In baking',
+        description: 'Chop and fold into muffins, banana bread, or brownies.',
+        tips: ['Toast first for more flavour', 'Pairs well with chocolate'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Walnut tacos', 'Walnut pesto', 'Walnut banana bread']
+  },
+  {
+    name: 'Peanuts',
+    foodType: 'other',
+    similarTo: ['Cashews', 'Almonds', 'Chickpeas'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Peanuts_on_a_white_background.jpg/320px-Peanuts_on_a_white_background.jpg',
+    cookingMethods: [
+      {
+        name: 'Peanut butter',
+        description: 'Blend roasted peanuts in a food processor until smooth.',
+        tips: ['Add a pinch of salt', 'Use in sauces, on toast, or in smoothies'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Peanut sauce',
+        description: 'Mix peanut butter, soy sauce, lime, ginger, and water.',
+        tips: ['Adjust thickness with water', 'Great on noodles or as a dip'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Roasted as snack',
+        description: 'Toss with oil and salt, roast at 350°F for 15 min.',
+        tips: ['Add chilli powder or cumin', 'Cool completely before storing'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'In stir-fries',
+        description: 'Scatter whole peanuts over stir-fried noodles or vegetables.',
+        tips: ['Add at the end to keep crunch', 'Pairs with sesame and soy'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Peanut butter toast', 'Peanut noodles', 'Peanut sauce']
+  },
+  {
+    name: 'Mango',
+    foodType: 'other',
+    similarTo: ['Peach', 'Pineapple', 'Papaya'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Hapus_Mango.jpg/320px-Hapus_Mango.jpg',
+    cookingMethods: [
+      {
+        name: 'Fresh in salsa',
+        description: 'Dice and mix with red onion, jalapeño, lime, and cilantro.',
+        tips: ['Use ripe but firm mango', 'Great on tacos or with chips'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Smoothies',
+        description: 'Blend frozen mango with banana and plant milk.',
+        tips: ['Frozen mango gives thick texture', 'No ice needed'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Mango sticky rice',
+        description: 'Serve sliced mango over coconut sticky rice.',
+        tips: ['Use glutinous rice', 'Sweeten coconut milk with sugar'],
+        difficulty: 'medium'
+      },
+      {
+        name: 'Grilled',
+        description: 'Slice and grill until caramelised, serve with lime.',
+        tips: ['Use slightly underripe mango', 'Chilli and lime is a classic combo'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Mango smoothie', 'Mango salsa', 'Mango sticky rice']
+  },
+  {
+    name: 'Barley',
+    foodType: 'grain',
+    similarTo: ['Quinoa', 'Rice', 'Farro'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Barley-Haeckel.jpg/320px-Barley-Haeckel.jpg',
+    cookingMethods: [
+      {
+        name: 'Grain bowl base',
+        description: 'Cook in broth and use as a hearty base for bowls.',
+        tips: ['Use pearl barley for faster cooking', 'Absorbs dressing well'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Barley soup',
+        description: 'Simmer with mushrooms, carrots, and herbs.',
+        tips: ['Thickens the broth naturally', 'Great in a slow cooker'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Risotto-style',
+        description: 'Cook slowly with stock, adding liquid gradually.',
+        tips: ['Creamy without cheese', 'Finish with nutritional yeast'],
+        difficulty: 'medium'
+      },
+      {
+        name: 'Salad',
+        description: 'Cook and cool, toss with roasted vegetables and vinaigrette.',
+        tips: ['Great at room temperature', 'Holds dressing well'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Barley soup', 'Barley bowl', 'Barley risotto']
+  },
+  {
+    name: 'Chia Seeds',
+    foodType: 'other',
+    similarTo: ['Hemp Seeds', 'Flaxseed', 'Oats'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Chia_seeds_-_Salvia_hispanica.jpg/320px-Chia_seeds_-_Salvia_hispanica.jpg',
+    cookingMethods: [
+      {
+        name: 'Chia pudding',
+        description: 'Mix with plant milk and refrigerate overnight.',
+        tips: ['3 tbsp chia per cup of milk', 'Stir after 10 min to prevent clumping'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'In smoothies',
+        description: 'Add 1 tbsp to any smoothie for extra nutrition.',
+        tips: ['They swell slightly when blended', 'Adds omega-3s invisibly'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Egg replacement',
+        description: 'Mix 1 tbsp chia with 3 tbsp water, rest 5 min.',
+        tips: ['Works in muffins and pancakes', 'Slightly denser result'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Sprinkled on bowls',
+        description: 'Sprinkle over oatmeal, yogurt, or salads.',
+        tips: ['No prep needed', 'Adds crunch and nutrition'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Chia pudding', 'Chia smoothie', 'Chia oatmeal']
+  },
+  {
+    name: 'Tahini',
+    foodType: 'other',
+    similarTo: ['Nut Butter', 'Cashews', 'Almonds'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Tahini_%28Sesame_Seed_Paste%29.jpg/320px-Tahini_%28Sesame_Seed_Paste%29.jpg',
+    cookingMethods: [
+      {
+        name: 'Tahini dressing',
+        description: 'Whisk with lemon juice, garlic, and water until creamy.',
+        tips: ['Add water gradually to get right consistency', 'Drizzle over everything'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Hummus base',
+        description: 'Blend with chickpeas, lemon, and garlic.',
+        tips: ['Good tahini makes great hummus', 'Add ice water for silky texture'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Baked goods',
+        description: 'Substitute for butter in cookies or brownies.',
+        tips: ['Adds a subtle nutty flavour', 'Works in halva too'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Drizzle on roasted veg',
+        description: 'Thin with lemon and water, drizzle over roasted vegetables.',
+        tips: ['Classic with roasted aubergine', 'Add za\'atar for Middle Eastern vibes'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Tahini dressing', 'Hummus', 'Tahini cookies']
+  },
+  {
+    name: 'Kidney Beans',
+    foodType: 'legume',
+    similarTo: ['Black Beans', 'Chickpeas', 'Lentils'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/RedKidneyBeans.jpg/320px-RedKidneyBeans.jpg',
+    cookingMethods: [
+      {
+        name: 'Chilli',
+        description: 'Simmer with tomatoes, spices, and vegetables.',
+        tips: ['Smoked paprika adds depth', 'Serve over rice or with cornbread'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Bean salad',
+        description: 'Toss with cucumber, onion, and vinaigrette.',
+        tips: ['Rinse canned beans well', 'Add fresh herbs and lemon'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Kidney bean curry',
+        description: 'Simmer in tomato-based curry sauce (rajma).',
+        tips: ['A North Indian classic', 'Let it simmer long for rich flavour'],
+        difficulty: 'medium'
+      },
+      {
+        name: 'Mashed as a spread',
+        description: 'Mash with garlic and lemon as a toast or sandwich spread.',
+        tips: ['Season generously', 'Add roasted red pepper for extra flavour'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Bean chilli', 'Bean salad', 'Rajma curry']
+  },
+  {
+    name: 'Millet',
+    foodType: 'grain',
+    similarTo: ['Quinoa', 'Couscous', 'Barley'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Foxtail_millet_in_a_bowl.jpg/320px-Foxtail_millet_in_a_bowl.jpg',
+    cookingMethods: [
+      {
+        name: 'Porridge',
+        description: 'Cook in plant milk until creamy, like oatmeal.',
+        tips: ['Stir frequently to prevent sticking', 'Top with fruit and maple syrup'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Fluffy grain base',
+        description: 'Toast dry in pan then cook in broth for a fluffy texture.',
+        tips: ['Toasting first brings out a nutty flavour', 'Works like couscous'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Polenta-style',
+        description: 'Cook with extra water, stirring until thick.',
+        tips: ['Cools into a sliceable loaf', 'Pan-fry slices until golden'],
+        difficulty: 'medium'
+      },
+      {
+        name: 'In patties',
+        description: 'Mix cooked millet with beans and spices, form patties.',
+        tips: ['Chill before frying', 'Holds together well when cold'],
+        difficulty: 'medium'
+      }
+    ],
+    easyMeals: ['Millet porridge', 'Millet grain bowl', 'Millet polenta']
+  },
+  {
+    name: 'Nutritional Yeast',
+    foodType: 'other',
+    similarTo: ['Tahini', 'Cashews', 'Miso'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Nutritional_Yeast.jpg/320px-Nutritional_Yeast.jpg',
+    cookingMethods: [
+      {
+        name: 'Cheese sauce',
+        description: 'Blend with soaked cashews, lemon, garlic, and plant milk.',
+        tips: ['More yeast = more cheesy flavour', 'Use on pasta or nachos'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Sprinkled on pasta',
+        description: 'Sprinkle generously over pasta like parmesan.',
+        tips: ['Toast briefly in a dry pan for nuttier flavour', 'No prep needed'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Popcorn seasoning',
+        description: 'Toss freshly popped corn with nutritional yeast and salt.',
+        tips: ['Add smoked paprika too', 'Toss while still hot so it sticks'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'In scrambles',
+        description: 'Stir into tofu scramble for an eggy, cheesy flavour.',
+        tips: ['Add kala namak (black salt) for eggy aroma', 'Works in quiches too'],
+        difficulty: 'easy'
+      }
+    ],
+    easyMeals: ['Cheesy pasta', 'Nooch popcorn', 'Cheesy scramble']
+  },
+  {
+    name: 'Pumpkin',
+    foodType: 'vegetable',
+    similarTo: ['Butternut Squash', 'Sweet Potato', 'Carrots'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/FrancePumpkin.jpg/320px-FrancePumpkin.jpg',
+    cookingMethods: [
+      {
+        name: 'Roasted wedges',
+        description: 'Cut into wedges, brush with oil and spices, roast at 400°F.',
+        tips: ['Skin is edible when roasted', 'Add cinnamon and chilli for contrast'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Pumpkin soup',
+        description: 'Roast and blend with broth, ginger, and coconut milk.',
+        tips: ['Roasting deepens the flavour', 'Top with pumpkin seeds'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Pumpkin puree in baking',
+        description: 'Use canned or roasted puree in muffins and pancakes.',
+        tips: ['Replaces some fat in recipes', 'Add cinnamon and nutmeg'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Stuffed pumpkin',
+        description: 'Hollow small pumpkin and fill with grains and mushrooms.',
+        tips: ['Season inside before filling', 'Pre-roast the pumpkin first'],
+        difficulty: 'medium'
+      }
+    ],
+    easyMeals: ['Pumpkin soup', 'Roasted pumpkin', 'Pumpkin muffins']
+  },
+  {
+    name: 'Cabbage',
+    foodType: 'vegetable',
+    similarTo: ['Brussels Sprouts', 'Kale', 'Bok Choy'],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Cabbage_and_cross_section_on_white.jpg/320px-Cabbage_and_cross_section_on_white.jpg',
+    cookingMethods: [
+      {
+        name: 'Slaw',
+        description: 'Shred finely and toss with vinaigrette or creamy dressing.',
+        tips: ['Salt and let sit 10 min to soften', 'Add apple or carrot for sweetness'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Stir-fried',
+        description: 'Slice and stir-fry with garlic, soy sauce, and sesame oil.',
+        tips: ['High heat is key', 'Cooks down fast — don\'t overcook'],
+        difficulty: 'easy'
+      },
+      {
+        name: 'Fermented (sauerkraut)',
+        description: 'Shred, salt, and ferment in a jar for 5-7 days.',
+        tips: ['Keep submerged under brine', 'Taste daily until tangy enough'],
+        difficulty: 'medium'
+      },
+      {
+        name: 'Stuffed cabbage rolls',
+        description: 'Blanch leaves and fill with rice and beans, bake in sauce.',
+        tips: ['Blanch just until pliable', 'Use a tomato or mushroom sauce'],
+        difficulty: 'medium'
+      }
+    ],
+    easyMeals: ['Coleslaw', 'Stir-fried cabbage', 'Sauerkraut']
   }
 ]
 export function getSuggestionsForFood(foodName: string): FoodSuggestion | undefined {
