@@ -6,6 +6,7 @@ import { getSuggestionsForFood, getSimilarFoods, getSimilarFoodsFallback, getAll
 import { recipes, getRecipeForFood } from '@/lib/recipes'
 
 const STORAGE_KEY = 'flavorfriend-foods'
+const DISMISSED_KEY = 'flavorfriend-dismissed'
 const FOOD_TYPES: FoodType[] = ['vegetable', 'grain', 'legume', 'other']
 const CATEGORIES: FoodCategory[] = ['love', 'exploring', 'curious', 'notYet']
 
@@ -105,8 +106,8 @@ export default function Home() {
   const [attemptMethod, setAttemptMethod] = useState('')
   const [attemptLiked, setAttemptLiked] = useState<boolean | null>(null)
   const [attemptNotes, setAttemptNotes] = useState('')
-  const [suggestionIndex, setSuggestionIndex] = useState(0)
   const [dismissedSuggestions, setDismissedSuggestions] = useState<string[]>([])
+  const [sessionSkipped, setSessionSkipped] = useState<string[]>([])
   const [plateInput, setPlateInput] = useState('')
   const [exploringInput, setExploringInput] = useState('')
   const [showAutocomplete, setShowAutocomplete] = useState<Record<string, boolean>>({})
@@ -145,6 +146,17 @@ export default function Home() {
   useEffect(() => {
     if (foods.length > 0) localStorage.setItem(STORAGE_KEY, JSON.stringify(foods))
   }, [foods])
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(DISMISSED_KEY)
+      if (stored) setDismissedSuggestions(JSON.parse(stored))
+    } catch {}
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem(DISMISSED_KEY, JSON.stringify(dismissedSuggestions))
+  }, [dismissedSuggestions])
 
   useEffect(() => {
     const onMove = (e: PointerEvent) => {
@@ -246,10 +258,6 @@ export default function Home() {
     }
   }
 
-  useEffect(() => {
-    setSuggestionImgError(false)
-  }, [suggestionIndex])
-
   const allFoodNames = getAllSuggestedFoods()
   const loveFoods = foods.filter(f => f.category === 'love')
   const exploringFoods = foods.filter(f => f.category === 'exploring')
@@ -257,21 +265,35 @@ export default function Home() {
   const recipeCategories = ['all', ...Array.from(new Set(recipes.map(r => r.category)))]
   const inProgressFoods = exploringFoods.filter(f => f.attempts > 0)
 
+  const activeFoodNames = new Set(foods.map(f => f.name.toLowerCase()))
+  const dismissedSet = new Set(dismissedSuggestions.map(s => s.toLowerCase()))
+  const skippedSet = new Set(sessionSkipped.map(s => s.toLowerCase()))
+  const isAvailable = (s: string) =>
+    !dismissedSet.has(s.toLowerCase()) && !skippedSet.has(s.toLowerCase()) && !activeFoodNames.has(s.toLowerCase())
+
   const allSuggested = getSimilarFoods(safeFoodNames)
-  const availableSuggestions = allSuggested.filter(s => !dismissedSuggestions.includes(s) && !foods.some(f => f.name.toLowerCase() === s.toLowerCase()))
-  const fallbackSuggestions = availableSuggestions.length === 0 ? getSimilarFoodsFallback(safeFoodNames, allFoodNames) : []
+  const availableSuggestions = allSuggested.filter(isAvailable)
+  const fallbackSuggestions = availableSuggestions.length === 0
+    ? getSimilarFoodsFallback(safeFoodNames, allFoodNames).filter(isAvailable)
+    : []
   const allSuggestions = availableSuggestions.length > 0 ? availableSuggestions : fallbackSuggestions
-  const currentSuggestion = allSuggestions[Math.max(0, suggestionIndex) % Math.max(1, allSuggestions.length)]
-  const usingFallback = availableSuggestions.length === 0 && fallbackSuggestions.length > 0
+  const currentSuggestion = allSuggestions[0] as string | undefined
   const suggestionData = currentSuggestion ? foodSuggestions.find(s => s.name === currentSuggestion) : undefined
   const exampleRecipe = currentSuggestion ? getRecipeForFood(currentSuggestion) : undefined
 
+  useEffect(() => {
+    setSuggestionImgError(false)
+  }, [currentSuggestion])
+
   const handleAddCurrentSuggestion = (category: FoodCategory) => {
     if (currentSuggestion) {
-      addFood(currentSuggestion, category)
+      addOrMoveFood(currentSuggestion, category)
       setDismissedSuggestions(prev => [...prev, currentSuggestion])
-      setSuggestionIndex(prev => prev + 1)
     }
+  }
+
+  const handleSkipCurrentSuggestion = () => {
+    if (currentSuggestion) setSessionSkipped(prev => [...prev, currentSuggestion])
   }
 
   const handleCardPointerDown = (e: React.PointerEvent) => {
@@ -302,7 +324,7 @@ export default function Home() {
     setSwipeDir(null)
     if (currentSuggestion) {
       if (deltaX > 60) handleAddCurrentSuggestion('exploring')
-      else if (deltaX < -60) setSuggestionIndex(prev => prev + 1)
+      else if (deltaX < -60) handleSkipCurrentSuggestion()
     }
   }
 
@@ -351,7 +373,7 @@ export default function Home() {
 
       {/* Suggestions toggle */}
       <button
-        onClick={() => setShowSuggestions(!showSuggestions)}
+        onClick={() => { if (!showSuggestions) setSessionSkipped([]); setShowSuggestions(!showSuggestions) }}
         className={`mx-auto block mb-4 px-6 py-3 rounded-2xl font-medium transition-all ${
           showSuggestions ? 'bg-emerald-500 text-white' : 'bg-green-100 text-green-700 border border-green-300 hover:bg-green-200'
         }`}
@@ -424,7 +446,7 @@ export default function Home() {
               <div className="flex items-center justify-around mt-4 px-8">
                 <div className="flex flex-col items-center gap-1">
                   <button
-                    onClick={() => setSuggestionIndex(p => p + 1)}
+                    onClick={handleSkipCurrentSuggestion}
                     className="w-14 h-14 rounded-full bg-gray-100 text-gray-500 text-2xl hover:bg-gray-200 flex items-center justify-center shadow transition-colors"
                   >
                     →
