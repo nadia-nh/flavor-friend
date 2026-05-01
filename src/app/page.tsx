@@ -299,12 +299,8 @@ export default function Home() {
     const deltaX = dragState.currentX - dragState.startX
     const deltaY = dragState.currentY - dragState.startY
     if (currentSuggestion) {
-      if (deltaX > 100) handleAddCurrentSuggestion('curious')
-      else if (deltaX < -100) handleAddCurrentSuggestion('notYet')
-      else if (deltaY < -100) {
-        setDismissedSuggestions(prev => [...prev, currentSuggestion])
-        setSuggestionIndex(prev => prev + 1)
-      }
+      if (deltaX > 60) handleAddCurrentSuggestion('curious')
+      else if (deltaX < -60) setSuggestionIndex(prev => prev + 1)
     }
     setDragState({ isDragging: false, startX: 0, startY: 0, currentX: 0, currentY: 0 })
   }
@@ -363,40 +359,84 @@ export default function Home() {
       </button>
 
       {showSuggestions && (
-        <div className="max-w-md mx-auto mb-6 p-4 bg-white rounded-2xl border-2 border-green-200 shadow-lg">
+        <div className="max-w-md mx-auto mb-6">
           {!currentSuggestion ? (
-            <p className="text-center text-gray-500 py-8">No more suggestions. Check back later!</p>
+            <div className="bg-white rounded-2xl border-2 border-green-200 shadow-lg p-8">
+              <p className="text-center text-gray-500">No more suggestions. Check back later!</p>
+            </div>
           ) : (
             <>
-              <h3 className="text-center font-semibold text-green-800 mb-4">Based on foods you like:</h3>
+              {/* Swipeable card */}
               <div
                 ref={cardRef}
-                className="relative h-48 cursor-grab active:cursor-grabbing select-none"
+                className="relative h-64 cursor-grab active:cursor-grabbing select-none"
                 onMouseDown={handleDragStart} onMouseMove={handleDragMove} onMouseUp={handleDragEnd} onMouseLeave={handleDragEnd}
                 onTouchStart={handleDragStart} onTouchMove={handleDragMove} onTouchEnd={handleDragEnd}
               >
                 <div
-                  className="absolute inset-0 bg-gradient-to-b from-green-50 to-green-100 rounded-2xl border border-green-300 shadow-lg flex flex-col items-center justify-center p-6"
-                  style={{ transform: `translateY(${dragState.isDragging ? dragState.currentY - dragState.startY : 0}px) translateX(${dragState.isDragging ? dragState.currentX - dragState.startX : 0}px) rotate(${dragState.isDragging ? (dragState.currentX - dragState.startX) / 20 : 0}deg)` }}
+                  className="absolute inset-0 bg-white rounded-2xl border border-green-200 shadow-lg overflow-hidden flex flex-col"
+                  style={{ transform: `translateX(${dragState.isDragging ? dragState.currentX - dragState.startX : 0}px) rotate(${dragState.isDragging ? (dragState.currentX - dragState.startX) / 20 : 0}deg)` }}
                 >
-                  {suggestionImgUrl && !suggestionImgError
-                    ? <img src={suggestionImgUrl} alt={currentSuggestion} className="w-20 h-20 object-cover rounded-xl mb-2" onError={() => setSuggestionImgError(true)} />
-                    : <span className="text-4xl mb-2">🍽️</span>
-                  }
-                  <span className="text-xl font-semibold text-green-800">{currentSuggestion}</span>
-                  {usingFallback && <span className="text-xs text-amber-600 mt-1">(Suggested for you)</span>}
-                  {exampleRecipe && <p className="text-xs text-green-600 mt-2">Try: {exampleRecipe.title}</p>}
-                  <p className="text-sm text-green-600 mt-2">← Never | ↑ Later | Want to Try →</p>
+                  {/* Full-width image area */}
+                  <div className="relative w-full flex-1 bg-green-100 flex items-center justify-center overflow-hidden">
+                    {suggestionImgUrl && !suggestionImgError
+                      ? <img src={suggestionImgUrl} alt={currentSuggestion} className="w-full h-full object-cover" onError={() => setSuggestionImgError(true)} />
+                      : <span className="text-7xl">🍽️</span>
+                    }
+                    {/* Gradient overlay for text legibility */}
+                    <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/70 to-transparent pointer-events-none" />
+                    {/* Category badge */}
+                    {suggestionData && (
+                      <span className="absolute top-2 left-2 bg-white/85 backdrop-blur-sm text-xs font-semibold px-2 py-1 rounded-full">
+                        {FOOD_TYPE_CONFIG[suggestionData.foodType].emoji} {FOOD_TYPE_CONFIG[suggestionData.foodType].label}
+                      </span>
+                    )}
+                    {/* Food name on gradient */}
+                    <span className="absolute bottom-3 left-0 right-0 text-center text-white font-bold text-xl drop-shadow-lg px-4">
+                      {currentSuggestion}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Swipe overlays */}
+                {dragState.isDragging && (dragState.currentX - dragState.startX) > 30 && (
+                  <div className="absolute inset-0 bg-green-400/30 rounded-2xl flex items-center justify-center pointer-events-none">
+                    <span className="text-white font-bold text-2xl drop-shadow-lg">✓ Try it!</span>
+                  </div>
+                )}
+                {dragState.isDragging && (dragState.currentX - dragState.startX) < -30 && (
+                  <div className="absolute inset-0 bg-gray-400/30 rounded-2xl flex items-center justify-center pointer-events-none">
+                    <span className="text-white font-bold text-2xl drop-shadow-lg">→ Skip</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Recipe hint outside drag zone */}
+              {exampleRecipe && (
+                <p className="text-xs text-center text-green-600 mt-2">✨ Try: {exampleRecipe.title}</p>
+              )}
+
+              {/* Action buttons */}
+              <div className="flex items-center justify-around mt-4 px-8">
+                <div className="flex flex-col items-center gap-1">
+                  <button
+                    onClick={() => setSuggestionIndex(p => p + 1)}
+                    className="w-14 h-14 rounded-full bg-gray-100 text-gray-500 text-2xl hover:bg-gray-200 flex items-center justify-center shadow transition-colors"
+                  >
+                    →
+                  </button>
+                  <span className="text-xs text-gray-400">Skip</span>
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                  <button
+                    onClick={() => handleAddCurrentSuggestion('curious')}
+                    className="w-14 h-14 rounded-full bg-green-100 text-green-700 text-2xl hover:bg-green-200 flex items-center justify-center shadow transition-colors"
+                  >
+                    ✓
+                  </button>
+                  <span className="text-xs text-green-600 font-medium">Try it!</span>
                 </div>
               </div>
-              <div className="flex justify-center gap-2 mt-4">
-                <button onClick={() => handleAddCurrentSuggestion('notYet')} className="px-4 py-2 bg-red-100 text-red-700 rounded-xl hover:bg-red-200 font-medium">← Never</button>
-                <button onClick={() => { setDismissedSuggestions(p => [...p, currentSuggestion]); setSuggestionIndex(p => p + 1) }} className="px-4 py-2 bg-gray-100 text-gray-600 rounded-xl hover:bg-gray-200 font-medium">↑ Maybe Later</button>
-                <button onClick={() => handleAddCurrentSuggestion('curious')} className="px-4 py-2 bg-orange-100 text-orange-700 rounded-xl hover:bg-orange-200 font-medium">Want to Try →</button>
-              </div>
-              <p className="text-xs text-center text-gray-400 mt-3">
-                {usingFallback ? 'Suggested for you' : `${availableSuggestions.length} more suggestion${availableSuggestions.length !== 1 ? 's' : ''} available`}
-              </p>
             </>
           )}
         </div>
