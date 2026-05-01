@@ -69,11 +69,11 @@ function getFoodCirclePositions(count: number, startDeg: number, endDeg: number,
   if (count === 0) return []
   const innerR = 48
   const outerR = 158
-  const pad = 14
+  const pad = 20
   const usableStart = startDeg + pad
   const usableEnd = endDeg - pad
   const usableRange = usableEnd - usableStart
-  const maxPerRow = 3
+  const maxPerRow = 2
   const rows = Math.ceil(count / maxPerRow)
   const rStep = (outerR - innerR) / rows
   const positions: Array<{x: number; y: number}> = []
@@ -104,10 +104,16 @@ export default function Home() {
   const [attemptNotes, setAttemptNotes] = useState('')
   const [suggestionIndex, setSuggestionIndex] = useState(0)
   const [dismissedSuggestions, setDismissedSuggestions] = useState<string[]>([])
-  const [plateInputs, setPlateInputs] = useState<Record<FoodType, string>>({ vegetable: '', grain: '', legume: '', other: '' })
+  const [plateInput, setPlateInput] = useState('')
   const [exploringInput, setExploringInput] = useState('')
   const [showAutocomplete, setShowAutocomplete] = useState<Record<string, boolean>>({})
   const [recipeFilter, setRecipeFilter] = useState('all')
+  const [suggestionImgError, setSuggestionImgError] = useState(false)
+  const [suggestionImgUrl, setSuggestionImgUrl] = useState<string | null>(null)
+  const [platePopover, setPlatePopover] = useState<{food: Food; x: number; y: number} | null>(null)
+  const [plateDragGhost, setPlateDragGhost] = useState<{svgX: number; svgY: number; outside: boolean; foodId: string} | null>(null)
+  const plateRef = useRef<SVGSVGElement>(null)
+  const plateDragRef = useRef<{food: Food; startX: number; startY: number; curX: number; curY: number; outside: boolean} | null>(null)
   const cardRef = useRef<HTMLDivElement>(null)
   const [dragState, setDragState] = useState<DragState>({ isDragging: false, startX: 0, startY: 0, currentX: 0, currentY: 0 })
 
@@ -136,8 +142,42 @@ export default function Home() {
     if (foods.length > 0) localStorage.setItem(STORAGE_KEY, JSON.stringify(foods))
   }, [foods])
 
+  useEffect(() => {
+    const onMove = (e: PointerEvent) => {
+      const drag = plateDragRef.current
+      if (!drag || !plateRef.current) return
+      drag.curX = e.clientX
+      drag.curY = e.clientY
+      const rect = plateRef.current.getBoundingClientRect()
+      const svgX = (e.clientX - rect.left) / rect.width * 400
+      const svgY = (e.clientY - rect.top) / rect.height * 400
+      const outside = Math.sqrt((svgX - PLATE_CX) ** 2 + (svgY - PLATE_CY) ** 2) > PLATE_R + 9
+      drag.outside = outside
+      setPlateDragGhost({ svgX, svgY, outside, foodId: drag.food.id })
+    }
+    const onUp = (e: PointerEvent) => {
+      const drag = plateDragRef.current
+      if (!drag) return
+      const dist = Math.sqrt((drag.curX - drag.startX) ** 2 + (drag.curY - drag.startY) ** 2)
+      if (dist < 8) {
+        setPlatePopover({ food: drag.food, x: drag.curX, y: drag.curY })
+      } else if (drag.outside) {
+        setFoods(prev => prev.filter(f => f.id !== drag.food.id))
+      }
+      plateDragRef.current = null
+      setPlateDragGhost(null)
+    }
+    window.addEventListener('pointermove', onMove)
+    window.addEventListener('pointerup', onUp)
+    return () => {
+      window.removeEventListener('pointermove', onMove)
+      window.removeEventListener('pointerup', onUp)
+    }
+  }, [])
+
   const addFood = (name: string, category: FoodCategory, foodType?: FoodType) => {
     if (!name.trim()) return
+    if (foods.some(f => f.name.toLowerCase() === name.trim().toLowerCase())) return
     const newFood: Food = {
       id: Date.now().toString(),
       name: name.trim(),
@@ -193,8 +233,21 @@ export default function Home() {
     setAttemptModal(null)
   }
 
+  const addOrMoveFood = (name: string, category: FoodCategory) => {
+    const existing = foods.find(f => f.name.toLowerCase() === name.toLowerCase())
+    if (existing) {
+      if (existing.category !== category) moveFood(existing, category)
+    } else {
+      addFood(name, category)
+    }
+  }
+
+  useEffect(() => {
+    setSuggestionImgError(false)
+    setSuggestionImgUrl(null)
+  }, [suggestionIndex])
+
   const allFoodNames = getAllSuggestedFoods()
-  const existingFoodNames = foods.map(f => f.name.toLowerCase())
   const loveFoods = foods.filter(f => f.category === 'love')
   const exploringFoods = foods.filter(f => f.category === 'exploring')
   const safeFoodNames = loveFoods.map(f => f.name)
@@ -209,6 +262,16 @@ export default function Home() {
   const usingFallback = availableSuggestions.length === 0 && fallbackSuggestions.length > 0
   const suggestionData = currentSuggestion ? foodSuggestions.find(s => s.name === currentSuggestion) : undefined
   const exampleRecipe = currentSuggestion ? getRecipeForFood(currentSuggestion) : undefined
+
+  useEffect(() => {
+    if (!currentSuggestion) return
+    const controller = new AbortController()
+    fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(currentSuggestion)}`, { signal: controller.signal })
+      .then(r => r.json())
+      .then(data => { if (data.thumbnail?.source) setSuggestionImgUrl(data.thumbnail.source) })
+      .catch(() => {})
+    return () => controller.abort()
+  }, [currentSuggestion])
 
   const handleAddCurrentSuggestion = (category: FoodCategory) => {
     if (currentSuggestion) {
@@ -248,11 +311,12 @@ export default function Home() {
 
   const dm = darkMode
 
-  const renderAutocomplete = (key: string, inputVal: string, onSelect: (name: string) => void, dropUp = false) => {
+  const renderAutocomplete = (key: string, inputVal: string, onSelect: (name: string) => void, dropUp = false, excludeNames: string[] = []) => {
     if (!showAutocomplete[key] || inputVal.length === 0) return null
+    const excluded = new Set(excludeNames.map(n => n.toLowerCase()))
     const filtered = allFoodNames.filter(n =>
-      n.toLowerCase().includes(inputVal.toLowerCase()) && !existingFoodNames.includes(n.toLowerCase())
-    ).slice(0, 5)
+      n.toLowerCase().includes(inputVal.toLowerCase()) && !excluded.has(n.toLowerCase())
+    ).slice(0, 6)
     if (filtered.length === 0) return null
     return (
       <div className={`absolute z-20 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-36 overflow-y-auto ${dropUp ? 'bottom-full mb-1' : 'top-full mt-1'}`}>
@@ -315,8 +379,8 @@ export default function Home() {
                   className="absolute inset-0 bg-gradient-to-b from-green-50 to-green-100 rounded-2xl border border-green-300 shadow-lg flex flex-col items-center justify-center p-6"
                   style={{ transform: `translateY(${dragState.isDragging ? dragState.currentY - dragState.startY : 0}px) translateX(${dragState.isDragging ? dragState.currentX - dragState.startX : 0}px) rotate(${dragState.isDragging ? (dragState.currentX - dragState.startX) / 20 : 0}deg)` }}
                 >
-                  {suggestionData?.image
-                    ? <img src={suggestionData.image} alt={currentSuggestion} className="w-20 h-20 object-cover rounded-xl mb-2" onError={e => { (e.target as HTMLImageElement).src = '/placeholder-vegetable.svg' }} />
+                  {suggestionImgUrl && !suggestionImgError
+                    ? <img src={suggestionImgUrl} alt={currentSuggestion} className="w-20 h-20 object-cover rounded-xl mb-2" onError={() => setSuggestionImgError(true)} />
                     : <span className="text-4xl mb-2">🍽️</span>
                   }
                   <span className="text-xl font-semibold text-green-800">{currentSuggestion}</span>
@@ -344,35 +408,42 @@ export default function Home() {
         {/* Plate */}
         <div className="flex-1">
           <h2 className={`text-xl font-bold mb-3 text-center ${dm ? 'text-gray-200' : 'text-gray-800'}`}>Your Plate</h2>
-          <svg viewBox="0 0 400 400" className="w-full max-w-sm mx-auto drop-shadow-xl">
+          <svg ref={plateRef} viewBox="-30 -30 460 460" className="w-full max-w-sm mx-auto drop-shadow-xl" style={{ touchAction: 'none' }}>
             {/* Rim */}
-            <circle cx={PLATE_CX} cy={PLATE_CY} r={PLATE_R + 9} fill={dm ? '#374151' : '#d1d5db'} />
+            <circle cx={PLATE_CX} cy={PLATE_CY} r={PLATE_R + 9} fill={plateDragGhost?.outside ? '#fca5a5' : dm ? '#374151' : '#d1d5db'} />
             <circle cx={PLATE_CX} cy={PLATE_CY} r={PLATE_R} fill="white" />
 
             {FOOD_TYPES.map(ft => {
               const cfg = FOOD_TYPE_CONFIG[ft]
               const sectorFoods = loveFoods.filter(f => f.foodType === ft)
               const positions = getFoodCirclePositions(sectorFoods.length, cfg.startDeg, cfg.endDeg, PLATE_CX, PLATE_CY)
-              const circleR = sectorFoods.length <= 3 ? 20 : sectorFoods.length <= 6 ? 16 : 13
-              const fontSize = circleR >= 20 ? 9 : circleR >= 16 ? 8 : 6
               const midAngle = (cfg.startDeg + cfg.endDeg) / 2
-              const labelPos = polarToXY(PLATE_CX, PLATE_CY, 100, midAngle)
+              const labelPos = polarToXY(PLATE_CX, PLATE_CY, 242, midAngle)
               return (
                 <g key={ft}>
                   <path d={makeSectorPath(PLATE_CX, PLATE_CY, PLATE_R, INNER_R, cfg.startDeg, cfg.endDeg)} fill={cfg.fill} stroke="white" strokeWidth="2" />
-                  <text x={labelPos.x} y={labelPos.y - 10} textAnchor="middle" dominantBaseline="central" fontSize="22">{cfg.emoji}</text>
-                  <text x={labelPos.x} y={labelPos.y + 14} textAnchor="middle" dominantBaseline="central" fontSize="13" fontWeight="700" fill={cfg.stroke} fontFamily="system-ui, sans-serif">
+                  <text x={labelPos.x} y={labelPos.y - 9} textAnchor="middle" dominantBaseline="central" fontSize="22">{cfg.emoji}</text>
+                  <text x={labelPos.x} y={labelPos.y + 13} textAnchor="middle" dominantBaseline="central" fontSize="14" fontWeight="700" fill={cfg.stroke} fontFamily="system-ui, sans-serif">
                     {cfg.label}
                   </text>
                   {sectorFoods.map((food, i) => {
                     const pos = positions[i]
                     if (!pos) return null
-                    const abbr = food.name.length <= 5 ? food.name : food.name.slice(0, 4)
+                    const isDragging = plateDragGhost?.foodId === food.id
                     return (
-                      <g key={food.id} onClick={() => setSelectedFood(food)} style={{ cursor: 'pointer' }}>
-                        <circle cx={pos.x} cy={pos.y} r={circleR} fill="white" stroke={cfg.stroke} strokeWidth="1.5" />
-                        <text x={pos.x} y={pos.y} textAnchor="middle" dominantBaseline="central" fontSize={fontSize} fill={cfg.textColor} fontWeight="500">
-                          {abbr}
+                      <g
+                        key={food.id}
+                        style={{ cursor: isDragging ? 'grabbing' : 'grab', opacity: isDragging ? 0.3 : 1 }}
+                        onPointerDown={e => {
+                          e.preventDefault()
+                          plateDragRef.current = { food, startX: e.clientX, startY: e.clientY, curX: e.clientX, curY: e.clientY, outside: false }
+                        }}
+                      >
+                        <text x={pos.x} y={pos.y} textAnchor="middle" dominantBaseline="central" fontSize="24" style={{ userSelect: 'none' }}>
+                          {cfg.emoji}
+                        </text>
+                        <text x={pos.x} y={pos.y + 16} textAnchor="middle" dominantBaseline="hanging" fontSize="11" fill={cfg.textColor} fontWeight="600" fontFamily="system-ui, sans-serif">
+                          {food.name.length <= 12 ? food.name : food.name.slice(0, 11) + '…'}
                         </text>
                         <title>{food.name}</title>
                       </g>
@@ -384,47 +455,50 @@ export default function Home() {
 
             {/* Center */}
             <circle cx={PLATE_CX} cy={PLATE_CY} r={INNER_R} fill={dm ? '#374151' : '#f9fafb'} stroke={dm ? '#4b5563' : '#e5e7eb'} strokeWidth="1" />
+
+            {/* Drag ghost */}
+            {plateDragGhost && (() => {
+              const draggedFood = loveFoods.find(f => f.id === plateDragGhost.foodId)
+              const ft = draggedFood?.foodType ?? 'other'
+              const cfg2 = FOOD_TYPE_CONFIG[ft]
+              return (
+                <g style={{ pointerEvents: 'none' }} opacity="0.85">
+                  <text x={plateDragGhost.svgX} y={plateDragGhost.svgY} textAnchor="middle" dominantBaseline="central" fontSize="24" style={{ userSelect: 'none' }}>
+                    {cfg2.emoji}
+                  </text>
+                  {plateDragGhost.outside && (
+                    <text x={plateDragGhost.svgX} y={plateDragGhost.svgY + 22} textAnchor="middle" fontSize="11" fill="#ef4444" fontWeight="600">Release to remove</text>
+                  )}
+                </g>
+              )
+            })()}
           </svg>
 
-          {/* Inputs below plate */}
-          <div className="grid grid-cols-2 gap-3 mt-5 max-w-sm mx-auto">
-            {FOOD_TYPES.map(ft => {
-              const cfg = FOOD_TYPE_CONFIG[ft]
-              const key = `plate-${ft}`
-              return (
-                <div key={ft} className="relative">
-                  <label className="block text-xs font-semibold mb-1" style={{ color: cfg.stroke }}>
-                    {cfg.emoji} {cfg.label}
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      value={plateInputs[ft]}
-                      placeholder={`Add…`}
-                      className="w-full px-2 py-1.5 text-sm border rounded-lg"
-                      style={{ borderColor: cfg.stroke + '70', background: dm ? '#1f2937' : cfg.fill + '60', color: dm ? '#f3f4f6' : '#1f2937' }}
-                      onChange={e => {
-                        setPlateInputs(p => ({ ...p, [ft]: e.target.value }))
-                        setShowAutocomplete(p => ({ ...p, [key]: e.target.value.length > 0 }))
-                      }}
-                      onFocus={() => { if (plateInputs[ft].length > 0) setShowAutocomplete(p => ({ ...p, [key]: true })) }}
-                      onBlur={() => { setTimeout(() => setShowAutocomplete(p => ({ ...p, [key]: false })), 200) }}
-                      onKeyDown={e => {
-                        if (e.key === 'Enter' && plateInputs[ft]) {
-                          addFood(plateInputs[ft], 'love', ft)
-                          setPlateInputs(p => ({ ...p, [ft]: '' }))
-                        }
-                      }}
-                    />
-                    {renderAutocomplete(key, plateInputs[ft], name => {
-                      addFood(name, 'love', ft)
-                      setPlateInputs(p => ({ ...p, [ft]: '' }))
-                      setShowAutocomplete(p => ({ ...p, [key]: false }))
-                    })}
-                  </div>
-                </div>
-              )
-            })}
+          {/* Single plate input */}
+          <div className="relative mt-5 max-w-sm mx-auto">
+            <input
+              type="text"
+              value={plateInput}
+              placeholder="Add food to your plate…"
+              className={`w-full px-4 py-2.5 text-sm border-2 rounded-xl ${dm ? 'bg-gray-800 border-gray-600 text-gray-100 placeholder-gray-500' : 'bg-white border-gray-300 placeholder-gray-400'} focus:outline-none focus:border-emerald-400`}
+              onChange={e => {
+                setPlateInput(e.target.value)
+                setShowAutocomplete(p => ({ ...p, plate: e.target.value.length > 0 }))
+              }}
+              onFocus={() => { if (plateInput.length > 0) setShowAutocomplete(p => ({ ...p, plate: true })) }}
+              onBlur={() => { setTimeout(() => setShowAutocomplete(p => ({ ...p, plate: false })), 200) }}
+              onKeyDown={e => {
+                if (e.key === 'Enter' && plateInput.trim()) {
+                  addOrMoveFood(plateInput.trim(), 'love')
+                  setPlateInput('')
+                }
+              }}
+            />
+            {renderAutocomplete('plate', plateInput, name => {
+              addOrMoveFood(name, 'love')
+              setPlateInput('')
+              setShowAutocomplete(p => ({ ...p, plate: false }))
+            }, false, loveFoods.map(f => f.name))}
           </div>
         </div>
 
@@ -476,19 +550,50 @@ export default function Home() {
               onBlur={() => { setTimeout(() => setShowAutocomplete(p => ({ ...p, exploring: false })), 200) }}
               onKeyDown={e => {
                 if (e.key === 'Enter' && exploringInput) {
-                  addFood(exploringInput, 'exploring')
+                  addOrMoveFood(exploringInput, 'exploring')
                   setExploringInput('')
                 }
               }}
             />
             {renderAutocomplete('exploring', exploringInput, name => {
-              addFood(name, 'exploring')
+              addOrMoveFood(name, 'exploring')
               setExploringInput('')
               setShowAutocomplete(p => ({ ...p, exploring: false }))
-            }, true)}
+            }, true, exploringFoods.map(f => f.name))}
           </div>
         </div>
       </div>
+
+      {/* Plate food popover */}
+      {platePopover && (
+        <div className="fixed inset-0 z-30" onClick={() => setPlatePopover(null)}>
+          <div
+            className="absolute bg-white rounded-2xl shadow-xl border border-gray-200 p-3 w-44"
+            style={{ left: Math.min(platePopover.x, window.innerWidth - 184), top: Math.min(platePopover.y - 8, window.innerHeight - 140) }}
+            onClick={e => e.stopPropagation()}
+          >
+            <p className="text-sm font-semibold text-gray-800 mb-2 truncate">{platePopover.food.name}</p>
+            <button
+              className="w-full text-left px-3 py-1.5 rounded-xl text-sm hover:bg-lime-50 text-lime-700 mb-1"
+              onClick={() => { moveFood(platePopover.food, 'exploring'); setPlatePopover(null) }}
+            >
+              🌱 Move to Exploring
+            </button>
+            <button
+              className="w-full text-left px-3 py-1.5 rounded-xl text-sm hover:bg-red-50 text-red-600 mb-1"
+              onClick={() => { deleteFood(platePopover.food.id); setPlatePopover(null) }}
+            >
+              🗑️ Remove
+            </button>
+            <button
+              className="w-full text-left px-3 py-1.5 rounded-xl text-sm hover:bg-gray-50 text-gray-600"
+              onClick={() => { setSelectedFood(platePopover.food); setPlatePopover(null) }}
+            >
+              Details →
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Food detail modal */}
       {selectedFood && (

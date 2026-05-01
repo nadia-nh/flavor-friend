@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "flavor-friend",
+      "runtimeExecutable": "wsl",
+      "runtimeArgs": ["bash", "-ic", "cd /home/hered/code/flavor-friend/.claude/worktrees/angry-germain-05eaf4 && npm run dev"],
+      "port": 3000
+    }
+  ]
+}
