@@ -48,32 +48,46 @@ const encouragementMessages = [
 // Spoonacular CDN slugs that differ from the simple lowercase-with-dashes food name
 const SPOONACULAR_SLUG_OVERRIDES: Record<string, string> = {
   'oats': 'rolled-oats',
-  'sweet potato': 'sweet-potatoes',
-  'bell peppers': 'bell-pepper',
+  'sweet potato': 'sweet-potato',
+  'bell peppers': 'red-pepper',
   'brussels sprouts': 'brussels-sprouts',
   'green beans': 'green-beans',
   'coconut milk': 'coconut-milk',
   'textured vegetable protein': 'tvp',
-  'soy curls': 'soybeans',
+  'soy curls': 'edamame',
   'black beans': 'black-beans',
   'kidney beans': 'kidney-beans',
   'chia seeds': 'chia-seeds',
   'butternut squash': 'butternut-squash',
   'nutritional yeast': 'nutritional-yeast',
-  // grouped variants — strip the "(variant)" suffix to get a clean slug
-  'rice (all)': 'rice',
-  'rice (white)': 'white-rice',
+  // CDN has singular for these (plural 404s)
+  'tomatoes': 'tomato',
+  'peppers': 'pepper',
+  'onions': 'red-onion',
+  // CDN slug differs from display name
+  'corn': 'corn-on-the-cob',
+  'tahini': 'sesame-seeds',
+  // grouped variants
+  'rice (all)': 'cooked-white-rice',
+  'rice (white)': 'cooked-white-rice',
   'rice (brown)': 'brown-rice',
   'beans (all)': 'black-beans',
-  'pasta (all)': 'pasta',
-  'pasta (wheat)': 'pasta',
-  'pasta (whole wheat)': 'whole-wheat-pasta',
+  'pasta (all)': 'spaghetti',
+  'pasta (wheat)': 'spaghetti',
+  'pasta (whole wheat)': 'spaghetti',
 }
 
 function getIngredientImageUrl(foodName: string): string {
   const key = foodName.toLowerCase()
   const slug = SPOONACULAR_SLUG_OVERRIDES[key] ?? key.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
   return `https://spoonacular.com/cdn/ingredients_500x500/${slug}.jpg`
+}
+
+// Flickr-based fallback: stable per food (lock = simple hash of name), food-tagged photos
+function getFlickrFallbackUrl(foodName: string): string {
+  const clean = foodName.replace(/\s*\(.*?\)\s*/g, ' ').trim()
+  const lock = Math.abs(clean.split('').reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 0))
+  return `https://loremflickr.com/500/500/${encodeURIComponent(clean)},food?lock=${lock}`
 }
 
 const PLATE_CX = 200
@@ -138,7 +152,7 @@ export default function Home() {
   const [exploringInput, setExploringInput] = useState('')
   const [showAutocomplete, setShowAutocomplete] = useState<Record<string, boolean>>({})
   const [recipeFilter, setRecipeFilter] = useState('all')
-  const [imgFallback, setImgFallback] = useState<'spoonacular' | 'fooddata' | 'parentimage' | 'emoji'>('spoonacular')
+  const [imgFallback, setImgFallback] = useState<'spoonacular' | 'fooddata' | 'parentimage' | 'flickr' | 'emoji'>('spoonacular')
   const [platePopover, setPlatePopover] = useState<{food: Food; x: number; y: number} | null>(null)
   const [plateDragGhost, setPlateDragGhost] = useState<{svgX: number; svgY: number; outside: boolean; foodId: string} | null>(null)
   const plateRef = useRef<SVGSVGElement>(null)
@@ -439,7 +453,9 @@ export default function Home() {
                               ? getIngredientImageUrl(currentSuggestion)
                               : imgFallback === 'fooddata'
                               ? getSuggestionsForFood(currentSuggestion)?.image ?? ''
-                              : getParentSuggestion(currentSuggestion)?.image ?? ''
+                              : imgFallback === 'parentimage'
+                              ? getParentSuggestion(currentSuggestion)?.image ?? ''
+                              : getFlickrFallbackUrl(currentSuggestion)
                           }
                           alt={currentSuggestion}
                           className="w-full h-full object-cover"
@@ -449,11 +465,13 @@ export default function Home() {
                               const parent = getParentSuggestion(currentSuggestion)?.image
                               if (own) setImgFallback('fooddata')
                               else if (parent) setImgFallback('parentimage')
-                              else setImgFallback('emoji')
+                              else setImgFallback('flickr')
                             } else if (imgFallback === 'fooddata') {
                               const parent = getParentSuggestion(currentSuggestion)?.image
                               if (parent) setImgFallback('parentimage')
-                              else setImgFallback('emoji')
+                              else setImgFallback('flickr')
+                            } else if (imgFallback === 'parentimage') {
+                              setImgFallback('flickr')
                             } else {
                               setImgFallback('emoji')
                             }

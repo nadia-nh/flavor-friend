@@ -368,6 +368,7 @@ export const foodSuggestions: FoodSuggestion[] = [
   {
     name: 'Textured Vegetable Protein',
     foodType: 'legume',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Soja_tvp.jpg/320px-Soja_tvp.jpg',
     similarTo: ['Lentils', 'Tofu', 'Soy Curls'],
     cookingMethods: [
       {
@@ -400,6 +401,7 @@ export const foodSuggestions: FoodSuggestion[] = [
   {
     name: 'Soy Curls',
     foodType: 'legume',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Soybeans.jpg/320px-Soybeans.jpg',
     similarTo: ['Tofu', 'Tempeh', 'Textured Vegetable Protein'],
     cookingMethods: [
       {
@@ -1395,7 +1397,7 @@ export const foodSuggestions: FoodSuggestion[] = [
     name: 'Corn',
     foodType: 'grain',
     similarTo: ['Peas', 'Bell Peppers', 'Carrots'],
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Cornflower_on_corn.jpg/320px-Cornflower_on_corn.jpg',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Corn_Cob.jpg/320px-Corn_Cob.jpg',
     cookingMethods: [
       {
         name: 'Grilled on the cob',
@@ -1659,7 +1661,7 @@ export const foodSuggestions: FoodSuggestion[] = [
     name: 'Barley',
     foodType: 'grain',
     similarTo: ['Quinoa', 'Rice', 'Farro'],
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Barley-Haeckel.jpg/320px-Barley-Haeckel.jpg',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Barley_%28Hordeum_vulgare%29.jpg/320px-Barley_%28Hordeum_vulgare%29.jpg',
     cookingMethods: [
       {
         name: 'Grain bowl base',
