@@ -15,8 +15,8 @@ const FOOD_TYPE_CONFIG: Record<FoodType, {
 }> = {
   vegetable: { label: 'Vegetables', emoji: '🥦', fill: '#bbf7d0', stroke: '#16a34a', textColor: '#14532d', startDeg: 180, endDeg: 270 },
   grain:     { label: 'Grains',     emoji: '🌾', fill: '#fde68a', stroke: '#d97706', textColor: '#78350f', startDeg: 270, endDeg: 360 },
-  legume:    { label: 'Legumes',    emoji: '🫘', fill: '#fed7aa', stroke: '#ea580c', textColor: '#7c2d12', startDeg: 0,   endDeg: 90  },
-  other:     { label: 'Other',      emoji: '🥜', fill: '#ddd6fe', stroke: '#7c3aed', textColor: '#4c1d95', startDeg: 90,  endDeg: 180 },
+  legume:    { label: 'Legumes',    emoji: '🫘', fill: '#e7e5e4', stroke: '#78716c', textColor: '#1c1917', startDeg: 0,   endDeg: 90  },
+  other:     { label: 'Other',      emoji: '🥜', fill: '#dcfce7', stroke: '#16a34a', textColor: '#14532d', startDeg: 90,  endDeg: 180 },
 }
 
 const defaultFoods: Food[] = [
@@ -138,7 +138,6 @@ export default function Home() {
   const [foods, setFoods] = useState<Food[]>([])
   const [showMessage, setShowMessage] = useState('')
   const [selectedFood, setSelectedFood] = useState<Food | null>(null)
-  const [showSuggestions, setShowSuggestions] = useState(false)
   const [showProgress, setShowProgress] = useState(false)
   const [darkMode, setDarkMode] = useState(false)
   const [movedToSafe, setMovedToSafe] = useState<string[]>([])
@@ -152,6 +151,7 @@ export default function Home() {
   const [exploringInput, setExploringInput] = useState('')
   const [showAutocomplete, setShowAutocomplete] = useState<Record<string, boolean>>({})
   const [recipeFilter, setRecipeFilter] = useState('all')
+  const [activeTab, setActiveTab] = useState<'home' | 'discover' | 'recipes'>('home')
   const [imgFallback, setImgFallback] = useState<'spoonacular' | 'fooddata' | 'parentimage' | 'flickr' | 'emoji'>('spoonacular')
   const [platePopover, setPlatePopover] = useState<{food: Food; x: number; y: number} | null>(null)
   const [plateDragGhost, setPlateDragGhost] = useState<{svgX: number; svgY: number; outside: boolean; foodId: string} | null>(null)
@@ -325,6 +325,10 @@ export default function Home() {
     setImgFallback('spoonacular')
   }, [currentSuggestion])
 
+  useEffect(() => {
+    if (activeTab === 'discover') setSessionSkipped([])
+  }, [activeTab])
+
   const handleAddCurrentSuggestion = (category: FoodCategory) => {
     if (currentSuggestion) {
       addOrMoveFood(currentSuggestion, category)
@@ -394,149 +398,31 @@ export default function Home() {
   }
 
   return (
-    <main className={`min-h-screen p-4 ${dm ? 'bg-gray-900' : 'bg-gray-50'}`}>
+    <main className={`min-h-screen p-4 pb-20 ${dm ? 'bg-gray-900' : 'bg-gray-50'}`}>
       <header className="text-center mb-6">
-        <div className="flex justify-end mb-2">
-          <button onClick={() => setDarkMode(!dm)} className={`px-3 py-1 rounded-lg text-sm ${dm ? 'bg-gray-700 text-yellow-300' : 'bg-gray-200 text-gray-700'}`}>
+        <div className="flex justify-between items-center mb-2">
+          <button onClick={() => setDarkMode(!dm)} className={`px-3 py-1 rounded-lg text-sm ${dm ? 'bg-gray-700 text-amber-300' : 'bg-gray-200 text-gray-700'}`}>
             {dm ? '☀️' : '🌙'}
           </button>
+          <button
+            onClick={() => setShowProgress(true)}
+            className={`p-2 rounded-lg text-lg leading-none ${dm ? 'text-gray-400 hover:text-green-300' : 'text-gray-400 hover:text-green-800'}`}
+            aria-label="View progress"
+          >
+            📊
+          </button>
         </div>
-        <h1 className={`text-3xl font-bold mb-2 ${dm ? 'text-emerald-300' : 'text-green-800'}`}>PlantPal</h1>
-        <p className={dm ? 'text-emerald-400' : 'text-green-700'}>Expand your palate, one bite at a time</p>
+        <h1 className={`text-3xl font-bold mb-2 ${dm ? 'text-green-300' : 'text-green-800'}`}>PlantPal</h1>
+        <p className={dm ? 'text-green-400' : 'text-green-700'}>Expand your palate, one bite at a time</p>
       </header>
 
       {showMessage && (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-emerald-500 text-white px-4 py-2 rounded-full shadow-lg z-50 text-sm">
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-green-800 text-white px-4 py-2 rounded-full shadow-lg z-50 text-sm">
           {showMessage}
         </div>
       )}
 
-      {/* Suggestions toggle */}
-      <button
-        onClick={() => { if (!showSuggestions) setSessionSkipped([]); setShowSuggestions(!showSuggestions) }}
-        className={`mx-auto block mb-4 px-6 py-3 rounded-2xl font-medium transition-all ${
-          showSuggestions ? 'bg-emerald-500 text-white' : 'bg-green-100 text-green-700 border border-green-300 hover:bg-green-200'
-        }`}
-      >
-        {showSuggestions ? '✕ Close Suggestions' : '+ Food Suggestions'}
-      </button>
-
-      {showSuggestions && (
-        <div className="max-w-md mx-auto mb-6">
-          {!currentSuggestion ? (
-            <div className="bg-white rounded-2xl border-2 border-green-200 shadow-lg p-8">
-              <p className="text-center text-gray-500">No more suggestions. Check back later!</p>
-            </div>
-          ) : (
-            <>
-              {/* Swipeable card */}
-              <div
-                ref={cardRef}
-                className="relative h-64 cursor-grab active:cursor-grabbing select-none touch-none"
-                onPointerDown={handleCardPointerDown}
-                onPointerMove={handleCardPointerMove}
-                onPointerUp={handleCardPointerUp}
-                onPointerCancel={handleCardPointerUp}
-              >
-                <div
-                  ref={cardInnerRef}
-                  className="absolute inset-0 bg-white rounded-2xl border border-green-200 shadow-lg overflow-hidden flex flex-col"
-                  style={{ willChange: 'transform' }}
-                >
-                  {/* Full-width image area */}
-                  <div className="relative w-full flex-1 bg-green-100 flex items-center justify-center overflow-hidden">
-                    {imgFallback !== 'emoji'
-                      ? <img
-                          key={`${currentSuggestion}-${imgFallback}`}
-                          src={
-                            imgFallback === 'spoonacular'
-                              ? getIngredientImageUrl(currentSuggestion)
-                              : imgFallback === 'fooddata'
-                              ? getSuggestionsForFood(currentSuggestion)?.image ?? ''
-                              : imgFallback === 'parentimage'
-                              ? getParentSuggestion(currentSuggestion)?.image ?? ''
-                              : getFlickrFallbackUrl(currentSuggestion)
-                          }
-                          alt={currentSuggestion}
-                          className="w-full h-full object-cover"
-                          onError={() => {
-                            if (imgFallback === 'spoonacular') {
-                              const own = getSuggestionsForFood(currentSuggestion)?.image
-                              const parent = getParentSuggestion(currentSuggestion)?.image
-                              if (own) setImgFallback('fooddata')
-                              else if (parent) setImgFallback('parentimage')
-                              else setImgFallback('flickr')
-                            } else if (imgFallback === 'fooddata') {
-                              const parent = getParentSuggestion(currentSuggestion)?.image
-                              if (parent) setImgFallback('parentimage')
-                              else setImgFallback('flickr')
-                            } else if (imgFallback === 'parentimage') {
-                              setImgFallback('flickr')
-                            } else {
-                              setImgFallback('emoji')
-                            }
-                          }}
-                        />
-                      : <span className="text-7xl">🍽️</span>
-                    }
-                    {/* Gradient overlay for text legibility */}
-                    <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/70 to-transparent pointer-events-none" />
-                    {/* Category badge */}
-                    {suggestionData && (
-                      <span className="absolute top-2 left-2 bg-white/85 backdrop-blur-sm text-xs font-semibold px-2 py-1 rounded-full">
-                        {FOOD_TYPE_CONFIG[suggestionData.foodType].emoji} {FOOD_TYPE_CONFIG[suggestionData.foodType].label}
-                      </span>
-                    )}
-                    {/* Food name on gradient */}
-                    <span className="absolute bottom-3 left-0 right-0 text-center text-white font-bold text-xl drop-shadow-lg px-4">
-                      {currentSuggestion}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Swipe overlays */}
-                {swipeDir === 'right' && (
-                  <div className="absolute inset-0 bg-green-400/30 rounded-2xl flex items-center justify-center pointer-events-none">
-                    <span className="text-white font-bold text-2xl drop-shadow-lg">✓ Try it!</span>
-                  </div>
-                )}
-                {swipeDir === 'left' && (
-                  <div className="absolute inset-0 bg-gray-400/30 rounded-2xl flex items-center justify-center pointer-events-none">
-                    <span className="text-white font-bold text-2xl drop-shadow-lg">→ Skip</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Recipe hint outside drag zone */}
-              {exampleRecipe && (
-                <p className="text-xs text-center text-green-600 mt-2">✨ Try: {exampleRecipe.title}</p>
-              )}
-
-              {/* Action buttons */}
-              <div className="flex items-center justify-around mt-4 px-8">
-                <div className="flex flex-col items-center gap-1">
-                  <button
-                    onClick={handleSkipCurrentSuggestion}
-                    className="w-14 h-14 rounded-full bg-gray-100 text-gray-500 text-2xl hover:bg-gray-200 flex items-center justify-center shadow transition-colors"
-                  >
-                    →
-                  </button>
-                  <span className="text-xs text-gray-400">Skip</span>
-                </div>
-                <div className="flex flex-col items-center gap-1">
-                  <button
-                    onClick={() => handleAddCurrentSuggestion('exploring')}
-                    className="w-14 h-14 rounded-full bg-green-100 text-green-700 text-2xl hover:bg-green-200 flex items-center justify-center shadow transition-colors"
-                  >
-                    ✓
-                  </button>
-                  <span className="text-xs text-green-600 font-medium">Try it!</span>
-                </div>
-              </div>
-            </>
-          )}
-        </div>
-      )}
+      {activeTab === 'home' && (<>
 
       {/* Main layout */}
       <div className="flex flex-col lg:flex-row gap-6 max-w-5xl mx-auto px-4 mb-8">
@@ -616,7 +502,7 @@ export default function Home() {
               type="text"
               value={plateInput}
               placeholder="Add food to your plate…"
-              className={`w-full px-4 py-2.5 text-sm border-2 rounded-xl ${dm ? 'bg-gray-800 border-gray-600 text-gray-100 placeholder-gray-500' : 'bg-white border-gray-300 placeholder-gray-400'} focus:outline-none focus:border-emerald-400`}
+              className={`w-full px-4 py-2.5 text-sm border-2 rounded-xl ${dm ? 'bg-gray-800 border-gray-600 text-gray-100 placeholder-gray-500' : 'bg-white border-gray-300 placeholder-gray-400'} focus:outline-none focus:border-green-400`}
               onChange={e => {
                 setPlateInput(e.target.value)
                 setShowAutocomplete(p => ({ ...p, plate: e.target.value.length > 0 }))
@@ -639,19 +525,19 @@ export default function Home() {
         </div>
 
         {/* Exploring sidebar */}
-        <div className={`w-full lg:w-72 rounded-2xl p-4 ${dm ? 'bg-lime-900/30 border-lime-800' : 'bg-lime-50 border-lime-200'} border`}>
-          <h2 className={`text-lg font-bold mb-4 ${dm ? 'text-lime-300' : 'text-lime-800'}`}>🌱 Trying Now</h2>
+        <div className={`w-full lg:w-72 rounded-2xl p-4 ${dm ? 'bg-green-900/30 border-green-800' : 'bg-green-50 border-green-200'} border`}>
+          <h2 className={`text-lg font-bold mb-4 ${dm ? 'text-green-300' : 'text-green-800'}`}>🌱 Trying Now</h2>
 
           {exploringFoods.length === 0 && (
-            <p className={`text-sm mb-4 ${dm ? 'text-lime-500' : 'text-lime-600'}`}>Add foods you&apos;re experimenting with here!</p>
+            <p className={`text-sm mb-4 ${dm ? 'text-green-500' : 'text-green-600'}`}>Add foods you&apos;re experimenting with here!</p>
           )}
 
           <ul className="space-y-2 mb-4">
             {exploringFoods.map(food => (
-              <li key={food.id} className={`flex items-center gap-2 p-2 rounded-xl ${dm ? 'bg-lime-800/40' : 'bg-white'} shadow-sm`}>
+              <li key={food.id} className={`flex items-center gap-2 p-2 rounded-xl ${dm ? 'bg-green-800/40' : 'bg-white'} shadow-sm`}>
                 <button
                   onClick={() => setSelectedFood(food)}
-                  className={`flex-1 text-left text-sm font-medium truncate ${dm ? 'text-lime-200 hover:text-lime-400' : 'text-gray-800 hover:text-lime-700'}`}
+                  className={`flex-1 text-left text-sm font-medium truncate ${dm ? 'text-green-200 hover:text-green-400' : 'text-gray-800 hover:text-green-700'}`}
                 >
                   {food.name}
                 </button>
@@ -662,10 +548,10 @@ export default function Home() {
                       <circle cx="14" cy="14" r="10" stroke="#84cc16" strokeWidth="2.5" fill="none"
                         strokeDasharray={`${Math.min(food.attempts, 7) * 8.98} 62.8`} className="transition-all duration-300" />
                     </svg>
-                    <span className={`absolute inset-0 flex items-center justify-center text-xs font-medium ${dm ? 'text-lime-300' : 'text-lime-700'}`}>{food.attempts}</span>
+                    <span className={`absolute inset-0 flex items-center justify-center text-xs font-medium ${dm ? 'text-green-300' : 'text-green-700'}`}>{food.attempts}</span>
                   </div>
-                  <span className={`text-xs ${dm ? 'text-lime-600' : 'text-lime-500'}`}>/7</span>
-                  <button onClick={() => openAttemptModal(food)} className={`text-lg font-bold leading-none px-1 ${dm ? 'text-lime-400 hover:text-lime-200' : 'text-lime-500 hover:text-lime-700'}`}>+</button>
+                  <span className={`text-xs ${dm ? 'text-green-600' : 'text-green-500'}`}>/7</span>
+                  <button onClick={() => openAttemptModal(food)} className={`text-lg font-bold leading-none px-1 ${dm ? 'text-green-400 hover:text-green-200' : 'text-green-500 hover:text-green-700'}`}>+</button>
                   <button onClick={() => deleteFood(food.id)} className={`text-xs px-0.5 ${dm ? 'text-gray-500 hover:text-red-400' : 'text-gray-400 hover:text-red-500'}`}>✕</button>
                 </div>
               </li>
@@ -677,7 +563,7 @@ export default function Home() {
               type="text"
               value={exploringInput}
               placeholder="Add food to try…"
-              className={`w-full px-3 py-2 text-sm border rounded-xl ${dm ? 'bg-lime-900/50 border-lime-700 text-lime-100 placeholder-lime-600' : 'bg-white border-lime-300 placeholder-lime-400'}`}
+              className={`w-full px-3 py-2 text-sm border rounded-xl ${dm ? 'bg-green-900/50 border-green-700 text-green-100 placeholder-green-600' : 'bg-white border-green-300 placeholder-green-400'}`}
               onChange={e => {
                 setExploringInput(e.target.value)
                 setShowAutocomplete(p => ({ ...p, exploring: e.target.value.length > 0 }))
@@ -710,7 +596,7 @@ export default function Home() {
           >
             <p className="text-sm font-semibold text-gray-800 mb-2 truncate">{platePopover.food.name}</p>
             <button
-              className="w-full text-left px-3 py-1.5 rounded-xl text-sm hover:bg-lime-50 text-lime-700 mb-1"
+              className="w-full text-left px-3 py-1.5 rounded-xl text-sm hover:bg-green-50 text-green-700 mb-1"
               onClick={() => { moveFood(platePopover.food, 'exploring'); setPlatePopover(null) }}
             >
               🌱 Move to Exploring
@@ -740,7 +626,7 @@ export default function Home() {
               <div className="flex gap-1">
                 {CATEGORIES.map(cat => (
                   <button key={cat} onClick={() => moveFood(selectedFood, cat)}
-                    className={`text-xs px-2 py-1 rounded ${selectedFood.category === cat ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                    className={`text-xs px-2 py-1 rounded ${selectedFood.category === cat ? 'bg-green-800 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
                   >
                     {cat === 'love' ? '🟢' : cat === 'exploring' ? '🌱' : cat === 'curious' ? '🌿' : '🚫'}
                   </button>
@@ -758,7 +644,7 @@ export default function Home() {
                     {suggestion.cookingMethods.map((method, i) => (
                       <li key={i} className="text-sm bg-gray-50 p-2 rounded">
                         <span className="font-medium">{method.name}</span>
-                        <span className={`ml-2 px-1 rounded text-xs ${method.difficulty === 'easy' ? 'bg-green-100 text-green-700' : method.difficulty === 'medium' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}`}>{method.difficulty}</span>
+                        <span className={`ml-2 px-1 rounded text-xs ${method.difficulty === 'easy' ? 'bg-green-100 text-green-700' : method.difficulty === 'medium' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'}`}>{method.difficulty}</span>
                         <p className="text-gray-600 text-xs mt-0.5">{method.description}</p>
                       </li>
                     ))}
@@ -766,7 +652,7 @@ export default function Home() {
                   <h4 className="font-medium text-gray-800 mb-2">Easy meals:</h4>
                   <div className="flex flex-wrap gap-1 mb-4">
                     {suggestion.easyMeals.map((meal, i) => (
-                      <span key={i} className="px-2 py-1 bg-blue-50 border border-blue-200 rounded-full text-xs text-blue-700">{meal}</span>
+                      <span key={i} className="px-2 py-1 bg-stone-100 border border-stone-200 rounded-full text-xs text-stone-700">{meal}</span>
                     ))}
                   </div>
                 </>
@@ -804,7 +690,7 @@ export default function Home() {
             <div className="mb-3">
               <label className="block text-sm font-medium text-gray-700 mb-2">Did you like it?</label>
               <div className="flex gap-2">
-                <button onClick={() => setAttemptLiked(true)} className={`flex-1 py-2 rounded-xl border ${attemptLiked === true ? 'bg-green-500 text-white border-green-500' : 'border-gray-300 text-gray-600'}`}>✓ Liked</button>
+                <button onClick={() => setAttemptLiked(true)} className={`flex-1 py-2 rounded-xl border ${attemptLiked === true ? 'bg-green-800 text-white border-green-800' : 'border-gray-300 text-gray-600'}`}>✓ Liked</button>
                 <button onClick={() => setAttemptLiked(false)} className={`flex-1 py-2 rounded-xl border ${attemptLiked === false ? 'bg-red-500 text-white border-red-500' : 'border-gray-300 text-gray-600'}`}>✕ Not yet</button>
                 <button onClick={() => setAttemptLiked(null)} className={`flex-1 py-2 rounded-xl border ${attemptLiked === null ? 'bg-gray-500 text-white border-gray-500' : 'border-gray-300 text-gray-600'}`}>? Not sure</button>
               </div>
@@ -815,88 +701,235 @@ export default function Home() {
             </div>
             <div className="flex gap-2">
               <button onClick={() => setAttemptModal(null)} className="flex-1 py-2 border border-gray-300 rounded-xl text-gray-600">Cancel</button>
-              <button onClick={submitAttempt} className="flex-1 py-2 bg-emerald-500 text-white rounded-xl">Save</button>
+              <button onClick={submitAttempt} className="flex-1 py-2 bg-green-800 text-white rounded-xl">Save</button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Progress */}
-      <button
-        onClick={() => setShowProgress(!showProgress)}
-        className={`mx-auto block mb-4 px-6 py-3 rounded-2xl font-medium transition-all ${showProgress ? 'bg-purple-600 text-white' : 'bg-purple-100 text-purple-700 border border-purple-300 hover:bg-purple-200'}`}
-      >
-        {showProgress ? '✕ Close Progress' : '📊 View Progress'}
-      </button>
+      </>)}
 
-      {showProgress && (
-        <div className="max-w-md mx-auto mb-6 p-4 bg-white rounded-2xl border-2 border-purple-200 shadow-lg">
-          <h3 className="font-semibold text-purple-800 mb-4">Your Food Journey</h3>
-          <div className="space-y-4">
-            <div>
-              <p className="text-sm text-purple-600 mb-1">Foods on your plate</p>
-              <p className="text-2xl font-bold text-emerald-600">{movedToSafe.length}</p>
+      {/* Discover tab */}
+      {activeTab === 'discover' && (
+        <div className="max-w-md mx-auto py-6 px-4">
+          <h2 className={`text-xl font-bold text-center mb-6 ${dm ? 'text-green-300' : 'text-green-900'}`}>What to try next</h2>
+          {!currentSuggestion ? (
+            <div className={`${dm ? 'bg-gray-800 border-green-800' : 'bg-white border-green-200'} rounded-2xl border-2 shadow-lg p-8`}>
+              <p className="text-center text-gray-500">No more suggestions right now — check back later!</p>
             </div>
-            <div>
-              <p className="text-sm text-purple-600 mb-1">In progress ({inProgressFoods.length})</p>
-              {inProgressFoods.length > 0 ? (
-                <div className="space-y-3">
-                  {inProgressFoods.map(f => (
-                    <div key={f.id} className="flex items-center gap-3">
-                      <span className="text-sm text-gray-700 w-24 truncate">{f.name}</span>
-                      <div className="relative w-8 h-8">
-                        <svg className="w-8 h-8 -rotate-90">
-                          <circle cx="16" cy="16" r="12" stroke="#e5e7eb" strokeWidth="3" fill="none" />
-                          <circle cx="16" cy="16" r="12" stroke="#8b5cf6" strokeWidth="3" fill="none" strokeDasharray={`${Math.min(f.attempts, 7) * 10.8} 75.4`} className="transition-all duration-300" />
-                        </svg>
-                        <span className="absolute inset-0 flex items-center justify-center text-xs font-medium">{f.attempts}</span>
-                      </div>
-                      <span className="text-xs text-gray-500">/ 7</span>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-xs text-gray-500">Start trying foods in &quot;Trying Now&quot;</p>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Recipe browser */}
-      <section className="max-w-6xl mx-auto px-4 pb-8">
-        <details className={`${dm ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-lg p-6`}>
-          <summary className={`text-xl font-bold cursor-pointer hover:text-emerald-600 ${dm ? 'text-gray-200' : 'text-gray-800'}`}>
-            📖 Recipe Browser ({recipes.length} recipes)
-          </summary>
-          <div className="mt-4">
-            <div className="flex flex-wrap gap-2 mb-6">
-              {recipeCategories.map(cat => (
-                <button key={cat} onClick={() => setRecipeFilter(cat)}
-                  className={`px-3 py-1 rounded-full text-sm ${recipeFilter === cat ? 'bg-emerald-500 text-white' : dm ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+          ) : (
+            <>
+              {/* Swipeable card */}
+              <div
+                ref={cardRef}
+                className="relative h-72 cursor-grab active:cursor-grabbing select-none touch-none"
+                onPointerDown={handleCardPointerDown}
+                onPointerMove={handleCardPointerMove}
+                onPointerUp={handleCardPointerUp}
+                onPointerCancel={handleCardPointerUp}
+              >
+                <div
+                  ref={cardInnerRef}
+                  className="absolute inset-0 bg-white rounded-2xl border border-green-200 shadow-lg overflow-hidden flex flex-col"
+                  style={{ willChange: 'transform' }}
                 >
-                  {cat === 'all' ? 'All' : cat.charAt(0).toUpperCase() + cat.slice(1)}
-                </button>
-              ))}
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {recipes.filter(r => recipeFilter === 'all' || r.category === recipeFilter).map((recipe, idx) => (
-                <div key={idx} className={`${dm ? 'bg-gray-700' : 'bg-gray-50'} rounded-lg shadow p-2 hover:shadow-md transition-shadow`}>
-                  <img src={recipe.image || '/placeholder-vegetable.svg'} alt={recipe.title} className="w-full h-32 object-cover rounded-md mb-2" onError={e => { (e.target as HTMLImageElement).src = '/placeholder-vegetable.svg' }} />
-                  <h3 className={`text-sm font-medium mb-1 line-clamp-2 ${dm ? 'text-gray-200' : 'text-gray-800'}`}>{recipe.title}</h3>
-                  <p className={`text-xs mb-2 ${dm ? 'text-gray-400' : 'text-gray-500'}`}>{recipe.source}</p>
-                  {recipe.prepTime && <span className={`inline-block text-xs px-2 py-0.5 rounded-full mb-2 ${dm ? 'bg-emerald-900 text-emerald-300' : 'bg-emerald-100 text-emerald-700'}`}>⏱ {recipe.prepTime}</span>}
-                  <a href={recipe.link} target="_blank" rel="noopener noreferrer" className="block text-center text-sm bg-emerald-500 text-white py-1.5 rounded-lg hover:bg-emerald-600 transition-colors">View Recipe</a>
+                  {/* Full-width image area */}
+                  <div className="relative w-full flex-1 bg-green-100 flex items-center justify-center overflow-hidden">
+                    {imgFallback !== 'emoji'
+                      ? <img
+                          key={`${currentSuggestion}-${imgFallback}`}
+                          src={
+                            imgFallback === 'spoonacular'
+                              ? getIngredientImageUrl(currentSuggestion)
+                              : imgFallback === 'fooddata'
+                              ? getSuggestionsForFood(currentSuggestion)?.image ?? ''
+                              : imgFallback === 'parentimage'
+                              ? getParentSuggestion(currentSuggestion)?.image ?? ''
+                              : getFlickrFallbackUrl(currentSuggestion)
+                          }
+                          alt={currentSuggestion}
+                          className="w-full h-full object-cover"
+                          onError={() => {
+                            if (imgFallback === 'spoonacular') {
+                              const own = getSuggestionsForFood(currentSuggestion)?.image
+                              const parent = getParentSuggestion(currentSuggestion)?.image
+                              if (own) setImgFallback('fooddata')
+                              else if (parent) setImgFallback('parentimage')
+                              else setImgFallback('flickr')
+                            } else if (imgFallback === 'fooddata') {
+                              const parent = getParentSuggestion(currentSuggestion)?.image
+                              if (parent) setImgFallback('parentimage')
+                              else setImgFallback('flickr')
+                            } else if (imgFallback === 'parentimage') {
+                              setImgFallback('flickr')
+                            } else {
+                              setImgFallback('emoji')
+                            }
+                          }}
+                        />
+                      : <span className="text-7xl">🍽️</span>
+                    }
+                    {/* Gradient overlay */}
+                    <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/70 to-transparent pointer-events-none" />
+                    {/* Category badge */}
+                    {suggestionData && (
+                      <span className="absolute top-2 left-2 bg-white/85 backdrop-blur-sm text-xs font-semibold px-2 py-1 rounded-full">
+                        {FOOD_TYPE_CONFIG[suggestionData.foodType].emoji} {FOOD_TYPE_CONFIG[suggestionData.foodType].label}
+                      </span>
+                    )}
+                    {/* Food name */}
+                    <span className="absolute bottom-3 left-0 right-0 text-center text-white font-bold text-xl drop-shadow-lg px-4">
+                      {currentSuggestion}
+                    </span>
+                  </div>
                 </div>
-              ))}
+                {/* Swipe overlays */}
+                {swipeDir === 'right' && (
+                  <div className="absolute inset-0 bg-green-400/30 rounded-2xl flex items-center justify-center pointer-events-none">
+                    <span className="text-white font-bold text-2xl drop-shadow-lg">✓ Try it!</span>
+                  </div>
+                )}
+                {swipeDir === 'left' && (
+                  <div className="absolute inset-0 bg-gray-400/30 rounded-2xl flex items-center justify-center pointer-events-none">
+                    <span className="text-white font-bold text-2xl drop-shadow-lg">→ Skip</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Recipe hint */}
+              {exampleRecipe && (
+                <p className="text-xs text-center text-green-600 mt-2">✨ Try: {exampleRecipe.title}</p>
+              )}
+
+              {/* Action buttons */}
+              <div className="flex items-center justify-around mt-6 px-8">
+                <div className="flex flex-col items-center gap-1">
+                  <button
+                    onClick={handleSkipCurrentSuggestion}
+                    className="w-14 h-14 rounded-full bg-gray-100 text-gray-500 text-2xl hover:bg-gray-200 flex items-center justify-center shadow transition-colors"
+                  >→</button>
+                  <span className="text-xs text-gray-400">Skip</span>
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                  <button
+                    onClick={() => handleAddCurrentSuggestion('exploring')}
+                    className="w-14 h-14 rounded-full bg-green-100 text-green-700 text-2xl hover:bg-green-200 flex items-center justify-center shadow transition-colors"
+                  >✓</button>
+                  <span className="text-xs text-green-700 font-medium">Try it!</span>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Progress modal */}
+      {showProgress && (
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+          onClick={() => setShowProgress(false)}
+        >
+          <div
+            className={`${dm ? 'bg-gray-800' : 'bg-white'} rounded-2xl p-6 max-w-sm w-full`}
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center mb-5">
+              <h3 className={`font-semibold text-lg ${dm ? 'text-green-300' : 'text-green-900'}`}>Your Food Journey</h3>
+              <button onClick={() => setShowProgress(false)} className="text-gray-400 hover:text-gray-600 text-xl leading-none">✕</button>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <p className={`text-sm mb-1 ${dm ? 'text-green-400' : 'text-green-700'}`}>Foods on your plate</p>
+                <p className={`text-2xl font-bold ${dm ? 'text-green-300' : 'text-green-800'}`}>{movedToSafe.length}</p>
+              </div>
+              <div>
+                <p className={`text-sm mb-2 ${dm ? 'text-green-400' : 'text-green-700'}`}>In progress ({inProgressFoods.length})</p>
+                {inProgressFoods.length > 0 ? (
+                  <div className="space-y-3">
+                    {inProgressFoods.map(f => (
+                      <div key={f.id} className="flex items-center gap-3">
+                        <span className={`text-sm w-24 truncate ${dm ? 'text-gray-300' : 'text-gray-700'}`}>{f.name}</span>
+                        <div className="relative w-8 h-8">
+                          <svg className="w-8 h-8 -rotate-90">
+                            <circle cx="16" cy="16" r="12" stroke="#e5e7eb" strokeWidth="3" fill="none" />
+                            <circle cx="16" cy="16" r="12" stroke="#16a34a" strokeWidth="3" fill="none" strokeDasharray={`${Math.min(f.attempts, 7) * 10.8} 75.4`} className="transition-all duration-300" />
+                          </svg>
+                          <span className={`absolute inset-0 flex items-center justify-center text-xs font-medium ${dm ? 'text-gray-300' : ''}`}>{f.attempts}</span>
+                        </div>
+                        <span className="text-xs text-gray-500">/ 7</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-gray-500">Start trying foods in &quot;Trying Now&quot;</p>
+                )}
+              </div>
             </div>
           </div>
-        </details>
-      </section>
+        </div>
+      )}
 
-      <footer className="text-center text-gray-500 text-sm pb-8">
+      {/* Recipe browser tab */}
+      {activeTab === 'recipes' && (
+        <section className="max-w-6xl mx-auto px-4 pb-8">
+          <h2 className={`text-2xl font-bold mb-4 ${dm ? 'text-gray-200' : 'text-gray-800'}`}>📖 Recipes ({recipes.length})</h2>
+          <div className="flex flex-wrap gap-2 mb-6">
+            {recipeCategories.map(cat => (
+              <button key={cat} onClick={() => setRecipeFilter(cat)}
+                className={`px-3 py-1 rounded-full text-sm ${recipeFilter === cat ? 'bg-green-800 text-white' : dm ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+              >
+                {cat === 'all' ? 'All' : cat.charAt(0).toUpperCase() + cat.slice(1)}
+              </button>
+            ))}
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {recipes.filter(r => recipeFilter === 'all' || r.category === recipeFilter).map((recipe, idx) => (
+              <div key={idx} className={`${dm ? 'bg-gray-700' : 'bg-gray-50'} rounded-lg shadow p-2 hover:shadow-md transition-shadow`}>
+                <img src={recipe.image || '/placeholder-vegetable.svg'} alt={recipe.title} className="w-full h-32 object-cover rounded-md mb-2" onError={e => { (e.target as HTMLImageElement).src = '/placeholder-vegetable.svg' }} />
+                <h3 className={`text-sm font-medium mb-1 line-clamp-2 ${dm ? 'text-gray-200' : 'text-gray-800'}`}>{recipe.title}</h3>
+                <p className={`text-xs mb-2 ${dm ? 'text-gray-400' : 'text-gray-500'}`}>{recipe.source}</p>
+                {recipe.prepTime && <span className={`inline-block text-xs px-2 py-0.5 rounded-full mb-2 ${dm ? 'bg-green-900 text-green-300' : 'bg-green-100 text-green-700'}`}>⏱ {recipe.prepTime}</span>}
+                <a href={recipe.link} target="_blank" rel="noopener noreferrer" className="block text-center text-sm bg-green-800 text-white py-1.5 rounded-lg hover:bg-green-900 transition-colors">View Recipe</a>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <footer className="text-center text-gray-500 text-sm pb-4">
         <p>Your journey is unique. Go at your own pace. 💚</p>
       </footer>
+
+      {/* Bottom tab bar */}
+      <nav className={`fixed bottom-0 left-0 right-0 z-40 flex border-t ${dm ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'}`}>
+        <button
+          onClick={() => setActiveTab('home')}
+          className={`flex-1 py-3 text-sm font-medium flex flex-col items-center gap-0.5 transition-colors ${
+            activeTab === 'home' ? (dm ? 'text-green-400' : 'text-green-700') : (dm ? 'text-gray-500' : 'text-gray-400')
+          }`}
+        >
+          <span className="text-lg">🌱</span>
+          <span>Home</span>
+        </button>
+        <button
+          onClick={() => setActiveTab('discover')}
+          className={`flex-1 py-3 text-sm font-medium flex flex-col items-center gap-0.5 transition-colors ${
+            activeTab === 'discover' ? (dm ? 'text-green-400' : 'text-green-700') : (dm ? 'text-gray-500' : 'text-gray-400')
+          }`}
+        >
+          <span className="text-lg">🔍</span>
+          <span>Discover</span>
+        </button>
+        <button
+          onClick={() => setActiveTab('recipes')}
+          className={`flex-1 py-3 text-sm font-medium flex flex-col items-center gap-0.5 transition-colors ${
+            activeTab === 'recipes' ? (dm ? 'text-green-400' : 'text-green-700') : (dm ? 'text-gray-500' : 'text-gray-400')
+          }`}
+        >
+          <span className="text-lg">📖</span>
+          <span>Recipes</span>
+        </button>
+      </nav>
     </main>
   )
 }
