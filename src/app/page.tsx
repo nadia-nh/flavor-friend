@@ -14,9 +14,9 @@ const FOOD_TYPE_CONFIG: Record<FoodType, {
   label: string; emoji: string; fill: string; stroke: string; textColor: string; startDeg: number; endDeg: number
 }> = {
   vegetable: { label: 'Vegetables', emoji: '🥦', fill: '#bbf7d0', stroke: '#16a34a', textColor: '#14532d', startDeg: 180, endDeg: 270 },
-  grain:     { label: 'Grains',     emoji: '🌾', fill: '#fde68a', stroke: '#d97706', textColor: '#78350f', startDeg: 270, endDeg: 360 },
-  legume:    { label: 'Legumes',    emoji: '🫘', fill: '#e7e5e4', stroke: '#78716c', textColor: '#1c1917', startDeg: 0,   endDeg: 90  },
-  other:     { label: 'Other',      emoji: '🥜', fill: '#dcfce7', stroke: '#16a34a', textColor: '#14532d', startDeg: 90,  endDeg: 180 },
+  grain:     { label: 'Grains',     emoji: '🌾', fill: '#fef3c7', stroke: '#d97706', textColor: '#78350f', startDeg: 270, endDeg: 360 },
+  legume:    { label: 'Legumes',    emoji: '🫘', fill: '#fed7aa', stroke: '#c2410c', textColor: '#7c2d12', startDeg: 0,   endDeg: 90  },
+  other:     { label: 'Other',      emoji: '🥜', fill: '#d1fae5', stroke: '#059669', textColor: '#064e3b', startDeg: 90,  endDeg: 180 },
 }
 
 const defaultFoods: Food[] = [
@@ -93,7 +93,7 @@ function getFlickrFallbackUrl(foodName: string): string {
 const PLATE_CX = 200
 const PLATE_CY = 200
 const PLATE_R = 183
-const INNER_R = 28
+const INNER_R = 38
 
 function polarToXY(cx: number, cy: number, r: number, angleDeg: number) {
   const rad = (angleDeg * Math.PI) / 180
@@ -399,7 +399,7 @@ export default function Home() {
 
   return (
     <main className={`min-h-screen p-4 pb-20 ${dm ? 'bg-gray-900' : 'bg-gray-50'}`}>
-      <header className="text-center mb-6">
+      <header className="text-center mb-4">
         <div className="flex justify-between items-center mb-2">
           <button onClick={() => setDarkMode(!dm)} className={`px-3 py-1 rounded-lg text-sm ${dm ? 'bg-gray-700 text-amber-300' : 'bg-gray-200 text-gray-700'}`}>
             {dm ? '☀️' : '🌙'}
@@ -412,8 +412,7 @@ export default function Home() {
             📊
           </button>
         </div>
-        <h1 className={`text-3xl font-bold mb-2 ${dm ? 'text-green-300' : 'text-green-800'}`}>PlantPal</h1>
-        <p className={dm ? 'text-green-400' : 'text-green-700'}>Expand your palate, one bite at a time</p>
+        <h1 className={`text-3xl font-bold italic mb-6 ${dm ? 'text-green-300' : 'text-green-800'}`} style={{ fontFamily: 'var(--font-display)' }}>Plant Pal</h1>
       </header>
 
       {showMessage && (
@@ -425,15 +424,50 @@ export default function Home() {
       {activeTab === 'home' && (<>
 
       {/* Main layout */}
-      <div className="flex flex-col lg:flex-row gap-6 max-w-5xl mx-auto px-4 mb-8">
+      <div className="flex flex-col lg:flex-row gap-6 max-w-5xl mx-auto px-4 mb-4">
 
         {/* Plate */}
         <div className="flex-1">
-          <h2 className={`text-xl font-bold mb-3 text-center ${dm ? 'text-gray-200' : 'text-gray-800'}`}>Your Plate</h2>
           <svg ref={plateRef} viewBox="-30 -30 460 460" className="w-full max-w-sm mx-auto drop-shadow-xl" style={{ touchAction: 'none' }}>
+            <defs>
+              {/* Rim gradient — off-centre radial, light from top-left, gives 3-D ceramic depth */}
+              <radialGradient id="rimGrad" cx="38%" cy="32%" r="68%">
+                <stop offset="0%"   stopColor={dm ? '#6b7280' : '#e9ecef'} />
+                <stop offset="65%"  stopColor={dm ? '#374151' : '#ced4da'} />
+                <stop offset="100%" stopColor={dm ? '#1f2937' : '#adb5bd'} />
+              </radialGradient>
+              {/* Plate base — very subtle warm cream at edges, pure white at centre */}
+              <radialGradient id="plateGrad" cx="50%" cy="50%" r="50%">
+                <stop offset="0%"   stopColor="#ffffff" />
+                <stop offset="100%" stopColor={dm ? '#1f2937' : '#fdf8f0'} />
+              </radialGradient>
+              {/* Rim noise filter — overlays fractal grain for matte stoneware feel */}
+              <filter id="rimNoise" x="-2%" y="-2%" width="104%" height="104%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" stitchTiles="stitch" result="noise"/>
+                <feColorMatrix type="saturate" values="0" in="noise" result="grayNoise"/>
+                <feBlend in="SourceGraphic" in2="grayNoise" mode="multiply" result="blended"/>
+                <feComposite in="blended" in2="SourceGraphic" operator="in"/>
+              </filter>
+            </defs>
+
             {/* Rim */}
-            <circle cx={PLATE_CX} cy={PLATE_CY} r={PLATE_R + 9} fill={plateDragGhost?.outside ? '#fca5a5' : dm ? '#374151' : '#d1d5db'} />
-            <circle cx={PLATE_CX} cy={PLATE_CY} r={PLATE_R} fill="white" />
+            <circle
+              cx={PLATE_CX} cy={PLATE_CY} r={PLATE_R + 9}
+              fill={plateDragGhost?.outside ? '#fca5a5' : 'url(#rimGrad)'}
+              filter={plateDragGhost?.outside ? undefined : 'url(#rimNoise)'}
+            />
+            {/* Ceramic glaze highlight arc — simulates specular gloss at top of rim */}
+            {!plateDragGhost?.outside && (() => {
+              const hStart = polarToXY(PLATE_CX, PLATE_CY, PLATE_R + 5, 210)
+              const hEnd   = polarToXY(PLATE_CX, PLATE_CY, PLATE_R + 5, 310)
+              return (
+                <path
+                  d={`M ${hStart.x} ${hStart.y} A ${PLATE_R + 5} ${PLATE_R + 5} 0 0 1 ${hEnd.x} ${hEnd.y}`}
+                  fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeOpacity="0.35"
+                />
+              )
+            })()}
+            <circle cx={PLATE_CX} cy={PLATE_CY} r={PLATE_R} fill="url(#plateGrad)" />
 
             {FOOD_TYPES.map(ft => {
               const cfg = FOOD_TYPE_CONFIG[ft]
@@ -443,7 +477,7 @@ export default function Home() {
               const labelPos = polarToXY(PLATE_CX, PLATE_CY, 242, midAngle)
               return (
                 <g key={ft}>
-                  <path d={makeSectorPath(PLATE_CX, PLATE_CY, PLATE_R, INNER_R, cfg.startDeg, cfg.endDeg)} fill={cfg.fill} stroke="white" strokeWidth="2" />
+                  <path d={makeSectorPath(PLATE_CX, PLATE_CY, PLATE_R, INNER_R, cfg.startDeg, cfg.endDeg)} fill={cfg.fill} stroke="white" strokeWidth="2.5" strokeOpacity="0.7" />
                   <text x={labelPos.x} y={labelPos.y - 9} textAnchor="middle" dominantBaseline="central" fontSize="22">{cfg.emoji}</text>
                   <text x={labelPos.x} y={labelPos.y + 13} textAnchor="middle" dominantBaseline="central" fontSize="14" fontWeight="700" fill={cfg.stroke} fontFamily="system-ui, sans-serif">
                     {cfg.label}
@@ -475,8 +509,9 @@ export default function Home() {
               )
             })}
 
-            {/* Center */}
-            <circle cx={PLATE_CX} cy={PLATE_CY} r={INNER_R} fill={dm ? '#374151' : '#f9fafb'} stroke={dm ? '#4b5563' : '#e5e7eb'} strokeWidth="1" />
+            {/* Center — water reminder */}
+            <circle cx={PLATE_CX} cy={PLATE_CY} r={INNER_R} fill={dm ? '#075985' : '#e0f2fe'} stroke={dm ? '#38bdf8' : '#7dd3fc'} strokeWidth="1.5" />
+            <text x={PLATE_CX} y={PLATE_CY + 3} textAnchor="middle" dominantBaseline="central" fontSize="22" style={{ userSelect: 'none' }}>💧</text>
 
             {/* Drag ghost */}
             {plateDragGhost && (() => {
@@ -502,7 +537,7 @@ export default function Home() {
               type="text"
               value={plateInput}
               placeholder="Add food to your plate…"
-              className={`w-full px-4 py-2.5 text-sm border-2 rounded-xl ${dm ? 'bg-gray-800 border-gray-600 text-gray-100 placeholder-gray-500' : 'bg-white border-gray-300 placeholder-gray-400'} focus:outline-none focus:border-green-400`}
+              className={`w-full px-4 py-2.5 text-sm border rounded-2xl ${dm ? 'bg-gray-800 border-gray-600 text-gray-100 placeholder-gray-500' : 'bg-white border-gray-300 placeholder-gray-400'} focus:outline-none focus:border-green-400`}
               onChange={e => {
                 setPlateInput(e.target.value)
                 setShowAutocomplete(p => ({ ...p, plate: e.target.value.length > 0 }))
@@ -525,19 +560,19 @@ export default function Home() {
         </div>
 
         {/* Exploring sidebar */}
-        <div className={`w-full lg:w-72 rounded-2xl p-4 ${dm ? 'bg-green-900/30 border-green-800' : 'bg-green-50 border-green-200'} border`}>
-          <h2 className={`text-lg font-bold mb-4 ${dm ? 'text-green-300' : 'text-green-800'}`}>🌱 Trying Now</h2>
+        <div className={`w-full lg:w-72 p-4 rounded-2xl shadow-lg ${dm ? 'bg-gray-800' : 'bg-white'}`}>
+          <h2 className={`text-xs font-semibold uppercase tracking-widest mb-3 ${dm ? 'text-gray-500' : 'text-gray-400'}`}>Trying Now</h2>
 
           {exploringFoods.length === 0 && (
-            <p className={`text-sm mb-4 ${dm ? 'text-green-500' : 'text-green-600'}`}>Add foods you&apos;re experimenting with here!</p>
+            <p className={`text-sm mb-4 ${dm ? 'text-gray-500' : 'text-gray-400'}`}>Add foods you&apos;re experimenting with here!</p>
           )}
 
-          <ul className="space-y-2 mb-4">
+          <ul className="space-y-1 mb-3">
             {exploringFoods.map(food => (
-              <li key={food.id} className={`flex items-center gap-2 p-2 rounded-xl ${dm ? 'bg-green-800/40' : 'bg-white'} shadow-sm`}>
+              <li key={food.id} className={`group flex items-center gap-2 px-2 py-1.5 rounded-xl ${dm ? 'hover:bg-gray-800' : 'hover:bg-gray-50'}`}>
                 <button
                   onClick={() => setSelectedFood(food)}
-                  className={`flex-1 text-left text-sm font-medium truncate ${dm ? 'text-green-200 hover:text-green-400' : 'text-gray-800 hover:text-green-700'}`}
+                  className={`flex-1 text-left text-sm font-medium truncate ${dm ? 'text-gray-200 hover:text-green-400' : 'text-gray-700 hover:text-green-700'}`}
                 >
                   {food.name}
                 </button>
@@ -545,14 +580,14 @@ export default function Home() {
                   <div className="relative w-7 h-7">
                     <svg className="w-7 h-7 -rotate-90">
                       <circle cx="14" cy="14" r="10" stroke={dm ? '#374151' : '#e5e7eb'} strokeWidth="2.5" fill="none" />
-                      <circle cx="14" cy="14" r="10" stroke="#84cc16" strokeWidth="2.5" fill="none"
+                      <circle cx="14" cy="14" r="10" stroke="#16a34a" strokeWidth="2.5" fill="none"
                         strokeDasharray={`${Math.min(food.attempts, 7) * 8.98} 62.8`} className="transition-all duration-300" />
                     </svg>
-                    <span className={`absolute inset-0 flex items-center justify-center text-xs font-medium ${dm ? 'text-green-300' : 'text-green-700'}`}>{food.attempts}</span>
+                    <span className={`absolute inset-0 flex items-center justify-center text-xs font-medium ${dm ? 'text-gray-300' : 'text-gray-600'}`}>{food.attempts}</span>
                   </div>
-                  <span className={`text-xs ${dm ? 'text-green-600' : 'text-green-500'}`}>/7</span>
-                  <button onClick={() => openAttemptModal(food)} className={`text-lg font-bold leading-none px-1 ${dm ? 'text-green-400 hover:text-green-200' : 'text-green-500 hover:text-green-700'}`}>+</button>
-                  <button onClick={() => deleteFood(food.id)} className={`text-xs px-0.5 ${dm ? 'text-gray-500 hover:text-red-400' : 'text-gray-400 hover:text-red-500'}`}>✕</button>
+                  <span className={`text-xs ${dm ? 'text-gray-600' : 'text-gray-400'}`}>/7</span>
+                  <button onClick={() => openAttemptModal(food)} className={`text-base font-bold leading-none px-1 ${dm ? 'text-green-400 hover:text-green-200' : 'text-green-600 hover:text-green-800'}`}>+</button>
+                  <button onClick={() => deleteFood(food.id)} className={`text-xs px-0.5 opacity-0 group-hover:opacity-100 transition-opacity ${dm ? 'text-gray-500 hover:text-red-400' : 'text-gray-400 hover:text-red-500'}`}>✕</button>
                 </div>
               </li>
             ))}
@@ -563,7 +598,7 @@ export default function Home() {
               type="text"
               value={exploringInput}
               placeholder="Add food to try…"
-              className={`w-full px-3 py-2 text-sm border rounded-xl ${dm ? 'bg-green-900/50 border-green-700 text-green-100 placeholder-green-600' : 'bg-white border-green-300 placeholder-green-400'}`}
+              className={`w-full px-3 py-2 text-sm border rounded-2xl ${dm ? 'bg-gray-800 border-gray-600 text-gray-100 placeholder-gray-500' : 'bg-white border-gray-300 placeholder-gray-400'} focus:outline-none focus:border-green-400`}
               onChange={e => {
                 setExploringInput(e.target.value)
                 setShowAutocomplete(p => ({ ...p, exploring: e.target.value.length > 0 }))
@@ -896,9 +931,6 @@ export default function Home() {
         </section>
       )}
 
-      <footer className="text-center text-gray-500 text-sm pb-4">
-        <p>Your journey is unique. Go at your own pace. 💚</p>
-      </footer>
 
       {/* Bottom tab bar */}
       <nav className={`fixed bottom-0 left-0 right-0 z-40 flex border-t ${dm ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'}`}>
