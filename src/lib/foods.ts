@@ -1,5 +1,4 @@
-import { FoodSuggestion, FoodType, Recipe } from './types'
-import { recipes } from './recipes'
+import { FoodSuggestion, FoodType, DietaryTag } from './types'
 
 export const foodSuggestions: FoodSuggestion[] = [
   {
@@ -1968,14 +1967,6 @@ export function getSimilarFoodsFallback(foods: string[], allFoods: string[]): st
   return remaining.sort(() => Math.random() - 0.5).slice(0, 5)
 }
 
-export function getRecipeForFood(foodName: string): Recipe | undefined {
-  const nameLower = foodName.toLowerCase()
-  return recipes.find(r => 
-    r.title.toLowerCase().includes(nameLower) || 
-    r.description.toLowerCase().includes(nameLower)
-  )
-}
-
 export function getAllSuggestedFoods(): string[] {
   return foodSuggestions.map(s => s.name)
 }
@@ -1983,4 +1974,22 @@ export function getAllSuggestedFoods(): string[] {
 export function getFoodType(name: string): FoodType {
   const match = foodSuggestions.find(s => s.name.toLowerCase() === name.toLowerCase())
   return match?.foodType ?? 'other'
+}
+
+const GLUTEN_PATTERNS = ['wheat', 'barley', 'rye', 'spelt', 'seitan', 'pasta', 'bread', 'farro', 'couscous', 'bulgur', 'kamut', 'triticale']
+const NUT_PATTERNS    = ['almond', 'cashew', 'walnut', 'pecan', 'peanut', 'pistachio', 'hazelnut', 'brazil nut', 'pine nut', 'macadamia', 'tahini', 'nut butter']
+const SOY_PATTERNS    = ['tofu', 'tempeh', 'edamame', 'soy', 'miso', 'tamari']
+
+export function getTagsForFood(name: string): DietaryTag[] {
+  const lower = name.toLowerCase()
+  const tags: DietaryTag[] = []
+  if (!GLUTEN_PATTERNS.some(p => lower.includes(p))) tags.push('gluten-free')
+  if (!NUT_PATTERNS.some(p => lower.includes(p)))    tags.push('nut-free')
+  if (!SOY_PATTERNS.some(p => lower.includes(p)))    tags.push('soy-free')
+  const food = foodSuggestions.find(s => s.name.toLowerCase() === lower)
+  if (food?.foodType === 'vegetable') {
+    tags.push('raw-friendly')
+    tags.push('oil-free')
+  }
+  return tags
 }
