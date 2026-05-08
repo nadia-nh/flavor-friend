@@ -167,7 +167,7 @@ export function SuggestionCard({ currentSuggestion, darkMode, onAdd, onSkip }: S
             }
             <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/70 to-transparent pointer-events-none" />
             {suggestionData && (
-              <span className="absolute top-2 left-2 bg-white/85 backdrop-blur-sm text-xs font-semibold px-2 py-1 rounded-full">
+              <span className="absolute top-2 left-2 bg-green-900/90 text-white text-xs font-semibold px-2 py-1 rounded-full">
                 {FOOD_TYPE_CONFIG[suggestionData.foodType].emoji} {FOOD_TYPE_CONFIG[suggestionData.foodType].label}
               </span>
             )}
@@ -196,16 +196,16 @@ export function SuggestionCard({ currentSuggestion, darkMode, onAdd, onSkip }: S
         <div className="flex flex-col items-center gap-1">
           <button
             onClick={onSkip}
-            className="w-14 h-14 rounded-full bg-gray-100 text-gray-500 text-2xl hover:bg-gray-200 flex items-center justify-center shadow transition-colors"
+            className="w-14 h-14 rounded-full bg-white border border-stone-300 text-stone-500 text-2xl hover:bg-stone-50 flex items-center justify-center shadow transition-colors"
           >→</button>
-          <span className="text-xs text-gray-400">Skip</span>
+          <span className="text-xs text-stone-400">Skip</span>
         </div>
         <div className="flex flex-col items-center gap-1">
           <button
             onClick={() => onAdd('exploring')}
-            className="w-14 h-14 rounded-full bg-green-100 text-green-700 text-2xl hover:bg-green-200 flex items-center justify-center shadow transition-colors"
+            className="w-14 h-14 rounded-full bg-green-900 text-white text-2xl hover:bg-green-800 flex items-center justify-center shadow transition-colors"
           >✓</button>
-          <span className="text-xs text-green-700 font-medium">Try it!</span>
+          <span className="text-xs text-green-800 font-semibold">Try it!</span>
         </div>
       </div>
     </>
