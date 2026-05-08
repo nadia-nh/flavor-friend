@@ -7,12 +7,11 @@ import { ATTEMPT_GOAL } from '@/lib/constants'
 interface StatsModalProps {
   open: boolean
   onClose: () => void
-  movedToSafe: string[]
-  inProgressFoods: Food[]
+  allFoods: Food[]
   darkMode: boolean
 }
 
-export function StatsModal({ open, onClose, movedToSafe, inProgressFoods, darkMode }: StatsModalProps) {
+export function StatsModal({ open, onClose, allFoods, darkMode }: StatsModalProps) {
   const dm = darkMode
   const dialogRef = useRef<HTMLDivElement>(null)
   // Circumference of ring (r=12): 2π*12 ≈ 75.4
@@ -23,6 +22,19 @@ export function StatsModal({ open, onClose, movedToSafe, inProgressFoods, darkMo
   }, [open])
 
   if (!open) return null
+
+  const loveFoods     = allFoods.filter(f => f.category === 'love')
+  const inProgressFoods = allFoods.filter(f => f.category === 'exploring' && f.attempts > 0)
+  const totalAttempts = allFoods.reduce((sum, f) => sum + f.attempts, 0)
+  const mostTried     = [...allFoods].sort((a, b) => b.attempts - a.attempts)[0]
+
+  const methodCounts: Record<string, number> = {}
+  for (const f of allFoods) {
+    for (const a of f.attemptHistory) {
+      if (a.method) methodCounts[a.method] = (methodCounts[a.method] ?? 0) + 1
+    }
+  }
+  const topMethods = Object.entries(methodCounts).sort((a, b) => b[1] - a[1]).slice(0, 3)
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}
@@ -35,10 +47,41 @@ export function StatsModal({ open, onClose, movedToSafe, inProgressFoods, darkMo
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl leading-none">✕</button>
         </div>
         <div className="space-y-4">
-          <div>
-            <p className={`text-sm mb-1 ${dm ? 'text-green-400' : 'text-green-700'}`}>Foods on your plate</p>
-            <p className={`text-2xl font-bold ${dm ? 'text-green-300' : 'text-green-800'}`}>{movedToSafe.length}</p>
+          <div className="grid grid-cols-2 gap-3">
+            <div className={`rounded-xl p-3 ${dm ? 'bg-gray-700' : 'bg-green-50'}`}>
+              <p className={`text-xs mb-1 ${dm ? 'text-green-400' : 'text-green-700'}`}>On your plate</p>
+              <p className={`text-2xl font-bold ${dm ? 'text-green-300' : 'text-green-800'}`}>{loveFoods.length}</p>
+            </div>
+            <div className={`rounded-xl p-3 ${dm ? 'bg-gray-700' : 'bg-green-50'}`}>
+              <p className={`text-xs mb-1 ${dm ? 'text-green-400' : 'text-green-700'}`}>Total attempts</p>
+              <p className={`text-2xl font-bold ${dm ? 'text-green-300' : 'text-green-800'}`}>{totalAttempts}</p>
+            </div>
           </div>
+
+          {mostTried && mostTried.attempts > 0 && (
+            <div>
+              <p className={`text-xs mb-1 ${dm ? 'text-green-400' : 'text-green-700'}`}>Most tried</p>
+              <p className={`text-sm font-semibold ${dm ? 'text-gray-200' : 'text-gray-800'}`}>
+                {mostTried.name} <span className={`font-normal ${dm ? 'text-gray-400' : 'text-gray-500'}`}>({mostTried.attempts}×)</span>
+              </p>
+            </div>
+          )}
+
+          {topMethods.length > 0 && (
+            <div>
+              <p className={`text-xs mb-2 ${dm ? 'text-green-400' : 'text-green-700'}`}>Favourite methods</p>
+              <div className="space-y-1">
+                {topMethods.map(([method, count]) => (
+                  <div key={method} className="flex items-center gap-2">
+                    <div className={`h-1.5 rounded-full bg-green-500`} style={{ width: `${Math.round((count / topMethods[0][1]) * 100)}%`, minWidth: '8px' }} />
+                    <span className={`text-xs truncate ${dm ? 'text-gray-300' : 'text-gray-600'}`}>{method}</span>
+                    <span className={`text-xs ml-auto flex-shrink-0 ${dm ? 'text-gray-500' : 'text-gray-400'}`}>{count}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div>
             <p className={`text-sm mb-2 ${dm ? 'text-green-400' : 'text-green-700'}`}>In progress ({inProgressFoods.length})</p>
             {inProgressFoods.length > 0 ? (

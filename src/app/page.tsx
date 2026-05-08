@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Food, FoodCategory, Attempt } from '@/lib/types'
-import { getSimilarFoods, getSimilarFoodsFallback, getAllSuggestedFoods, getFoodType } from '@/lib/foods'
+import { useRef, useState, useEffect } from 'react'
+import { Food, FoodCategory, Attempt, DietaryTag } from '@/lib/types'
+import { getSimilarFoods, getSimilarFoodsFallback, getAllSuggestedFoods, getFoodType, getTagsForFood } from '@/lib/foods'
 import { ATTEMPT_GOAL } from '@/lib/constants'
 import { useFoodsStorage } from '@/hooks/useFoodsStorage'
 import { useDismissedSuggestions } from '@/hooks/useDismissedSuggestions'
@@ -24,6 +24,14 @@ const encouragementMessages = [
   "Small steps lead to big discoveries!",
 ]
 
+const ALL_DIETARY_TAGS: { tag: DietaryTag; label: string }[] = [
+  { tag: 'gluten-free',  label: 'Gluten-free' },
+  { tag: 'nut-free',     label: 'Nut-free' },
+  { tag: 'soy-free',     label: 'Soy-free' },
+  { tag: 'oil-free',     label: 'Oil-free' },
+  { tag: 'raw-friendly', label: 'Raw-friendly' },
+]
+
 export default function Home() {
   const [foods, setFoods] = useFoodsStorage()
   const [dismissedSuggestions, setDismissedSuggestions] = useDismissedSuggestions()
@@ -36,6 +44,9 @@ export default function Home() {
   const [sessionSkipped, setSessionSkipped] = useState<string[]>([])
   const [recipeFilter, setRecipeFilter] = useState('all')
   const [activeTab, setActiveTab] = useState<'home' | 'discover' | 'recipes'>('home')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [activeTags, setActiveTags] = useState<DietaryTag[]>([])
+  const importRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (activeTab === 'discover') setSessionSkipped([])
@@ -94,22 +105,57 @@ export default function Home() {
     setAttemptModal(null)
   }
 
+  const exportData = () => {
+    const blob = new Blob([JSON.stringify({ version: 1, foods }, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `flavorfriend-backup-${new Date().toISOString().split('T')[0]}.json`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const importData = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    e.target.value = ''
+    const reader = new FileReader()
+    reader.onload = ev => {
+      try {
+        const parsed = JSON.parse(ev.target?.result as string)
+        const imported: Food[] = Array.isArray(parsed) ? parsed : parsed.foods
+        if (!Array.isArray(imported)) return
+        setFoods(imported)
+        setShowMessage('Data imported!')
+        setTimeout(() => setShowMessage(''), 2000)
+      } catch {
+        setShowMessage('Import failed — invalid file')
+        setTimeout(() => setShowMessage(''), 3000)
+      }
+    }
+    reader.readAsText(file)
+  }
+
+  const toggleTag = (tag: DietaryTag) =>
+    setActiveTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag])
+
   const allFoodNames = getAllSuggestedFoods()
   const loveFoods = foods.filter(f => f.category === 'love')
   const exploringFoods = foods.filter(f => f.category === 'exploring')
   const safeFoodNames = loveFoods.map(f => f.name)
-  const inProgressFoods = exploringFoods.filter(f => f.attempts > 0)
 
   const activeFoodNames = new Set(foods.map(f => f.name.toLowerCase()))
   const dismissedSet = new Set(dismissedSuggestions.map(s => s.toLowerCase()))
   const skippedSet = new Set(sessionSkipped.map(s => s.toLowerCase()))
   const isAvailable = (s: string) =>
     !dismissedSet.has(s.toLowerCase()) && !skippedSet.has(s.toLowerCase()) && !activeFoodNames.has(s.toLowerCase())
+  const matchesDiet = (s: string) =>
+    activeTags.length === 0 || activeTags.every(t => getTagsForFood(s).includes(t))
 
   const allSuggested = getSimilarFoods(safeFoodNames)
-  const availableSuggestions = allSuggested.filter(isAvailable)
+  const availableSuggestions = allSuggested.filter(s => isAvailable(s) && matchesDiet(s))
   const fallbackSuggestions = availableSuggestions.length === 0
-    ? getSimilarFoodsFallback(safeFoodNames, allFoodNames).filter(isAvailable)
+    ? getSimilarFoodsFallback(safeFoodNames, allFoodNames).filter(s => isAvailable(s) && matchesDiet(s))
     : []
   const allSuggestions = availableSuggestions.length > 0 ? availableSuggestions : fallbackSuggestions
   const currentSuggestion = allSuggestions[0] as string | undefined
@@ -125,15 +171,28 @@ export default function Home() {
     if (currentSuggestion) setSessionSkipped(prev => [...prev, currentSuggestion])
   }
 
+  const searchResults = searchQuery.trim()
+    ? foods.filter(f => f.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    : []
+
   const dm = darkMode
 
   return (
     <main className={`min-h-screen p-4 pb-20 ${dm ? 'bg-gray-900' : 'bg-gray-50'}`}>
       <header className="text-center mb-4">
         <div className="flex justify-between items-center mb-2">
-          <button onClick={() => setDarkMode(!dm)} className={`px-3 py-1 rounded-lg text-sm ${dm ? 'bg-gray-700 text-amber-300' : 'bg-gray-200 text-gray-700'}`}>
-            {dm ? '☀️' : '🌙'}
-          </button>
+          <div className="flex gap-2">
+            <button onClick={() => setDarkMode(!dm)} className={`px-3 py-1 rounded-lg text-sm ${dm ? 'bg-gray-700 text-amber-300' : 'bg-gray-200 text-gray-700'}`}>
+              {dm ? '☀️' : '🌙'}
+            </button>
+            <button onClick={exportData} className={`px-3 py-1 rounded-lg text-xs ${dm ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`} title="Export backup">
+              ↓ Export
+            </button>
+            <label className={`px-3 py-1 rounded-lg text-xs cursor-pointer ${dm ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`} title="Import backup">
+              ↑ Import
+              <input ref={importRef} type="file" accept="application/json" className="sr-only" onChange={importData} />
+            </label>
+          </div>
           <button
             onClick={() => setShowProgress(true)}
             className={`p-2 rounded-lg text-lg leading-none ${dm ? 'text-gray-400 hover:text-green-300' : 'text-gray-400 hover:text-green-800'}`}
@@ -142,7 +201,39 @@ export default function Home() {
             📊
           </button>
         </div>
-        <h1 className={`text-3xl font-bold italic mb-6 ${dm ? 'text-green-300' : 'text-green-800'}`} style={{ fontFamily: 'var(--font-display)' }}>Plant Pal</h1>
+        <h1 className={`text-3xl font-bold italic mb-3 ${dm ? 'text-green-300' : 'text-green-800'}`} style={{ fontFamily: 'var(--font-display)' }}>Plant Pal</h1>
+        <div className="relative max-w-sm mx-auto">
+          <input
+            type="search"
+            value={searchQuery}
+            placeholder="Search your foods…"
+            aria-label="Search your foods"
+            className={`w-full px-4 py-2 text-sm border rounded-2xl ${dm ? 'bg-gray-800 border-gray-600 text-gray-100 placeholder-gray-500' : 'bg-white border-gray-300 placeholder-gray-400'} focus:outline-none focus:border-green-400`}
+            onChange={e => setSearchQuery(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Escape') setSearchQuery('') }}
+          />
+          {searchQuery && (
+            <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">✕</button>
+          )}
+        </div>
+        {searchResults.length > 0 && (
+          <ul className={`mt-1 max-w-sm mx-auto rounded-xl border shadow-lg overflow-hidden ${dm ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-200'}`}>
+            {searchResults.map(f => (
+              <li key={f.id}>
+                <button
+                  className={`w-full text-left px-4 py-2 text-sm flex items-center gap-2 ${dm ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700 hover:bg-green-50'}`}
+                  onClick={() => { setSelectedFood(f); setSearchQuery('') }}
+                >
+                  <span>{f.name}</span>
+                  <span className={`ml-auto text-xs ${dm ? 'text-gray-500' : 'text-gray-400'}`}>{f.category}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+        {searchQuery && searchResults.length === 0 && (
+          <p className={`mt-1 text-sm ${dm ? 'text-gray-500' : 'text-gray-400'}`}>No foods found</p>
+        )}
       </header>
 
       {showMessage && (
@@ -175,7 +266,18 @@ export default function Home() {
 
       {activeTab === 'discover' && (
         <div className="max-w-md mx-auto py-6 px-4">
-          <h2 className={`text-xl font-bold text-center mb-6 ${dm ? 'text-green-300' : 'text-green-900'}`}>What to try next</h2>
+          <h2 className={`text-xl font-bold text-center mb-4 ${dm ? 'text-green-300' : 'text-green-900'}`}>What to try next</h2>
+          <div className="flex flex-wrap gap-2 justify-center mb-6">
+            {ALL_DIETARY_TAGS.map(({ tag, label }) => (
+              <button
+                key={tag}
+                onClick={() => toggleTag(tag)}
+                className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${activeTags.includes(tag) ? 'bg-green-700 text-white border-green-700' : (dm ? 'bg-gray-800 text-gray-400 border-gray-600 hover:border-green-600' : 'bg-white text-gray-500 border-gray-300 hover:border-green-400')}`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
           <SuggestionCard
             currentSuggestion={currentSuggestion}
             darkMode={darkMode}
@@ -208,8 +310,7 @@ export default function Home() {
       <StatsModal
         open={showProgress}
         onClose={() => setShowProgress(false)}
-        movedToSafe={movedToSafe}
-        inProgressFoods={inProgressFoods}
+        allFoods={foods}
         darkMode={darkMode}
       />
 

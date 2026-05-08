@@ -1,4 +1,5 @@
 export type FoodCategory = 'love' | 'exploring' | 'curious' | 'notYet'
+export type DietaryTag = 'gluten-free' | 'nut-free' | 'soy-free' | 'oil-free' | 'raw-friendly'
 export type FoodType = 'vegetable' | 'grain' | 'legume' | 'other'
 
 export interface Attempt {
