@@ -18,10 +18,10 @@ export function RecipeBrowser({ darkMode, recipeFilter, onFilterChange }: Recipe
         Recipes
       </h2>
       <p className={`text-sm mb-4 ${dm ? 'text-gray-500' : 'text-stone-400'}`}>{recipes.length} plant-based recipes</p>
-      <div className="flex flex-wrap gap-2 mb-6">
+      <div className="flex flex-wrap gap-1.5 mb-6">
         {recipeCategories.map(cat => (
           <button key={cat} onClick={() => onFilterChange(cat)}
-            className={`px-3 py-1 rounded-full text-sm ${recipeFilter === cat ? 'bg-green-900 text-white' : dm ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-stone-100 text-gray-700 hover:bg-stone-200'}`}
+            className={`px-2.5 py-0.5 rounded-full text-xs ${recipeFilter === cat ? 'bg-green-900 text-white' : dm ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-stone-100 text-gray-700 hover:bg-stone-200'}`}
           >
             {cat === 'all' ? 'All' : cat.charAt(0).toUpperCase() + cat.slice(1)}
           </button>

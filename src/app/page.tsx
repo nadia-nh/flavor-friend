@@ -280,12 +280,12 @@ export default function Home() {
         <div className="max-w-md mx-auto py-6 px-4">
           <h2 className={`text-2xl font-bold italic text-center mb-1 ${dm ? 'text-green-300' : 'text-green-900'}`} style={{ fontFamily: 'var(--font-display)' }}>What to try next</h2>
           <p className={`text-sm text-center mb-4 ${dm ? 'text-gray-500' : 'text-stone-400'}`}>Based on what&apos;s on your plate</p>
-          <div className="flex flex-wrap gap-2 justify-center mb-6">
+          <div className="flex flex-wrap gap-1.5 justify-center mb-6">
             {ALL_DIETARY_TAGS.map(({ tag, label }) => (
               <button
                 key={tag}
                 onClick={() => toggleTag(tag)}
-                className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${activeTags.includes(tag) ? 'bg-green-700 text-white border-green-700' : (dm ? 'bg-gray-800 text-gray-400 border-gray-600 hover:border-green-600' : 'bg-white text-gray-500 border-gray-300 hover:border-green-400')}`}
+                className={`px-2.5 py-0.5 rounded-full text-[11px] font-medium border transition-colors ${activeTags.includes(tag) ? 'bg-green-700 text-white border-green-700' : (dm ? 'bg-gray-800 text-gray-400 border-gray-600 hover:border-green-600' : 'bg-white text-gray-500 border-gray-300 hover:border-green-400')}`}
               >
                 {label}
               </button>
