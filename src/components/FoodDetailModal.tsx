@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
 import { Food, FoodCategory } from '@/lib/types'
 import { CATEGORIES } from '@/lib/constants'
 import { getSuggestionsForFood } from '@/lib/foods'
@@ -11,15 +12,26 @@ interface FoodDetailModalProps {
 }
 
 export function FoodDetailModal({ food, onClose, onMove }: FoodDetailModalProps) {
+  const dialogRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (food) dialogRef.current?.focus()
+  }, [food])
+
   if (!food) return null
 
   const suggestion = getSuggestionsForFood(food.name)
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-40 p-4" onClick={onClose}>
-      <div className="bg-white rounded-2xl p-4 max-w-sm w-full max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-40 p-4" onClick={onClose}
+      onKeyDown={e => { if (e.key === 'Escape') onClose() }}
+    >
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="food-detail-title" tabIndex={-1}
+        className="bg-white rounded-2xl p-4 max-w-sm w-full max-h-[80vh] overflow-y-auto focus:outline-none"
+        onClick={e => e.stopPropagation()}
+      >
         <div className="flex justify-between items-start mb-4">
-          <h3 className="text-lg font-semibold">{food.name}</h3>
+          <h3 id="food-detail-title" className="text-lg font-semibold">{food.name}</h3>
           <div className="flex gap-1">
             {CATEGORIES.map(cat => (
               <button key={cat} onClick={() => onMove(food, cat)}

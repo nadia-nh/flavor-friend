@@ -106,7 +106,9 @@ export function Plate({ loveFoods, darkMode, onAddFood, onMoveFood, onDeleteFood
 
   return (
     <div className="flex-1">
-      <svg ref={plateRef} viewBox="-30 -30 460 460" className="w-full max-w-sm mx-auto drop-shadow-xl" style={{ touchAction: 'none' }}>
+      <svg ref={plateRef} viewBox="-30 -30 460 460" className="w-full max-w-sm mx-auto drop-shadow-xl" style={{ touchAction: 'none' }}
+        role="img" aria-label={`Your plate with ${loveFoods.length} food${loveFoods.length !== 1 ? 's' : ''}. Drag a food off the plate to remove it.`}
+      >
         <defs>
           <radialGradient id="rimGrad" cx="38%" cy="32%" r="68%">
             <stop offset="0%"   stopColor={dm ? '#6b7280' : '#e9ecef'} />
@@ -162,10 +164,20 @@ export function Plate({ loveFoods, darkMode, onAddFood, onMoveFood, onDeleteFood
                 return (
                   <g
                     key={food.id}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`${food.name} — press Enter for options, drag to remove`}
                     style={{ cursor: isDragging ? 'grabbing' : 'grab', opacity: isDragging ? 0.3 : 1 }}
                     onPointerDown={e => {
                       e.preventDefault()
                       plateDragRef.current = { food, startX: e.clientX, startY: e.clientY, curX: e.clientX, curY: e.clientY, outside: false }
+                    }}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        const rect = plateRef.current?.getBoundingClientRect()
+                        setPlatePopover({ food, x: (rect?.left ?? 0) + (rect?.width ?? 0) / 2, y: (rect?.top ?? 0) + (rect?.height ?? 0) / 2 })
+                      }
                     }}
                   >
                     <text x={pos.x} y={pos.y} textAnchor="middle" dominantBaseline="central" fontSize="24" style={{ userSelect: 'none' }}>
@@ -207,6 +219,12 @@ export function Plate({ loveFoods, darkMode, onAddFood, onMoveFood, onDeleteFood
           type="text"
           value={plateInput}
           placeholder="Add food to your plate…"
+          aria-label="Add food to your plate"
+          role="combobox"
+          aria-expanded={showAutocomplete && filtered.length > 0}
+          aria-haspopup="listbox"
+          aria-autocomplete="list"
+          aria-controls="plate-autocomplete"
           className={`w-full px-4 py-2.5 text-sm border rounded-2xl ${dm ? 'bg-gray-800 border-gray-600 text-gray-100 placeholder-gray-500' : 'bg-white border-gray-300 placeholder-gray-400'} focus:outline-none focus:border-green-400`}
           onChange={e => {
             setPlateInput(e.target.value)
@@ -218,32 +236,40 @@ export function Plate({ loveFoods, darkMode, onAddFood, onMoveFood, onDeleteFood
             if (e.key === 'Enter' && plateInput.trim()) {
               onAddFood(plateInput.trim(), 'love')
               setPlateInput('')
+            } else if (e.key === 'Escape') {
+              setShowAutocomplete(false)
             }
           }}
         />
         {showAutocomplete && filtered.length > 0 && (
-          <div className="absolute z-20 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-36 overflow-y-auto top-full mt-1">
+          <ul id="plate-autocomplete" role="listbox" aria-label="Food suggestions" className="absolute z-20 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-36 overflow-y-auto top-full mt-1 list-none p-0 m-0">
             {filtered.map(name => (
-              <button
-                key={name}
-                className="w-full text-left px-3 py-1.5 text-sm hover:bg-green-50"
-                onMouseDown={e => e.preventDefault()}
-                onClick={() => {
-                  onAddFood(name, 'love')
-                  setPlateInput('')
-                  setShowAutocomplete(false)
-                }}
-              >
-                {name}
-              </button>
+              <li key={name} role="option" aria-selected={false}>
+                <button
+                  className="w-full text-left px-3 py-1.5 text-sm hover:bg-green-50 focus:bg-green-50 focus:outline-none"
+                  onMouseDown={e => e.preventDefault()}
+                  onClick={() => {
+                    onAddFood(name, 'love')
+                    setPlateInput('')
+                    setShowAutocomplete(false)
+                  }}
+                >
+                  {name}
+                </button>
+              </li>
             ))}
-          </div>
+          </ul>
         )}
       </div>
 
       {platePopover && (
-        <div className="fixed inset-0 z-30" onClick={() => setPlatePopover(null)}>
+        <div className="fixed inset-0 z-30" onClick={() => setPlatePopover(null)}
+          onKeyDown={e => { if (e.key === 'Escape') setPlatePopover(null) }}
+        >
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Options for ${platePopover.food.name}`}
             className="absolute bg-white rounded-2xl shadow-xl border border-gray-200 p-3 w-44"
             style={{ left: Math.min(platePopover.x, window.innerWidth - 184), top: Math.min(platePopover.y - 8, window.innerHeight - 140) }}
             onClick={e => e.stopPropagation()}

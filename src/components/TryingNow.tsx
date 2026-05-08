@@ -68,6 +68,12 @@ export function TryingNow({ exploringFoods, allFoodNames, darkMode, onAddFood, o
           type="text"
           value={input}
           placeholder="Add food to try…"
+          aria-label="Add food to try"
+          role="combobox"
+          aria-expanded={showAutocomplete && filtered.length > 0}
+          aria-haspopup="listbox"
+          aria-autocomplete="list"
+          aria-controls="trying-now-autocomplete"
           className={`w-full px-3 py-2 text-sm border rounded-2xl ${dm ? 'bg-gray-800 border-gray-600 text-gray-100 placeholder-gray-500' : 'bg-white border-gray-300 placeholder-gray-400'} focus:outline-none focus:border-green-400`}
           onChange={e => {
             setInput(e.target.value)
@@ -79,26 +85,29 @@ export function TryingNow({ exploringFoods, allFoodNames, darkMode, onAddFood, o
             if (e.key === 'Enter' && input.trim()) {
               onAddFood(input.trim(), 'exploring')
               setInput('')
+            } else if (e.key === 'Escape') {
+              setShowAutocomplete(false)
             }
           }}
         />
         {showAutocomplete && filtered.length > 0 && (
-          <div className="absolute z-20 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-36 overflow-y-auto bottom-full mb-1">
+          <ul id="trying-now-autocomplete" role="listbox" aria-label="Food suggestions" className="absolute z-20 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-36 overflow-y-auto bottom-full mb-1 list-none p-0 m-0">
             {filtered.map(name => (
-              <button
-                key={name}
-                className="w-full text-left px-3 py-1.5 text-sm hover:bg-green-50"
-                onMouseDown={e => e.preventDefault()}
-                onClick={() => {
-                  onAddFood(name, 'exploring')
-                  setInput('')
-                  setShowAutocomplete(false)
-                }}
-              >
-                {name}
-              </button>
+              <li key={name} role="option" aria-selected={false}>
+                <button
+                  className="w-full text-left px-3 py-1.5 text-sm hover:bg-green-50 focus:bg-green-50 focus:outline-none"
+                  onMouseDown={e => e.preventDefault()}
+                  onClick={() => {
+                    onAddFood(name, 'exploring')
+                    setInput('')
+                    setShowAutocomplete(false)
+                  }}
+                >
+                  {name}
+                </button>
+              </li>
             ))}
-          </div>
+          </ul>
         )}
       </div>
     </div>

@@ -136,11 +136,18 @@ export function SuggestionCard({ currentSuggestion, darkMode, onAdd, onSkip }: S
     <>
       <div
         ref={cardRef}
-        className="relative h-72 cursor-grab active:cursor-grabbing select-none touch-none"
+        role="article"
+        aria-label={`${currentSuggestion} suggestion. Use left/right arrow keys or swipe to skip or add.`}
+        tabIndex={0}
+        className="relative h-72 cursor-grab active:cursor-grabbing select-none touch-none focus:outline-2 focus:outline-green-400 rounded-2xl"
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerUp}
+        onKeyDown={e => {
+          if (e.key === 'ArrowRight') { e.preventDefault(); onAdd('exploring') }
+          if (e.key === 'ArrowLeft')  { e.preventDefault(); onSkip() }
+        }}
       >
         <div
           ref={cardInnerRef}

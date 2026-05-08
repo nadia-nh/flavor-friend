@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
 import { Food } from '@/lib/types'
 import { ATTEMPT_GOAL } from '@/lib/constants'
 
@@ -13,16 +14,24 @@ interface StatsModalProps {
 
 export function StatsModal({ open, onClose, movedToSafe, inProgressFoods, darkMode }: StatsModalProps) {
   const dm = darkMode
+  const dialogRef = useRef<HTMLDivElement>(null)
   // Circumference of ring (r=12): 2π*12 ≈ 75.4
   const ringCircumference = 75.4
+
+  useEffect(() => {
+    if (open) dialogRef.current?.focus()
+  }, [open])
 
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className={`${dm ? 'bg-gray-800' : 'bg-white'} rounded-2xl p-6 max-w-sm w-full`} onClick={e => e.stopPropagation()}>
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}
+      onKeyDown={e => { if (e.key === 'Escape') onClose() }}
+    >
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="stats-modal-title" tabIndex={-1}
+        className={`${dm ? 'bg-gray-800' : 'bg-white'} rounded-2xl p-6 max-w-sm w-full focus:outline-none`} onClick={e => e.stopPropagation()}>
         <div className="flex justify-between items-center mb-5">
-          <h3 className={`font-semibold text-lg ${dm ? 'text-green-300' : 'text-green-900'}`}>Your Food Journey</h3>
+          <h3 id="stats-modal-title" className={`font-semibold text-lg ${dm ? 'text-green-300' : 'text-green-900'}`}>Your Food Journey</h3>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl leading-none">✕</button>
         </div>
         <div className="space-y-4">
