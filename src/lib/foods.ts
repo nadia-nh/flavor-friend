@@ -1,5 +1,4 @@
-import { FoodSuggestion, FoodType, Recipe } from './types'
-import { recipes } from './recipes'
+import { FoodSuggestion, FoodType } from './types'
 
 export const foodSuggestions: FoodSuggestion[] = [
   {
@@ -1966,14 +1965,6 @@ export function getSimilarFoodsFallback(foods: string[], allFoods: string[]): st
     !foods.some(f => f.toLowerCase() === a.toLowerCase())
   )
   return remaining.sort(() => Math.random() - 0.5).slice(0, 5)
-}
-
-export function getRecipeForFood(foodName: string): Recipe | undefined {
-  const nameLower = foodName.toLowerCase()
-  return recipes.find(r => 
-    r.title.toLowerCase().includes(nameLower) || 
-    r.description.toLowerCase().includes(nameLower)
-  )
 }
 
 export function getAllSuggestedFoods(): string[] {
