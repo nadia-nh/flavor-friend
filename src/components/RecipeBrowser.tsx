@@ -21,7 +21,7 @@ export function RecipeBrowser({ darkMode, recipeFilter, onFilterChange }: Recipe
       <div className="flex flex-wrap gap-1.5 mb-6">
         {recipeCategories.map(cat => (
           <button key={cat} onClick={() => onFilterChange(cat)}
-            className={`px-2.5 py-0.5 rounded-full text-xs ${recipeFilter === cat ? 'bg-green-900 text-white' : dm ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-stone-100 text-gray-700 hover:bg-stone-200'}`}
+            className={`inline-flex items-center leading-none px-2.5 py-1 rounded-full text-xs ${recipeFilter === cat ? 'bg-green-900 text-white' : dm ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-stone-100 text-gray-700 hover:bg-stone-200'}`}
           >
             {cat === 'all' ? 'All' : cat.charAt(0).toUpperCase() + cat.slice(1)}
           </button>
@@ -43,11 +43,11 @@ export function RecipeBrowser({ darkMode, recipeFilter, onFilterChange }: Recipe
               onError={e => { (e.target as HTMLImageElement).src = '/placeholder-vegetable.svg' }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-            <span className="absolute top-2 left-2 bg-green-900/80 text-white text-[10px] px-2 py-0.5 rounded-full font-medium leading-none">
+            <span className="absolute top-2 left-2 inline-flex items-center bg-green-900/80 text-white text-[10px] px-2 py-1 rounded-full font-medium leading-none">
               {recipe.source}
             </span>
             {recipe.difficulty && (
-              <span className="absolute top-2 right-2 bg-black/50 text-white text-[10px] px-2 py-0.5 rounded-full leading-none">
+              <span className="absolute top-2 right-2 inline-flex items-center bg-black/50 text-white text-[10px] px-2 py-1 rounded-full leading-none">
                 {recipe.difficulty}
               </span>
             )}

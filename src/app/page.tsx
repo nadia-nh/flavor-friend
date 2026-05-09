@@ -285,7 +285,7 @@ export default function Home() {
               <button
                 key={tag}
                 onClick={() => toggleTag(tag)}
-                className={`px-2.5 py-0.5 rounded-full text-[11px] font-medium border transition-colors ${activeTags.includes(tag) ? 'bg-green-700 text-white border-green-700' : (dm ? 'bg-gray-800 text-gray-400 border-gray-600 hover:border-green-600' : 'bg-white text-gray-500 border-gray-300 hover:border-green-400')}`}
+                className={`inline-flex items-center leading-none px-2.5 py-1 rounded-full text-[11px] font-medium border transition-colors ${activeTags.includes(tag) ? 'bg-green-700 text-white border-green-700' : (dm ? 'bg-gray-800 text-gray-400 border-gray-600 hover:border-green-600' : 'bg-white text-gray-500 border-gray-300 hover:border-green-400')}`}
               >
                 {label}
               </button>

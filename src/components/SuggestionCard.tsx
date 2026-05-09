@@ -167,7 +167,7 @@ export function SuggestionCard({ currentSuggestion, darkMode, onAdd, onSkip }: S
             }
             <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/70 to-transparent pointer-events-none" />
             {suggestionData && (
-              <span className="absolute top-2 left-2 bg-green-900/90 text-white text-xs font-semibold px-2 py-1 rounded-full">
+              <span className="absolute top-2 left-2 inline-flex items-center bg-green-900/90 text-white text-xs font-semibold px-2 py-1 rounded-full leading-none">
                 {FOOD_TYPE_CONFIG[suggestionData.foodType].emoji} {FOOD_TYPE_CONFIG[suggestionData.foodType].label}
               </span>
             )}
