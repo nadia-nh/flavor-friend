@@ -8,6 +8,7 @@ import {
   DRAG_CLICK_THRESHOLD, FOOD_TYPE_CONFIG, FOOD_TYPES,
 } from '@/lib/constants'
 import { getAllSuggestedFoods } from '@/lib/foods'
+import { FoodTypeIcon } from '@/lib/foodIcons'
 
 function polarToXY(cx: number, cy: number, r: number, angleDeg: number) {
   const rad = (angleDeg * Math.PI) / 180
@@ -153,7 +154,11 @@ export function Plate({ loveFoods, darkMode, onAddFood, onMoveFood, onDeleteFood
           return (
             <g key={ft}>
               <path d={makeSectorPath(PLATE_CX, PLATE_CY, PLATE_R, PLATE_INNER_R, cfg.startDeg, cfg.endDeg)} fill={cfg.fill} stroke="white" strokeWidth="2.5" strokeOpacity="0.7" />
-              <text x={labelPos.x} y={labelPos.y - 9} textAnchor="middle" dominantBaseline="central" fontSize="22">{cfg.emoji}</text>
+              <foreignObject x={labelPos.x - 12} y={labelPos.y - 21} width={24} height={24}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
+                  <FoodTypeIcon name={cfg.iconName} className="w-5 h-5" style={{ color: cfg.stroke }} />
+                </div>
+              </foreignObject>
               <text x={labelPos.x} y={labelPos.y + 13} textAnchor="middle" dominantBaseline="central" fontSize="14" fontWeight="700" fill={cfg.stroke} fontFamily="system-ui, sans-serif">
                 {cfg.label}
               </text>
@@ -180,9 +185,11 @@ export function Plate({ loveFoods, darkMode, onAddFood, onMoveFood, onDeleteFood
                       }
                     }}
                   >
-                    <text x={pos.x} y={pos.y} textAnchor="middle" dominantBaseline="central" fontSize="24" style={{ userSelect: 'none' }}>
-                      {cfg.emoji}
-                    </text>
+                    <foreignObject x={pos.x - 12} y={pos.y - 12} width={24} height={24}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
+                        <FoodTypeIcon name={cfg.iconName} className="w-4 h-4" style={{ color: cfg.stroke }} />
+                      </div>
+                    </foreignObject>
                     <text x={pos.x} y={pos.y + 16} textAnchor="middle" dominantBaseline="hanging" fontSize="11" fill={cfg.textColor} fontWeight="600" fontFamily="system-ui, sans-serif">
                       {food.name.length <= 12 ? food.name : food.name.slice(0, 11) + '…'}
                     </text>
@@ -195,7 +202,7 @@ export function Plate({ loveFoods, darkMode, onAddFood, onMoveFood, onDeleteFood
         })}
 
         <circle cx={PLATE_CX} cy={PLATE_CY} r={PLATE_INNER_R} fill={dm ? '#075985' : '#e0f2fe'} stroke={dm ? '#38bdf8' : '#7dd3fc'} strokeWidth="1.5" />
-        <text x={PLATE_CX} y={PLATE_CY + 3} textAnchor="middle" dominantBaseline="central" fontSize="22" style={{ userSelect: 'none' }}>💧</text>
+        <circle cx={PLATE_CX} cy={PLATE_CY} r={7} fill={dm ? '#38bdf8' : '#86efac'} opacity="0.7" />
 
         {plateDragGhost && (() => {
           const draggedFood = loveFoods.find(f => f.id === plateDragGhost.foodId)
@@ -203,9 +210,11 @@ export function Plate({ loveFoods, darkMode, onAddFood, onMoveFood, onDeleteFood
           const cfg2 = FOOD_TYPE_CONFIG[ft]
           return (
             <g style={{ pointerEvents: 'none' }} opacity="0.85">
-              <text x={plateDragGhost.svgX} y={plateDragGhost.svgY} textAnchor="middle" dominantBaseline="central" fontSize="24" style={{ userSelect: 'none' }}>
-                {cfg2.emoji}
-              </text>
+              <foreignObject x={plateDragGhost.svgX - 12} y={plateDragGhost.svgY - 12} width={24} height={24}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
+                  <FoodTypeIcon name={cfg2.iconName} className="w-5 h-5" style={{ color: cfg2.stroke }} />
+                </div>
+              </foreignObject>
               {plateDragGhost.outside && (
                 <text x={plateDragGhost.svgX} y={plateDragGhost.svgY + 22} textAnchor="middle" fontSize="11" fill="#ef4444" fontWeight="600">Release to remove</text>
               )}

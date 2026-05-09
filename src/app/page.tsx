@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState, useEffect } from 'react'
+import { Leaf, Compass, ChefHat } from 'lucide-react'
 import { Food, FoodCategory, Attempt, DietaryTag } from '@/lib/types'
 import { getSimilarFoods, getSimilarFoodsFallback, getAllSuggestedFoods, getFoodType, getTagsForFood } from '@/lib/foods'
 import { ATTEMPT_GOAL } from '@/lib/constants'
@@ -332,21 +333,21 @@ export default function Home() {
           onClick={() => setActiveTab('home')}
           className={`flex-1 py-3 text-sm font-medium flex flex-col items-center gap-0.5 transition-colors ${activeTab === 'home' ? (dm ? 'text-green-400' : 'text-green-700') : (dm ? 'text-gray-500' : 'text-gray-400')}`}
         >
-          <span className="text-lg">🌱</span>
+          <Leaf className="w-5 h-5" />
           <span>Home</span>
         </button>
         <button
           onClick={() => setActiveTab('discover')}
           className={`flex-1 py-3 text-sm font-medium flex flex-col items-center gap-0.5 transition-colors ${activeTab === 'discover' ? (dm ? 'text-green-400' : 'text-green-700') : (dm ? 'text-gray-500' : 'text-gray-400')}`}
         >
-          <span className="text-lg">🔍</span>
+          <Compass className="w-5 h-5" />
           <span>Discover</span>
         </button>
         <button
           onClick={() => setActiveTab('recipes')}
           className={`flex-1 py-3 text-sm font-medium flex flex-col items-center gap-0.5 transition-colors ${activeTab === 'recipes' ? (dm ? 'text-green-400' : 'text-green-700') : (dm ? 'text-gray-500' : 'text-gray-400')}`}
         >
-          <span className="text-lg">📖</span>
+          <ChefHat className="w-5 h-5" />
           <span>Recipes</span>
         </button>
       </nav>

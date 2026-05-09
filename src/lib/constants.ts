@@ -24,10 +24,10 @@ export const FOOD_TYPES: FoodType[] = ['vegetable', 'grain', 'legume', 'other']
 export const CATEGORIES: FoodCategory[] = ['love', 'exploring', 'curious', 'notYet']
 
 export const FOOD_TYPE_CONFIG: Record<FoodType, {
-  label: string; emoji: string; fill: string; stroke: string; textColor: string; startDeg: number; endDeg: number
+  label: string; iconName: string; fill: string; stroke: string; textColor: string; startDeg: number; endDeg: number
 }> = {
-  vegetable: { label: 'Vegetables', emoji: '🥦', fill: '#bbf7d0', stroke: '#16a34a', textColor: '#14532d', startDeg: 180, endDeg: 270 },
-  grain:     { label: 'Grains',     emoji: '🌾', fill: '#fef3c7', stroke: '#d97706', textColor: '#78350f', startDeg: 270, endDeg: 360 },
-  legume:    { label: 'Legumes',    emoji: '🫘', fill: '#fed7aa', stroke: '#c2410c', textColor: '#7c2d12', startDeg: 0,   endDeg: 90  },
-  other:     { label: 'Other',      emoji: '🥜', fill: '#d1fae5', stroke: '#059669', textColor: '#064e3b', startDeg: 90,  endDeg: 180 },
+  vegetable: { label: 'Vegetables', iconName: 'Leaf',  fill: '#bbf7d0', stroke: '#16a34a', textColor: '#14532d', startDeg: 180, endDeg: 270 },
+  grain:     { label: 'Grains',     iconName: 'Wheat', fill: '#fef3c7', stroke: '#d97706', textColor: '#78350f', startDeg: 270, endDeg: 360 },
+  legume:    { label: 'Legumes',    iconName: 'Bean',  fill: '#fed7aa', stroke: '#c2410c', textColor: '#7c2d12', startDeg: 0,   endDeg: 90  },
+  other:     { label: 'Other',      iconName: 'Nut',   fill: '#d1fae5', stroke: '#059669', textColor: '#064e3b', startDeg: 90,  endDeg: 180 },
 }
