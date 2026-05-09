@@ -46,6 +46,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<'home' | 'discover' | 'recipes'>('home')
   const [searchQuery, setSearchQuery] = useState('')
   const [activeTags, setActiveTags] = useState<DietaryTag[]>([])
+  const [showOptionsMenu, setShowOptionsMenu] = useState(false)
   const importRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -178,61 +179,72 @@ export default function Home() {
   const dm = darkMode
 
   return (
-    <main className={`min-h-screen p-4 pb-20 ${dm ? 'bg-gray-900' : 'bg-gray-50'}`}>
-      <header className="text-center mb-4">
-        <div className="flex justify-between items-center mb-2">
-          <div className="flex gap-2">
-            <button onClick={() => setDarkMode(!dm)} className={`px-3 py-1 rounded-lg text-sm ${dm ? 'bg-gray-700 text-amber-300' : 'bg-gray-200 text-gray-700'}`}>
-              {dm ? '☀️' : '🌙'}
+    <main className={`min-h-screen pb-20 ${dm ? 'bg-gray-900' : 'bg-stone-50'}`}>
+      <header className={`rounded-b-3xl shadow-lg mb-6 px-6 pt-5 pb-5 ${dm ? 'bg-green-950' : 'bg-green-900'}`}>
+        <div className="flex justify-between items-center mb-4">
+          <div className="w-10" />
+          <h1 className="text-4xl font-bold italic text-white" style={{ fontFamily: 'var(--font-display)' }}>Plant Pal</h1>
+          <div className="relative">
+            <button
+              onClick={() => setShowOptionsMenu(o => !o)}
+              className="w-10 h-10 flex items-center justify-center text-white/70 hover:text-white text-2xl leading-none rounded-full hover:bg-white/10 transition-colors"
+              aria-label="Options"
+            >
+              ⋯
             </button>
-            <button onClick={exportData} className={`px-3 py-1 rounded-lg text-xs ${dm ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`} title="Export backup">
-              ↓ Export
-            </button>
-            <label className={`px-3 py-1 rounded-lg text-xs cursor-pointer ${dm ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`} title="Import backup">
-              ↑ Import
-              <input ref={importRef} type="file" accept="application/json" className="sr-only" onChange={importData} />
-            </label>
+            {showOptionsMenu && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setShowOptionsMenu(false)} />
+                <div className="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-xl z-50 py-1 min-w-40 border border-stone-100">
+                  <button onClick={() => { setDarkMode(!dm); setShowOptionsMenu(false) }} className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-stone-50 flex items-center gap-2">
+                    {dm ? '☀️ Light mode' : '🌙 Dark mode'}
+                  </button>
+                  <button onClick={() => { exportData(); setShowOptionsMenu(false) }} className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-stone-50 flex items-center gap-2">
+                    ↓ Export backup
+                  </button>
+                  <label className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-stone-50 flex items-center gap-2 cursor-pointer">
+                    ↑ Import backup
+                    <input ref={importRef} type="file" accept="application/json" className="sr-only" onChange={e => { importData(e); setShowOptionsMenu(false) }} />
+                  </label>
+                  <button onClick={() => { setShowProgress(true); setShowOptionsMenu(false) }} className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-stone-50 flex items-center gap-2">
+                    📊 Stats
+                  </button>
+                </div>
+              </>
+            )}
           </div>
-          <button
-            onClick={() => setShowProgress(true)}
-            className={`p-2 rounded-lg text-lg leading-none ${dm ? 'text-gray-400 hover:text-green-300' : 'text-gray-400 hover:text-green-800'}`}
-            aria-label="View progress"
-          >
-            📊
-          </button>
         </div>
-        <h1 className={`text-3xl font-bold italic mb-3 ${dm ? 'text-green-300' : 'text-green-800'}`} style={{ fontFamily: 'var(--font-display)' }}>Plant Pal</h1>
         <div className="relative max-w-sm mx-auto">
           <input
             type="search"
             value={searchQuery}
             placeholder="Search your foods…"
             aria-label="Search your foods"
-            className={`w-full px-4 py-2 text-sm border rounded-2xl ${dm ? 'bg-gray-800 border-gray-600 text-gray-100 placeholder-gray-500' : 'bg-white border-gray-300 placeholder-gray-400'} focus:outline-none focus:border-green-400`}
+            className="w-full px-4 py-2 text-sm rounded-2xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:bg-white/20 transition-colors"
             onChange={e => setSearchQuery(e.target.value)}
             onKeyDown={e => { if (e.key === 'Escape') setSearchQuery('') }}
           />
           {searchQuery && (
-            <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">✕</button>
+            <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white">✕</button>
           )}
         </div>
         {searchResults.length > 0 && (
-          <ul className={`mt-1 max-w-sm mx-auto rounded-xl border shadow-lg overflow-hidden ${dm ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-200'}`}>
+          <ul className="mt-1 max-w-sm mx-auto rounded-xl border shadow-lg overflow-hidden bg-white border-stone-200 relative z-10">
             {searchResults.map(f => (
               <li key={f.id}>
                 <button
-                  className={`w-full text-left px-4 py-2 text-sm flex items-center gap-2 ${dm ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700 hover:bg-green-50'}`}
+                  className="w-full text-left px-4 py-2 text-sm flex items-center gap-2 text-gray-700 hover:bg-green-50"
                   onClick={() => { setSelectedFood(f); setSearchQuery('') }}
                 >
                   <span>{f.name}</span>
-                  <span className={`ml-auto text-xs ${dm ? 'text-gray-500' : 'text-gray-400'}`}>{f.category}</span>
+                  <span className="ml-auto text-xs text-gray-400">{f.category}</span>
                 </button>
               </li>
             ))}
           </ul>
         )}
         {searchQuery && searchResults.length === 0 && (
-          <p className={`mt-1 text-sm ${dm ? 'text-gray-500' : 'text-gray-400'}`}>No foods found</p>
+          <p className="mt-1 text-sm text-white/60 text-center">No foods found</p>
         )}
       </header>
 
@@ -243,7 +255,7 @@ export default function Home() {
       )}
 
       {activeTab === 'home' && (
-        <div className="flex flex-col lg:flex-row gap-6 max-w-5xl mx-auto px-4 mb-4">
+        <div className="flex flex-col lg:flex-row gap-6 max-w-5xl mx-auto px-4 mb-4 mt-2">
           <Plate
             loveFoods={loveFoods}
             darkMode={darkMode}
@@ -266,13 +278,14 @@ export default function Home() {
 
       {activeTab === 'discover' && (
         <div className="max-w-md mx-auto py-6 px-4">
-          <h2 className={`text-xl font-bold text-center mb-4 ${dm ? 'text-green-300' : 'text-green-900'}`}>What to try next</h2>
-          <div className="flex flex-wrap gap-2 justify-center mb-6">
+          <h2 className={`text-2xl font-bold italic text-center mb-1 ${dm ? 'text-green-300' : 'text-green-900'}`} style={{ fontFamily: 'var(--font-display)' }}>What to try next</h2>
+          <p className={`text-sm text-center mb-4 ${dm ? 'text-gray-500' : 'text-stone-400'}`}>Based on what&apos;s on your plate</p>
+          <div className="flex flex-wrap gap-1.5 justify-center mb-6">
             {ALL_DIETARY_TAGS.map(({ tag, label }) => (
               <button
                 key={tag}
                 onClick={() => toggleTag(tag)}
-                className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${activeTags.includes(tag) ? 'bg-green-700 text-white border-green-700' : (dm ? 'bg-gray-800 text-gray-400 border-gray-600 hover:border-green-600' : 'bg-white text-gray-500 border-gray-300 hover:border-green-400')}`}
+                className={`inline-flex items-center leading-none px-2.5 py-1 rounded-full text-[11px] font-medium border transition-colors ${activeTags.includes(tag) ? 'bg-green-700 text-white border-green-700' : (dm ? 'bg-gray-800 text-gray-400 border-gray-600 hover:border-green-600' : 'bg-white text-gray-500 border-gray-300 hover:border-green-400')}`}
               >
                 {label}
               </button>

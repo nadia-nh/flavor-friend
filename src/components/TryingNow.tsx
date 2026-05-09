@@ -29,7 +29,7 @@ export function TryingNow({ exploringFoods, allFoodNames, darkMode, onAddFood, o
 
   return (
     <div className={`w-full lg:w-72 p-4 rounded-2xl shadow-lg ${dm ? 'bg-gray-800' : 'bg-white'}`}>
-      <h2 className={`text-xs font-semibold uppercase tracking-widest mb-3 ${dm ? 'text-gray-500' : 'text-gray-400'}`}>Trying Now</h2>
+      <h2 className={`text-base font-bold italic mb-3 ${dm ? 'text-green-300' : 'text-green-900'}`} style={{ fontFamily: 'var(--font-display)' }}>Trying Now</h2>
 
       {exploringFoods.length === 0 && (
         <p className={`text-sm mb-4 ${dm ? 'text-gray-500' : 'text-gray-400'}`}>Add foods you&apos;re experimenting with here!</p>
