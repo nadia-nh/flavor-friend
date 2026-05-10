@@ -2688,7 +2688,7 @@ export const foodSuggestions: FoodSuggestion[] = [
   {
     name: 'Parsnips',
     foodType: 'vegetable',
-    similarTo: ['Carrots', 'Turnips', 'Butternut Squash', 'Sweet Potato'],
+    similarTo: ['Carrots', 'Beets', 'Butternut Squash', 'Sweet Potato'],
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Parsnip_on_white.jpg/320px-Parsnip_on_white.jpg',
     cookingMethods: [
       {
@@ -2721,7 +2721,7 @@ export const foodSuggestions: FoodSuggestion[] = [
   {
     name: 'Radishes',
     foodType: 'vegetable',
-    similarTo: ['Turnips', 'Carrots', 'Cucumber', 'Beets'],
+    similarTo: ['Fennel', 'Carrots', 'Cucumber', 'Beets'],
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Radishes.jpg/320px-Radishes.jpg',
     cookingMethods: [
       {
