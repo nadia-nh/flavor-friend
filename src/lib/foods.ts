@@ -1994,7 +1994,7 @@ export const foodSuggestions: FoodSuggestion[] = [
     foodType: 'grain',
     parent: 'Bread (All)',
     similarTo: ['Bread (All)', 'Bread (Whole Wheat)', 'Pasta (All)'],
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Sourdough_bread_and_starter.jpg/320px-Sourdough_bread_and_starter.jpg',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Home_made_sour_dough_bread.jpg/500px-Home_made_sour_dough_bread.jpg',
     cookingMethods: [
       {
         name: 'Toast with toppings',
@@ -2027,7 +2027,7 @@ export const foodSuggestions: FoodSuggestion[] = [
     name: 'Jackfruit',
     foodType: 'vegetable',
     similarTo: ['Mushrooms', 'Tofu', 'Tempeh', 'Eggplant'],
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1g/Fresh_jackfruit.jpg/320px-Fresh_jackfruit.jpg',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Jackfruit_fresh_golden.jpg/500px-Jackfruit_fresh_golden.jpg',
     cookingMethods: [
       {
         name: 'BBQ pulled jackfruit',
@@ -2060,7 +2060,7 @@ export const foodSuggestions: FoodSuggestion[] = [
     name: 'Lettuce',
     foodType: 'vegetable',
     similarTo: ['Spinach', 'Kale', 'Cabbage', 'Swiss Chard'],
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Salad_garden.jpg/320px-Salad_garden.jpg',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Salad_in_a_bowl.jpg/500px-Salad_in_a_bowl.jpg',
     cookingMethods: [
       {
         name: 'Simple green salad',
@@ -2126,7 +2126,7 @@ export const foodSuggestions: FoodSuggestion[] = [
     name: 'Farro',
     foodType: 'grain',
     similarTo: ['Barley', 'Bulgur', 'Couscous', 'Quinoa'],
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Farro_salad.jpg/320px-Farro_salad.jpg',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/4/46/Farro2.jpg',
     cookingMethods: [
       {
         name: 'Boiled and seasoned',
@@ -2159,7 +2159,7 @@ export const foodSuggestions: FoodSuggestion[] = [
     name: 'Bulgur',
     foodType: 'grain',
     similarTo: ['Couscous', 'Farro', 'Quinoa', 'Millet'],
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Bulgur-Weizen.jpg/320px-Bulgur-Weizen.jpg',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/3/3b/Bulgur_on_plate.jpg',
     cookingMethods: [
       {
         name: 'Quick soak',
@@ -2192,7 +2192,7 @@ export const foodSuggestions: FoodSuggestion[] = [
     name: 'White Beans',
     foodType: 'legume',
     similarTo: ['Beans (All)', 'Chickpeas', 'Lentils', 'Kidney Beans'],
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/White_beans.jpg/320px-White_beans.jpg',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Cannellini_beans.jpg/500px-Cannellini_beans.jpg',
     cookingMethods: [
       {
         name: 'On toast',
@@ -2225,7 +2225,7 @@ export const foodSuggestions: FoodSuggestion[] = [
     name: 'Sunflower Seeds',
     foodType: 'other',
     similarTo: ['Pumpkin Seeds', 'Hemp Seeds', 'Sesame Seeds', 'Almonds'],
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Sunflower_seeds.jpg/320px-Sunflower_seeds.jpg',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Sunflower_seeds._img_001.jpg/500px-Sunflower_seeds._img_001.jpg',
     cookingMethods: [
       {
         name: 'Toasted on salads',
@@ -2655,7 +2655,7 @@ export const foodSuggestions: FoodSuggestion[] = [
     name: 'Banana',
     foodType: 'other',
     similarTo: ['Mango', 'Avocado', 'Oats', 'Coconut Milk'],
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Banana-Chocolate-Chip-Cookies.jpg/320px-Banana-Chocolate-Chip-Cookies.jpg',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Cavendish_banana_from_Maracaibo.jpg/500px-Cavendish_banana_from_Maracaibo.jpg',
     cookingMethods: [
       {
         name: 'Banana nice cream',
