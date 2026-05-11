@@ -33,6 +33,22 @@ const SPOONACULAR_SLUG_OVERRIDES: Record<string, string> = {
   'pasta (all)': 'spaghetti',
   'pasta (wheat)': 'spaghetti',
   'pasta (whole wheat)': 'spaghetti',
+  // Batch 1–3 new foods
+  'bread (all)': 'white-bread',
+  'bread (whole wheat)': 'bread-whole-wheat',
+  'sourdough': 'sourdough-bread',
+  'lettuce': 'iceberg-lettuce',
+  'artichoke': 'artichoke-hearts',
+  'split peas': 'yellow-split-peas',
+  'mung beans': 'bean-sprouts',
+  'fava beans': 'broad-beans',
+  'hemp seeds': 'hemp-seed',
+  'flaxseeds': 'flax-seeds',
+  'banana': 'bananas',
+  'parsnips': 'parsnip',
+  'tortillas': 'flour-tortilla',
+  'buckwheat': 'buckwheat-flour',
+  'polenta': 'cornmeal',
 }
 
 function getIngredientImageUrl(foodName: string): string {
