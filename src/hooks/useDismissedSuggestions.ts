@@ -10,7 +10,9 @@ export function useDismissedSuggestions() {
     try {
       const stored = localStorage.getItem(DISMISSED_KEY)
       if (stored) setDismissed(JSON.parse(stored))
-    } catch {}
+    } catch (error) {
+      console.error('Failed to parse dismissed suggestions:', error)
+    }
   }, [])
 
   useEffect(() => {

@@ -180,8 +180,8 @@ export default function Home() {
   const dm = darkMode
 
   return (
-    <main className={`min-h-screen pb-20 ${dm ? 'bg-gray-900' : 'bg-stone-50'}`}>
-      <header className={`rounded-b-3xl shadow-lg mb-6 px-6 pt-5 pb-5 ${dm ? 'bg-green-950' : 'bg-green-900'}`}>
+    <main className={`min-h-screen pb-20 ${dm ? 'bg-gray-900' : 'bg-[#fcfaf8]'}`}>
+      <header className={`sticky top-0 z-50 backdrop-blur-xl shadow-sm mb-6 px-6 py-4 border-b ${dm ? 'bg-emerald-950/80 border-emerald-900/50' : 'bg-emerald-600/90 border-emerald-500/50'}`}>
         <div className="flex justify-between items-center mb-4">
           <div className="w-10" />
           <h1 className="text-4xl font-bold italic text-white" style={{ fontFamily: 'var(--font-display)' }}>Plant Pal</h1>
@@ -250,7 +250,7 @@ export default function Home() {
       </header>
 
       {showMessage && (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-green-800 text-white px-4 py-2 rounded-full shadow-lg z-50 text-sm">
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-emerald-800 text-white px-4 py-2 rounded-full shadow-lg z-50 text-sm">
           {showMessage}
         </div>
       )}
@@ -328,27 +328,33 @@ export default function Home() {
         darkMode={darkMode}
       />
 
-      <nav className={`fixed bottom-0 left-0 right-0 z-40 flex border-t ${dm ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'}`}>
+      <nav className={`fixed bottom-0 left-0 right-0 z-40 flex border-t pb-safe ${dm ? 'bg-gray-900/90 backdrop-blur-md border-gray-800' : 'bg-white/90 backdrop-blur-md border-gray-100'}`}>
         <button
           onClick={() => setActiveTab('home')}
-          className={`flex-1 py-3 text-sm font-medium flex flex-col items-center gap-0.5 transition-colors ${activeTab === 'home' ? (dm ? 'text-green-400' : 'text-green-700') : (dm ? 'text-gray-500' : 'text-gray-400')}`}
+          className="flex-1 pt-2 pb-3 text-[11px] font-medium flex flex-col items-center gap-1 transition-all"
         >
-          <Leaf className="w-5 h-5" />
-          <span>Home</span>
+          <div className={`p-1.5 rounded-2xl transition-colors ${activeTab === 'home' ? (dm ? 'bg-emerald-900/50 text-emerald-400' : 'bg-emerald-50 text-emerald-600') : (dm ? 'text-gray-500 hover:text-gray-400' : 'text-gray-400 hover:text-gray-600')}`}>
+            <Leaf className="w-5 h-5" />
+          </div>
+          <span className={activeTab === 'home' ? (dm ? 'text-emerald-400' : 'text-emerald-700') : (dm ? 'text-gray-500' : 'text-gray-400')}>Home</span>
         </button>
         <button
           onClick={() => setActiveTab('discover')}
-          className={`flex-1 py-3 text-sm font-medium flex flex-col items-center gap-0.5 transition-colors ${activeTab === 'discover' ? (dm ? 'text-green-400' : 'text-green-700') : (dm ? 'text-gray-500' : 'text-gray-400')}`}
+          className="flex-1 pt-2 pb-3 text-[11px] font-medium flex flex-col items-center gap-1 transition-all"
         >
-          <Compass className="w-5 h-5" />
-          <span>Discover</span>
+          <div className={`p-1.5 rounded-2xl transition-colors ${activeTab === 'discover' ? (dm ? 'bg-emerald-900/50 text-emerald-400' : 'bg-emerald-50 text-emerald-600') : (dm ? 'text-gray-500 hover:text-gray-400' : 'text-gray-400 hover:text-gray-600')}`}>
+            <Compass className="w-5 h-5" />
+          </div>
+          <span className={activeTab === 'discover' ? (dm ? 'text-emerald-400' : 'text-emerald-700') : (dm ? 'text-gray-500' : 'text-gray-400')}>Discover</span>
         </button>
         <button
           onClick={() => setActiveTab('recipes')}
-          className={`flex-1 py-3 text-sm font-medium flex flex-col items-center gap-0.5 transition-colors ${activeTab === 'recipes' ? (dm ? 'text-green-400' : 'text-green-700') : (dm ? 'text-gray-500' : 'text-gray-400')}`}
+          className="flex-1 pt-2 pb-3 text-[11px] font-medium flex flex-col items-center gap-1 transition-all"
         >
-          <ChefHat className="w-5 h-5" />
-          <span>Recipes</span>
+          <div className={`p-1.5 rounded-2xl transition-colors ${activeTab === 'recipes' ? (dm ? 'bg-emerald-900/50 text-emerald-400' : 'bg-emerald-50 text-emerald-600') : (dm ? 'text-gray-500 hover:text-gray-400' : 'text-gray-400 hover:text-gray-600')}`}>
+            <ChefHat className="w-5 h-5" />
+          </div>
+          <span className={activeTab === 'recipes' ? (dm ? 'text-emerald-400' : 'text-emerald-700') : (dm ? 'text-gray-500' : 'text-gray-400')}>Recipes</span>
         </button>
       </nav>
     </main>
