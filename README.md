@@ -86,11 +86,12 @@ Use the **↓ Export** button to download a `flavorfriend-backup-{date}.json` fi
 
 ```
 src/
-  app/          # Next.js app router (page.tsx is a thin orchestrator)
+  app/          # Next.js app router (page.tsx orchestrates state and tabs)
   components/   # Plate, TryingNow, SuggestionCard, RecipeBrowser,
                 # AttemptModal, FoodDetailModal, StatsModal
   hooks/        # useFoodsStorage, useDismissedSuggestions
   lib/          # types.ts, constants.ts, foods.ts, recipes.ts
+  test/         # Vitest setup and utilities
 ```
 
 ## Smart Suggestions
