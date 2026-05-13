@@ -18,10 +18,14 @@ PlantPal/
 │   │   ├── globals.css       # Global Tailwind styles
 │   │   ├── layout.tsx        # Root layout with metadata
 │   │   └── page.tsx          # Main app component
-│   └── lib/
-│       ├── types.ts          # TypeScript interfaces
-│       ├── foods.ts          # Food suggestions database (25+ foods)
-│       └── recipes.ts        # Recipe database (100+ recipes)
+│   ├── components/           # UI components (Plate, SuggestionCard, etc.)
+│   ├── hooks/                # Custom React hooks
+│   ├── lib/
+│   │   ├── constants.ts      # App constants
+│   │   ├── types.ts          # TypeScript interfaces
+│   │   ├── foods.ts          # Food suggestions database
+│   │   └── recipes.ts        # Recipe database
+│   └── test/                 # Vitest setup
 ├── public/
 │   └── placeholder-vegetable.svg  # Fallback image
 ├── package.json              # Dependencies & scripts
@@ -36,14 +40,21 @@ PlantPal/
 ## Key Files
 
 ### `src/app/page.tsx`
-Main React component containing:
-- Food state management (add, delete, move between categories)
-- Attempt logging modal
-- Progress dashboard
-- Cooking suggestions panel with images
-- Recipe Browser with dynamic category filters
-- Food detail view with attempt history
-- Fallback suggestion system
+Main orchestrator component that handles:
+- Global state and tab navigation (Home, Discover, Recipes)
+- Combining components like `Plate`, `TryingNow`, and `RecipeBrowser`
+- Handling dark mode and data export/import
+
+### `src/components/`
+Contains the core modular UI components:
+- `Plate.tsx` - Visualizes the foods you love
+- `TryingNow.tsx` - Sidebar for tracking and progressing foods
+- `SuggestionCard.tsx` - Swipeable card for discovering new foods
+- `RecipeBrowser.tsx` - Filterable recipe catalog
+
+### `src/hooks/`
+- `useFoodsStorage.ts` - LocalStorage persistence for the food list
+- `useDismissedSuggestions.ts` - Tracks dismissed suggestion cards
 
 ### `src/lib/types.ts`
 TypeScript interfaces:

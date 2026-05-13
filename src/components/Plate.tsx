@@ -111,35 +111,42 @@ export function Plate({ loveFoods, darkMode, onAddFood, onMoveFood, onDeleteFood
         role="img" aria-label={`Your plate with ${loveFoods.length} food${loveFoods.length !== 1 ? 's' : ''}. Drag a food off the plate to remove it.`}
       >
         <defs>
-          <radialGradient id="rimGrad" cx="38%" cy="32%" r="68%">
-            <stop offset="0%"   stopColor={dm ? '#6b7280' : '#e9ecef'} />
-            <stop offset="65%"  stopColor={dm ? '#374151' : '#ced4da'} />
-            <stop offset="100%" stopColor={dm ? '#1f2937' : '#adb5bd'} />
+          <radialGradient id="rimGrad" cx="35%" cy="30%" r="70%">
+            <stop offset="0%"   stopColor={dm ? '#4b5563' : '#f8fafc'} />
+            <stop offset="60%"  stopColor={dm ? '#374151' : '#e2e8f0'} />
+            <stop offset="100%" stopColor={dm ? '#1f2937' : '#cbd5e1'} />
           </radialGradient>
-          <radialGradient id="plateGrad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stopColor="#ffffff" />
-            <stop offset="100%" stopColor={dm ? '#1f2937' : '#fdf8f0'} />
+          <radialGradient id="plateGrad" cx="40%" cy="40%" r="60%">
+            <stop offset="0%"   stopColor={dm ? '#374151' : '#ffffff'} />
+            <stop offset="80%" stopColor={dm ? '#1f2937' : '#f8fafc'} />
+            <stop offset="100%" stopColor={dm ? '#111827' : '#e2e8f0'} />
           </radialGradient>
-          <filter id="rimNoise" x="-2%" y="-2%" width="104%" height="104%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" stitchTiles="stitch" result="noise"/>
-            <feColorMatrix type="saturate" values="0" in="noise" result="grayNoise"/>
-            <feBlend in="SourceGraphic" in2="grayNoise" mode="multiply" result="blended"/>
-            <feComposite in="blended" in2="SourceGraphic" operator="in"/>
+          <radialGradient id="sectorOverlay" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="transparent" />
+            <stop offset="80%" stopColor="transparent" />
+            <stop offset="100%" stopColor={dm ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.05)'} />
+          </radialGradient>
+          <filter id="plateShadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="15" stdDeviation="15" floodColor={dm ? '#000000' : '#475569'} floodOpacity="0.25"/>
+          </filter>
+          <filter id="ghostShadow">
+            <feDropShadow dx="0" dy="8" stdDeviation="6" floodOpacity="0.3" />
           </filter>
         </defs>
 
         <circle
           cx={PLATE_CX} cy={PLATE_CY} r={PLATE_R + PLATE_RIM_WIDTH}
           fill={plateDragGhost?.outside ? '#fca5a5' : 'url(#rimGrad)'}
-          filter={plateDragGhost?.outside ? undefined : 'url(#rimNoise)'}
+          filter={plateDragGhost?.outside ? undefined : 'url(#plateShadow)'}
         />
         {!plateDragGhost?.outside && (() => {
-          const hStart = polarToXY(PLATE_CX, PLATE_CY, PLATE_R + 5, 210)
-          const hEnd   = polarToXY(PLATE_CX, PLATE_CY, PLATE_R + 5, 310)
+          const hStart = polarToXY(PLATE_CX, PLATE_CY, PLATE_R + 10, 210)
+          const hEnd   = polarToXY(PLATE_CX, PLATE_CY, PLATE_R + 10, 300)
           return (
             <path
-              d={`M ${hStart.x} ${hStart.y} A ${PLATE_R + 5} ${PLATE_R + 5} 0 0 1 ${hEnd.x} ${hEnd.y}`}
-              fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeOpacity="0.35"
+              d={`M ${hStart.x} ${hStart.y} A ${PLATE_R + 10} ${PLATE_R + 10} 0 0 1 ${hEnd.x} ${hEnd.y}`}
+              fill="none" stroke="white" strokeWidth="6" strokeLinecap="round" strokeOpacity="0.6"
+              filter="blur(2px)"
             />
           )
         })()}
@@ -153,7 +160,7 @@ export function Plate({ loveFoods, darkMode, onAddFood, onMoveFood, onDeleteFood
           const labelPos = polarToXY(PLATE_CX, PLATE_CY, 242, midAngle)
           return (
             <g key={ft}>
-              <path d={makeSectorPath(PLATE_CX, PLATE_CY, PLATE_R, PLATE_INNER_R, cfg.startDeg, cfg.endDeg)} fill={cfg.fill} stroke="white" strokeWidth="2.5" strokeOpacity="0.7" />
+              <path d={makeSectorPath(PLATE_CX, PLATE_CY, PLATE_R, PLATE_INNER_R, cfg.startDeg, cfg.endDeg)} fill={cfg.fill} stroke={dm ? 'rgba(255,255,255,0.05)' : 'white'} strokeWidth="2.5" strokeOpacity="0.9" />
               <foreignObject x={labelPos.x - 12} y={labelPos.y - 21} width={24} height={24}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
                   <FoodTypeIcon name={cfg.iconName} className="w-5 h-5" style={{ color: cfg.stroke }} />
@@ -190,8 +197,9 @@ export function Plate({ loveFoods, darkMode, onAddFood, onMoveFood, onDeleteFood
                         <FoodTypeIcon name={cfg.iconName} className="w-4 h-4" style={{ color: cfg.stroke }} />
                       </div>
                     </foreignObject>
-                    <text x={pos.x} y={pos.y + 16} textAnchor="middle" dominantBaseline="hanging" fontSize="11" fill={cfg.textColor} fontWeight="600" fontFamily="system-ui, sans-serif">
-                      {food.name.length <= 12 ? food.name : food.name.slice(0, 11) + '…'}
+                    <rect x={pos.x - 30} y={pos.y + 11} width={60} height={18} rx={9} fill={dm ? 'rgba(31, 41, 55, 0.75)' : 'rgba(255, 255, 255, 0.75)'} />
+                    <text x={pos.x} y={pos.y + 20} textAnchor="middle" dominantBaseline="middle" fontSize="10" fill={cfg.textColor} fontWeight="700" fontFamily="system-ui, sans-serif">
+                      {food.name.length <= 10 ? food.name : food.name.slice(0, 9) + '…'}
                     </text>
                     <title>{food.name}</title>
                   </g>
@@ -201,6 +209,8 @@ export function Plate({ loveFoods, darkMode, onAddFood, onMoveFood, onDeleteFood
           )
         })}
 
+        <circle cx={PLATE_CX} cy={PLATE_CY} r={PLATE_R} fill="url(#sectorOverlay)" style={{ pointerEvents: 'none' }} />
+
         <circle cx={PLATE_CX} cy={PLATE_CY} r={PLATE_INNER_R} fill={dm ? '#075985' : '#e0f2fe'} stroke={dm ? '#38bdf8' : '#7dd3fc'} strokeWidth="1.5" />
         <circle cx={PLATE_CX} cy={PLATE_CY} r={7} fill={dm ? '#38bdf8' : '#86efac'} opacity="0.7" />
 
@@ -209,14 +219,15 @@ export function Plate({ loveFoods, darkMode, onAddFood, onMoveFood, onDeleteFood
           const ft = draggedFood?.foodType ?? 'other'
           const cfg2 = FOOD_TYPE_CONFIG[ft]
           return (
-            <g style={{ pointerEvents: 'none' }} opacity="0.85">
+            <g style={{ pointerEvents: 'none' }} opacity="0.95" filter="url(#ghostShadow)" transform={`translate(${plateDragGhost.svgX}, ${plateDragGhost.svgY}) scale(1.15) translate(${-plateDragGhost.svgX}, ${-plateDragGhost.svgY})`}>
+              <circle cx={plateDragGhost.svgX} cy={plateDragGhost.svgY} r={16} fill={dm ? 'rgba(31, 41, 55, 0.9)' : 'rgba(255, 255, 255, 0.9)'} />
               <foreignObject x={plateDragGhost.svgX - 12} y={plateDragGhost.svgY - 12} width={24} height={24}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
                   <FoodTypeIcon name={cfg2.iconName} className="w-5 h-5" style={{ color: cfg2.stroke }} />
                 </div>
               </foreignObject>
               {plateDragGhost.outside && (
-                <text x={plateDragGhost.svgX} y={plateDragGhost.svgY + 22} textAnchor="middle" fontSize="11" fill="#ef4444" fontWeight="600">Release to remove</text>
+                <text x={plateDragGhost.svgX} y={plateDragGhost.svgY + 26} textAnchor="middle" fontSize="12" fill="#ef4444" fontWeight="700">Release to remove</text>
               )}
             </g>
           )
