@@ -25,6 +25,7 @@ export function useDismissedSuggestions(userId: string | null) {
 
     db.fetchDismissed(userId).then(cloud => {
       setDismissed(cloud)
+      localStorage.removeItem(DISMISSED_KEY)
       initializedRef.current = true
     }).catch(() => {
       try {

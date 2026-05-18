@@ -62,10 +62,8 @@ export function useFoodsStorage(userId: string | null) {
       const localFoods = loadLocalFoods()
 
       if (cloudFoods.length === 0 && localFoods && localFoods.length > 0) {
-        // Silent migration: push local data to cloud, clear local
+        // First login with local data: migrate to cloud
         await db.saveFoods(userId, localFoods)
-        localStorage.removeItem(STORAGE_KEY)
-        localStorage.removeItem(DISMISSED_KEY)
         setFoods(localFoods)
       } else if (cloudFoods.length > 0) {
         setFoods(cloudFoods)
@@ -73,6 +71,8 @@ export function useFoodsStorage(userId: string | null) {
         await db.saveFoods(userId, defaultFoods)
         setFoods(defaultFoods)
       }
+      // Always clear localStorage when logged in — Supabase is the source of truth
+      localStorage.removeItem(STORAGE_KEY)
       initializedRef.current = true
     }).catch(() => {
       // Fallback to local if cloud fetch fails
