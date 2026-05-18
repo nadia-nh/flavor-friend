@@ -44,6 +44,8 @@ function loadLocalFoods(): Food[] | null {
 export function useFoodsStorage(userId: string | null | undefined) {
   const [foods, setFoods] = useState<Food[]>([])
   const initializedRef = useRef(false)
+  const foodsRef = useRef<Food[]>(foods)
+  foodsRef.current = foods
 
   useEffect(() => {
     if (userId === undefined) return
@@ -53,8 +55,14 @@ export function useFoodsStorage(userId: string | null | undefined) {
     if (userId === null) {
       // Guest mode: localStorage only
       const local = loadLocalFoods()
-      setFoods(local ?? defaultFoods)
-      if (!local) localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultFoods))
+      if (local) {
+        setFoods(local)
+      } else {
+        // Preserve foods from logged-in state so logout doesn't reset to defaults
+        const carry = foodsRef.current.length > 0 ? foodsRef.current : defaultFoods
+        setFoods(carry)
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(carry))
+      }
       initializedRef.current = true
       return
     }
