@@ -4,11 +4,13 @@ import { useState, useEffect, useRef } from 'react'
 import { DISMISSED_KEY } from '@/lib/constants'
 import * as db from '@/lib/supabase/db'
 
-export function useDismissedSuggestions(userId: string | null) {
+export function useDismissedSuggestions(userId: string | null | undefined) {
   const [dismissed, setDismissed] = useState<string[]>([])
   const initializedRef = useRef(false)
 
   useEffect(() => {
+    if (userId === undefined) return
+
     initializedRef.current = false
 
     if (userId === null) {

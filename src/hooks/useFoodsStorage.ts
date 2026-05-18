@@ -41,11 +41,13 @@ function loadLocalFoods(): Food[] | null {
   }
 }
 
-export function useFoodsStorage(userId: string | null) {
+export function useFoodsStorage(userId: string | null | undefined) {
   const [foods, setFoods] = useState<Food[]>([])
   const initializedRef = useRef(false)
 
   useEffect(() => {
+    if (userId === undefined) return
+
     initializedRef.current = false
 
     if (userId === null) {

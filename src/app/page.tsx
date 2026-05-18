@@ -45,8 +45,8 @@ export default function Page() {
 }
 
 function Home() {
-  const { user, signIn, signOut } = useAuth()
-  const userId = user?.id ?? null
+  const { user, loading: authLoading, signIn, signOut } = useAuth()
+  const userId = authLoading ? undefined : (user?.id ?? null)
   const [foods, setFoods] = useFoodsStorage(userId)
   const [dismissedSuggestions, setDismissedSuggestions] = useDismissedSuggestions(userId)
   const searchParams = useSearchParams()
