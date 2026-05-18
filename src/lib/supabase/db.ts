@@ -1,9 +1,8 @@
 import { Food } from '@/lib/types'
 import { createClient } from './client'
 
-const supabase = createClient()
-
 export async function fetchFoods(userId: string): Promise<Food[]> {
+  const supabase = createClient()
   const { data, error } = await supabase
     .from('foods')
     .select('*')
@@ -26,6 +25,7 @@ export async function fetchFoods(userId: string): Promise<Food[]> {
 }
 
 export async function saveFoods(userId: string, foods: Food[]): Promise<void> {
+  const supabase = createClient()
   const rows = foods.map(f => ({
     id: f.id,
     user_id: userId,
@@ -47,6 +47,7 @@ export async function saveFoods(userId: string, foods: Food[]): Promise<void> {
 }
 
 export async function deleteFoodRow(userId: string, foodId: string): Promise<void> {
+  const supabase = createClient()
   const { error } = await supabase
     .from('foods')
     .delete()
@@ -57,6 +58,7 @@ export async function deleteFoodRow(userId: string, foodId: string): Promise<voi
 }
 
 export async function fetchDismissed(userId: string): Promise<string[]> {
+  const supabase = createClient()
   const { data, error } = await supabase
     .from('dismissed_suggestions')
     .select('suggestions')
@@ -68,6 +70,7 @@ export async function fetchDismissed(userId: string): Promise<string[]> {
 }
 
 export async function saveDismissed(userId: string, dismissed: string[]): Promise<void> {
+  const supabase = createClient()
   const { error } = await supabase
     .from('dismissed_suggestions')
     .upsert({ user_id: userId, suggestions: dismissed }, { onConflict: 'user_id' })
