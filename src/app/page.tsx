@@ -1,12 +1,14 @@
 'use client'
 
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, Suspense } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { Leaf, Compass, ChefHat } from 'lucide-react'
 import { Food, FoodCategory, Attempt, DietaryTag } from '@/lib/types'
 import { getSimilarFoods, getSimilarFoodsFallback, getAllSuggestedFoods, getFoodType, getTagsForFood } from '@/lib/foods'
 import { ATTEMPT_GOAL } from '@/lib/constants'
 import { useFoodsStorage } from '@/hooks/useFoodsStorage'
 import { useDismissedSuggestions } from '@/hooks/useDismissedSuggestions'
+import { useAuth } from '@/hooks/useAuth'
 import { Plate } from '@/components/Plate'
 import { TryingNow } from '@/components/TryingNow'
 import { SuggestionCard } from '@/components/SuggestionCard'
@@ -14,6 +16,7 @@ import { RecipeBrowser } from '@/components/RecipeBrowser'
 import { AttemptModal } from '@/components/AttemptModal'
 import { FoodDetailModal } from '@/components/FoodDetailModal'
 import { StatsModal } from '@/components/StatsModal'
+import { AuthModal } from '@/components/AuthModal'
 
 const encouragementMessages = [
   "You're doing great! Every try counts.",
@@ -33,9 +36,21 @@ const ALL_DIETARY_TAGS: { tag: DietaryTag; label: string }[] = [
   { tag: 'raw-friendly', label: 'Raw-friendly' },
 ]
 
-export default function Home() {
-  const [foods, setFoods] = useFoodsStorage()
-  const [dismissedSuggestions, setDismissedSuggestions] = useDismissedSuggestions()
+export default function Page() {
+  return (
+    <Suspense>
+      <Home />
+    </Suspense>
+  )
+}
+
+function Home() {
+  const { user, loading: authLoading, signIn, signOut } = useAuth()
+  const userId = authLoading ? undefined : (user?.id ?? null)
+  const [foods, setFoods] = useFoodsStorage(userId)
+  const [dismissedSuggestions, setDismissedSuggestions] = useDismissedSuggestions(userId)
+  const searchParams = useSearchParams()
+  const router = useRouter()
   const [showMessage, setShowMessage] = useState('')
   const [selectedFood, setSelectedFood] = useState<Food | null>(null)
   const [showProgress, setShowProgress] = useState(false)
@@ -48,7 +63,17 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState('')
   const [activeTags, setActiveTags] = useState<DietaryTag[]>([])
   const [showOptionsMenu, setShowOptionsMenu] = useState(false)
+  const [showAuthModal, setShowAuthModal] = useState(false)
+  const [linkExpired, setLinkExpired] = useState(false)
   const importRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (searchParams.get('auth_error') === 'link_expired') {
+      setLinkExpired(true)
+      setShowAuthModal(true)
+      router.replace('/')
+    }
+  }, [searchParams, router])
 
   useEffect(() => {
     if (activeTab === 'discover') setSessionSkipped([])
@@ -210,6 +235,10 @@ export default function Home() {
                   <button onClick={() => { setShowProgress(true); setShowOptionsMenu(false) }} className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-stone-50 flex items-center gap-2">
                     📊 Stats
                   </button>
+                  <div className="border-t border-stone-100 my-1" />
+                  <button onClick={() => { setShowAuthModal(true); setShowOptionsMenu(false) }} className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-stone-50 flex items-center gap-2">
+                    {user ? `👤 Account` : '🔑 Sign in / Sync'}
+                  </button>
                 </div>
               </>
             )}
@@ -326,6 +355,16 @@ export default function Home() {
         onClose={() => setShowProgress(false)}
         allFoods={foods}
         darkMode={darkMode}
+      />
+
+      <AuthModal
+        open={showAuthModal}
+        user={user}
+        darkMode={darkMode}
+        linkExpired={linkExpired}
+        onClose={() => { setShowAuthModal(false); setLinkExpired(false) }}
+        onSignIn={signIn}
+        onSignOut={signOut}
       />
 
       <nav className={`fixed bottom-0 left-0 right-0 z-40 flex border-t pb-safe ${dm ? 'bg-gray-900/90 backdrop-blur-md border-gray-800' : 'bg-white/90 backdrop-blur-md border-gray-100'}`}>

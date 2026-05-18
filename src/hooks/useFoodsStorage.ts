@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Food, FoodCategory, FoodType } from '@/lib/types'
 import { getFoodType } from '@/lib/foods'
-import { STORAGE_KEY } from '@/lib/constants'
+import { STORAGE_KEY, DISMISSED_KEY } from '@/lib/constants'
+import * as db from '@/lib/supabase/db'
 
 const defaultFoods: Food[] = [
   { id: '1', name: 'Rice',    category: 'love', foodType: 'grain',     attempts: 10, lastAttempted: '2024-01-15', notes: '', methodUsed: '', attemptHistory: [] },
@@ -21,37 +22,87 @@ const defaultFoods: Food[] = [
   { id: '8', name: 'Cauliflower',      category: 'curious', foodType: 'vegetable', attempts: 0, lastAttempted: null, notes: '', methodUsed: '', attemptHistory: [] },
 ]
 
-export function useFoodsStorage() {
+function normalizeFoods(parsed: Food[]): Food[] {
+  return parsed.map(f => ({
+    ...f,
+    foodType: (f.foodType ?? getFoodType(f.name)) as FoodType,
+    category: (f.category === 'notYet' ? 'curious' : f.category) as FoodCategory,
+  }))
+}
+
+function loadLocalFoods(): Food[] | null {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY)
+    if (!stored) return null
+    const parsed: Food[] = JSON.parse(stored)
+    return parsed.length > 0 ? normalizeFoods(parsed) : null
+  } catch {
+    return null
+  }
+}
+
+export function useFoodsStorage(userId: string | null | undefined) {
   const [foods, setFoods] = useState<Food[]>([])
+  const initializedRef = useRef(false)
+  const foodsRef = useRef<Food[]>(foods)
+  foodsRef.current = foods
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY)
-      if (!stored) {
-        setFoods(defaultFoods)
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultFoods))
-        return
-      }
-      const parsed: Food[] = JSON.parse(stored)
-      if (parsed.length === 0) {
-        setFoods(defaultFoods)
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultFoods))
+    if (userId === undefined) return
+
+    initializedRef.current = false
+
+    if (userId === null) {
+      // Guest mode: localStorage only
+      const local = loadLocalFoods()
+      if (local) {
+        setFoods(local)
       } else {
-        const migrated = parsed.map(f => ({
-          ...f,
-          foodType: (f.foodType ?? getFoodType(f.name)) as FoodType,
-          category: (f.category === 'notYet' ? 'curious' : f.category) as FoodCategory,
-        }))
-        setFoods(migrated)
+        // Preserve foods from logged-in state so logout doesn't reset to defaults
+        const carry = foodsRef.current.length > 0 ? foodsRef.current : defaultFoods
+        setFoods(carry)
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(carry))
       }
-    } catch {
-      setFoods(defaultFoods)
+      initializedRef.current = true
+      return
     }
-  }, [])
 
+    // Logged-in mode: load from cloud, auto-migrate local data if present
+    db.fetchFoods(userId).then(async cloudFoods => {
+      const localFoods = loadLocalFoods()
+
+      if (cloudFoods.length === 0 && localFoods && localFoods.length > 0) {
+        // First login with local data: migrate to cloud
+        await db.saveFoods(userId, localFoods)
+        setFoods(localFoods)
+      } else if (cloudFoods.length > 0) {
+        setFoods(cloudFoods)
+      } else {
+        await db.saveFoods(userId, defaultFoods)
+        setFoods(defaultFoods)
+      }
+      // Always clear localStorage when logged in — Supabase is the source of truth
+      localStorage.removeItem(STORAGE_KEY)
+      initializedRef.current = true
+    }).catch(() => {
+      // Fallback to local if cloud fetch fails
+      const local = loadLocalFoods()
+      setFoods(local ?? defaultFoods)
+      initializedRef.current = true
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId])
+
+  // Persist changes
   useEffect(() => {
-    if (foods.length > 0) localStorage.setItem(STORAGE_KEY, JSON.stringify(foods))
-  }, [foods])
+    if (!initializedRef.current || foods.length === 0) return
+
+    if (userId === null) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(foods))
+    } else if (userId !== undefined) {
+      db.saveFoods(userId, foods).catch(console.error)
+    }
+  }, [foods, userId])
 
   return [foods, setFoods] as const
 }
