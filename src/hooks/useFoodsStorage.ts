@@ -91,7 +91,7 @@ export function useFoodsStorage(userId: string | null | undefined) {
 
     if (userId === null) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(foods))
-    } else {
+    } else if (userId !== undefined) {
       db.saveFoods(userId, foods).catch(console.error)
     }
   }, [foods, userId])

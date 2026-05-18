@@ -46,7 +46,7 @@ export function useDismissedSuggestions(userId: string | null | undefined) {
 
     if (userId === null) {
       localStorage.setItem(DISMISSED_KEY, JSON.stringify(dismissed))
-    } else {
+    } else if (userId !== undefined) {
       db.saveDismissed(userId, dismissed).catch(console.error)
     }
   }, [dismissed, userId])
